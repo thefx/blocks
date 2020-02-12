@@ -21,7 +21,7 @@ Add to your composer.json.
 Either run
 
 ```
-php composer.phar require thefx/yii2-blocks:dev-master
+composer require thefx/yii2-blocks:dev-master
 ```
 
 or add
@@ -42,17 +42,23 @@ Once the extension is installed, simply use it in your code by  :
 <?= \thefx\blocks\AutoloadExample::widget(); ?>
 ```
 
+
 For Development
 -----
 
-Add to your composer.json.
+```
+"repositories":[
+    {
+        "type": "path",
+        "url": "extensions/thefx/yii2-blocks"
+    }
+]
+```
+
+Either run
 
 ```
-"autoload": {
-  "psr-4": {
-    "thefx\\blocks\\": "extensions/thefx/yii2-blocks/"
-  }
-},
+composer require thefx/yii2-blocks:dev-master --prefer-source
 ```
 
 Modify your application configuration:

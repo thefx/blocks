@@ -1,0 +1,21 @@
+{
+    "name": "thefx/yii2-blocks",
+    "description": "Blocks",
+    "type": "yii2-extension",
+    "keywords": ["yii2","extension"],
+    "license": "GPL-3.0+",
+    "authors": [
+        {
+            "name": "3FoX",
+            "email": "fenixq@mail.ru"
+        }
+    ],
+    "require": {
+        "yiisoft/yii2": "~2.0.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "thefx\\blocks\\": ""
+        }
+    }
+}

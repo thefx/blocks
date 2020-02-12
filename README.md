@@ -66,7 +66,9 @@ return [
     'modules' => [
         'blocks-manage' => [
             'class' => 'thefx\blocks\Module',
-            ...
+            'layout' => 'page',
+            'layoutPath' => '@app/modules/admin/layouts',
+        ...
         ]
         ...
     ],

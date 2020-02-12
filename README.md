@@ -93,3 +93,8 @@ Refresh Migrations
 php yii migrate/fresh --migrationPath=@thefx/blocks/migrations
 ```
 
+Create block
+
+```
+http://site.com/admin/blocks-manage/block
+```

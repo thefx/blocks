@@ -4,8 +4,8 @@
 /* @var $form yii\widgets\ActiveForm */
 /* @var int $value - propId */
 
-use app\modules\admin\widgets\propInput\PropInput;
-use app\shop\entities\Block\BlockItem;
+use thefx\blocks\widgets\propInput\PropInput;
+use thefx\blocks\models\blocks\BlockItem;
 
 $assignment = $model->getAssignmentByPropId($value);
 

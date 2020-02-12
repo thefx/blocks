@@ -38,7 +38,7 @@ class DefaultController extends Controller
 //            else $doctors[] = $item;
 //        }
 
-        return $this->redirect(['block-category/index?parent_id=1']);
+        return $this->redirect(['/admin/blocks-manage/block-category/index?parent_id=1']);
 
 //        return $this->render('index', [
 //            'slider' => $slider,

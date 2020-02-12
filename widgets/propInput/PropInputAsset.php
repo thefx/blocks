@@ -70,6 +70,7 @@ $js = <<<JS
         });
     }
 JS;
+        $this->sourcePath = __DIR__ . '/assets';
 
         /* @see https://github.com/RubaXa/Sortable */
         \Yii::$app->view->registerJs($js, View::POS_END);

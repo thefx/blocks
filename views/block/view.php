@@ -1,6 +1,7 @@
 <?php
 
-use app\shop\entities\Block\BlockProp;
+use thefx\blocks\models\blocks\Block;
+use thefx\blocks\models\blocks\BlockProp;
 use yii\data\ActiveDataProvider;
 use yii\grid\GridView;
 use yii\helpers\Html;
@@ -8,7 +9,7 @@ use yii\widgets\DetailView;
 use yii\widgets\Pjax;
 
 /* @var $this yii\web\View */
-/* @var $model app\shop\entities\Block\Block */
+/* @var $model Block */
 /* @var ActiveDataProvider $propsDataProvider */
 /* @var BlockProp $propsSearchModel */
 

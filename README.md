@@ -55,12 +55,22 @@ Add to your composer.json.
 },
 ```
 
-Add to your config file
+Modify your application configuration:
 
 ```
-'aliases' => [
-    '@thefx/blocks' => '@app/extensions/thefx/yii2-blocks',
-],
+return [
+    'aliases' => [
+        '@thefx/blocks' => '@app/extensions/thefx/yii2-blocks',
+        ...
+    ],
+    'modules' => [
+        'blocks-manage' => [
+            'class' => 'thefx\blocks\Module',
+            ...
+        ]
+        ...
+    ],
+];
 ```
 
 Apply Migrations
@@ -74,3 +84,4 @@ Refresh Migrations
 ```
 php yii migrate/fresh --migrationPath=@thefx/blocks/migrations
 ```
+

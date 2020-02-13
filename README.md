@@ -32,6 +32,19 @@ or add
 
 to the require section of your `composer.json` file.
 
+Alternative installation
+---
+
+1. Move libs to extensions/thefx/yii2-blocks
+2. then add to your config
+
+```
+'aliases' => [
+    '@thefx/blocks' => '@app/extensions/thefx/yii2-blocks',
+    ...
+],
+```
+
 
 Usage
 -----
@@ -50,7 +63,7 @@ For Development
 "repositories":[
     {
         "type": "path",
-        "url": "extensions/thefx/yii2-blocks"
+        "url": "extensions/thefx/*"
     }
 ]
 ```
@@ -65,10 +78,6 @@ Modify your application configuration:
 
 ```
 return [
-    'aliases' => [
-        '@thefx/blocks' => '@app/extensions/thefx/yii2-blocks',
-        ...
-    ],
     'modules' => [
         'blocks-manage' => [
             'class' => 'thefx\blocks\Module',
@@ -96,5 +105,5 @@ php yii migrate/fresh --migrationPath=@thefx/blocks/migrations
 Create block
 
 ```
-http://site.com/admin/blocks-manage/block
+http://site.com/blocks-manage/block
 ```

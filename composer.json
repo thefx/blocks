@@ -12,7 +12,8 @@
     ],
     "require": {
         "yiisoft/yii2": "~2.0.5",
-        "la-haute-societe/yii2-save-relations-behavior": "^1.2"
+        "la-haute-societe/yii2-save-relations-behavior": "^1.2",
+        "paulzi/yii2-nested-sets": "^1.0"
     },
     "autoload": {
         "psr-4": {

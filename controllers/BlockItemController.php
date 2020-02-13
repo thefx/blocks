@@ -9,6 +9,7 @@ use thefx\blocks\models\blocks\Block;
 use thefx\blocks\models\blocks\BlockCategory;
 use thefx\blocks\models\blocks\BlockItem;
 use thefx\blocks\models\blocks\BlockItemPropAssignments;
+use thefx\blocks\widgets\propInput\PropInputAsset;
 use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -122,6 +123,8 @@ class BlockItemController extends Controller
      */
     public function actionUpdate($id, $parent_id)
     {
+        PropInputAsset::register($this->view);
+
         $this->layout = 'pure';
 
         $model = $this->findModel($id);

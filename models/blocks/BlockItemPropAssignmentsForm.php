@@ -50,7 +50,7 @@ class BlockItemPropAssignmentsForm extends Model
 
     public function beforeValidate()
     {
-        if ($this->prop->isFile()) {
+        if ($this->prop->isImage()) {
             $this->attachBehaviorImageUpload();
         }
         return parent::beforeValidate();
@@ -118,7 +118,7 @@ class BlockItemPropAssignmentsForm extends Model
 //            $this->prop->isList() ? ['value', 'integer'] : false,
 //            $this->prop->isList() && !$this->prop->isMulti() ? ['value', 'integer'] : false,
 //            $this->prop->isList() && $this->prop->isMulti()? ['value', 'each', 'rule' => ['integer']] : false,
-            $this->prop->isFile() ? ['value', 'file' /*, 'mimeTypes' => 'image/*'*/, 'maxFiles' => 10, 'skipOnEmpty' => true] : false,
+            $this->prop->isImage() ? ['value', 'file' /*, 'mimeTypes' => 'image/*'*/, 'maxFiles' => 10, 'skipOnEmpty' => true] : false,
             ['value', 'safe'],
         ]);
     }

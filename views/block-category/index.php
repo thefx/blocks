@@ -49,7 +49,7 @@ $this->params['title_btn'] = (Yii::$app->user->id == 1) ? $this->render('_modal'
                         'attribute' => 'title',
     //                'label' => '',
                         'format' => 'html',
-                        'value' => function(BlockCategory  $model) use ($category) {
+                        'value' => static function(BlockCategory  $model) use ($category) {
                             if ($model->isFolder()) {
                                 return '<i class="fa fa-folder text-muted position-left"></i> ' . Html::a($model->title, ['index', 'parent_id' => $model->id]);
                             }
@@ -71,10 +71,8 @@ $this->params['title_btn'] = (Yii::$app->user->id == 1) ? $this->render('_modal'
                         'attribute' => 'public',
                         'headerOptions' => ['style' => 'width:85px; text-align:center'],
                         'contentOptions' => ['style' => 'text-align:center'],
-                        'content' => function(BlockCategory $row) {
-                            return $row->public
-                                ? '<span class="label label-success">Да</span>'
-                                : '<span class="label label-default">Нет</span>';
+                        'content' => static function(BlockCategory $row) {
+                            return $row->public ? '<span class="label label-success">Да</span>' : '<span class="label label-default">Нет</span>';
                         }
                     ];
                     break;
@@ -89,7 +87,8 @@ $this->params['title_btn'] = (Yii::$app->user->id == 1) ? $this->render('_modal'
         }
         $columns[] = [
             'class' => 'yii\grid\ActionColumn',
-            'urlCreator' => function($action, BlockCategory $model, $key, $index) use ($category) {
+            'template' => '{update}{delete}',
+            'urlCreator' => static function($action, BlockCategory $model, $key, $index) use ($category) {
                 $params = is_array($key) ? $key : ['id' => (string)$key];
                 $params['parent_id'] = $category->id;
                 $params[0] = ($model->isFolder() ? 'block-category' : 'block-item') . '/' . $action;
@@ -102,7 +101,7 @@ $this->params['title_btn'] = (Yii::$app->user->id == 1) ? $this->render('_modal'
         'dataProvider' => $dataProvider,
 //        'filterModel' => $searchModel,
         'columns' => $columns,
-    ]); ?>
+    ]) ?>
 <!--    --><?php //Pjax::end(); ?>
 
 </div>

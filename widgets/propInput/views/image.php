@@ -21,7 +21,7 @@ $random = uniqid();
 <script>
     document.addEventListener("DOMContentLoaded", function () {
 
-        enableProductDng('#well-<?=$random?> .image-wrapper', <?=$model->id?>);
+        enableImageGalleryDng('#well-<?=$random?> .image-wrapper', <?=$model->id?>);
 
         $('.well-<?=$random?>').on('change', 'input', previewFileWrapper.upload);
     });

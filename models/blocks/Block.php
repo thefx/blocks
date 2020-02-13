@@ -2,8 +2,10 @@
 
 namespace thefx\blocks\models\blocks;
 
+use app\modules\user\models\User;
 use lhs\Yii2SaveRelationsBehavior\SaveRelationsBehavior;
 use thefx\blocks\models\blocks\queries\BlockQuery;
+use yii\behaviors\AttributesBehavior;
 use yii\db\ActiveRecord;
 
 /**
@@ -29,6 +31,8 @@ use yii\db\ActiveRecord;
  * @property array $fieldsCategoryTemplates
  * @property array $defaultFieldsTemplates
  * @property BlockFields[] $fieldsCategory
+ * @property User $createUser
+ * @property User $updateUser
  */
 class Block extends ActiveRecord
 {
@@ -41,6 +45,9 @@ class Block extends ActiveRecord
         $model->settings  = BlockSettings::create();
         $model->translate = BlockTranslate::create();
         $model->category  = BlockCategory::createRoot();
+
+        $model->create_user  = \Yii::$app->user->id;
+        $model->create_date  = date('Y-m-d H:i:s');
 
         return $model;
     }
@@ -150,6 +157,7 @@ class Block extends ActiveRecord
     public function rules()
     {
         return [
+            [['title'], 'required'],
             [['create_user', 'update_user'], 'integer'],
             [['create_date', 'update_date'], 'safe'],
             [['title', 'path', 'table', 'template', 'pagination'], 'string', 'max' => 255],
@@ -205,9 +213,30 @@ class Block extends ActiveRecord
         return $this->hasMany(BlockFields::class, ['block_id' => 'id'])->onCondition(['block_type' => BlockFields::BLOCK_TYPE_CATEGORY]);
     }
 
+    public function getCreateUser()
+    {
+        return $this->hasOne(User::class, ['id' => 'create_user']);
+    }
+
+    public function getUpdateUser()
+    {
+        return $this->hasOne(User::class, ['id' => 'update_user']);
+    }
+
     public function behaviors()
     {
         return [
+            [
+                'class' => AttributesBehavior::class,
+                'attributes' => [
+                    'update_user' => [
+                        ActiveRecord::EVENT_BEFORE_UPDATE => \Yii::$app->user->id,
+                    ],
+                    'update_date' => [
+                        ActiveRecord::EVENT_BEFORE_UPDATE => date('Y-m-d H:i:s'),
+                    ],
+                ],
+            ],
             [
                 'class' => SaveRelationsBehavior::class,
                 'relations' => [

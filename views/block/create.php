@@ -1,10 +1,9 @@
 <?php
 
-use yii\helpers\Html;
-
+use thefx\blocks\models\blocks\Block;
 
 /* @var $this yii\web\View */
-/* @var $model app\shop\entities\Block\Block */
+/* @var $model Block */
 
 $this->title = 'Новый блок';
 $this->params['breadcrumbs'][] = ['label' => 'Блоки', 'url' => ['index']];

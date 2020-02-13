@@ -55,8 +55,8 @@ class BlockProp extends ActiveRecord
             self::TYPE_INT => 'Число',
             self::TYPE_TEXT => 'Текст',
             self::TYPE_LIST => 'Список',
-            self::TYPE_FILE => 'Файл',
-//            self::TYPE_IMAGE => 'Фото',
+//            self::TYPE_FILE => 'Файл',
+            self::TYPE_IMAGE => 'Фото',
 //            self::TYPE_GALLERY => 'Галлерея',
             self::TYPE_RELATIVE_BLOCK_ITEM => 'Связанный блок (элемент)',
             self::TYPE_RELATIVE_BLOCK_CAT => 'Связанный блок (группа)',
@@ -100,13 +100,18 @@ class BlockProp extends ActiveRecord
         return $this->type == self::TYPE_FILE;
     }
 
+    public function isImage()
+    {
+        return $this->type == self::TYPE_IMAGE;
+    }
+
     public function isList()
     {
         return $this->type == self::TYPE_LIST;
     }
 
-    public function beforeValidate()
-    {
+//    public function beforeValidate()
+//    {
 //        var_dump($this->validators);
 //        die;
 
@@ -115,7 +120,6 @@ class BlockProp extends ActiveRecord
 ////                'extensions'=>$this->extensions,
 //        ]);
 //        $validator->validateAttribute($this, $this->attributeName);
-
 
 //        switch ($this->type) {
 //            case self::TYPE_STRING:
@@ -130,8 +134,8 @@ class BlockProp extends ActiveRecord
 //            default:
 //                echo "i не равно 0, 1 или 2";
 //        }
-        return parent::beforeValidate();
-    }
+//        return parent::beforeValidate();
+//    }
 
     public function assignPropElement(BlockPropElem $element)
     {

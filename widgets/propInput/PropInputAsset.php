@@ -10,8 +10,6 @@ use yii\web\View;
  */
 class PropInputAsset extends AssetBundle
 {
-    public $sourcePath = '@thefx\blocks\widgets/propInput/assets';
-
     public $css = [
         'styles.css',
     ];
@@ -33,6 +31,8 @@ class PropInputAsset extends AssetBundle
 
     public function init()
     {
+        $this->sourcePath = __DIR__ . '/assets';
+
         \Yii::$app->view->registerCss('
             .sortable-chosen {outline: 0 !important}
             .sortable-chosen {border: 1px solid #3c8dbc}
@@ -40,7 +40,7 @@ class PropInputAsset extends AssetBundle
         ');
 
 $js = <<<JS
-    function enableProductDng(selector, propAssignmentId)
+    function enableImageGalleryDng(selector, propAssignmentId)
     {
         var el = document.querySelector(selector);
         var sortable = new Sortable(el, {
@@ -61,16 +61,11 @@ $js = <<<JS
                     url: "sort-photo-prop?id=" + propAssignmentId,
                     data: {ids:ids},
                     dataType: "json"
-                }).done(function(data){
-                    
-                }).fail(function() {
-            
                 });
             },
         });
     }
 JS;
-        $this->sourcePath = __DIR__ . '/assets';
 
         /* @see https://github.com/RubaXa/Sortable */
         \Yii::$app->view->registerJs($js, View::POS_END);

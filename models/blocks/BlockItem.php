@@ -98,7 +98,7 @@ class BlockItem extends ActiveRecord
             $isset = false;
             foreach ($this->propAssignments as $assignment) {
                 if ($assignment->isForProp($prop->id)) {
-                    if ($prop->isMulti() && !$prop->isFile()) {
+                    if ($prop->isMulti() && !$prop->isImage()) {
                         $assignment->value = explode(';', $assignment->value);
                     }
 // array
@@ -182,10 +182,10 @@ class BlockItem extends ActiveRecord
             $i = $model->prop_id;
 
             $model->setAttributes($data[$model->formName()][$i]);
-            if ($model->prop->isFile()) {
+            if ($model->prop->isImage()) {
                 $model->value = UploadedFile::getInstances($model, "[$i]value");
             }
-            if ($model->prop->isMulti() && !$model->prop->isFile() && is_array($model->value)) {
+            if ($model->prop->isMulti() && !$model->prop->isImage() && is_array($model->value)) {
                 $model->value = array_filter(array_map(static function ($data) {
                     return (int) $data;
                 }, $model->value));

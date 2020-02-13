@@ -123,7 +123,7 @@ class BlockItemPropAssignments extends ActiveRecord
 
     public function beforeValidate()
     {
-        if ($this->prop->isFile()) {
+        if ($this->prop->isImage()) {
             $config = [
                 'defaultCrop' => [1920, 1200, 'widen'],
                 'crop' => [[250,250,'prev','widen']],
@@ -222,7 +222,7 @@ class BlockItemPropAssignments extends ActiveRecord
 //            $this->prop->isList() ? ['value', 'integer'] : false,
 //            $this->prop->isList() && !$this->prop->isMulti() ? ['value', 'integer'] : false,
 //            $this->prop->isList() && $this->prop->isMulti()? ['value', 'each', 'rule' => ['integer']] : false,
-            $this->prop->isFile() ? ['value', 'file' /*, 'mimeTypes' => 'image/*'*/, 'maxFiles' => 10, 'skipOnEmpty' => true] : false,
+            $this->prop->isImage() ? ['value', 'file' /*, 'mimeTypes' => 'image/*'*/, 'maxFiles' => 10, 'skipOnEmpty' => true] : false,
             ['value', 'safe'],
         ]);
     }

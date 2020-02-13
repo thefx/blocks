@@ -17,6 +17,7 @@ $this->title = $model->title;
 $this->params['breadcrumbs'][] = ['label' => 'Блоки', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
+
 <div class="block-view">
 
     <div class="nav-tabs-custom goods-form">
@@ -38,10 +39,20 @@ $this->params['breadcrumbs'][] = $this->title;
                         'table',
                         'template',
                         'pagination',
-//                        'create_user',
-//                        'create_date',
-//                        'update_user',
-//                        'update_date',
+                        [
+                            'attribute' => 'create_user',
+                            'value' => static function(Block $model) {
+                                return $model->createUser->username;
+                            }
+                        ],
+                        'create_date',
+                        [
+                            'attribute' => 'update_user',
+                            'value' => static function(Block $model) {
+                                return $model->updateUser->username;
+                            }
+                        ],
+                        'update_date',
                     ],
                 ]) ?>
 
@@ -82,50 +93,49 @@ $this->params['breadcrumbs'][] = $this->title;
                     'dataProvider' => $propsDataProvider,
                     'filterModel' => $propsSearchModel,
                     'columns' => [
-//                        ['class' => 'yii\grid\SerialColumn'],
                         [
                             'attribute' => 'id',
                             'headerOptions' => ['style' => 'width:85px; text-align:center'],
                             'contentOptions' => ['style' => 'text-align:center'],
                         ],
-//                        'block_id',
-                        'title',
+                        [
+                            'attribute' => 'title',
+                            'headerOptions' => ['style' => 'width:150px; text-align:center'],
+                            'contentOptions' => ['style' => 'text-align:center'],
+                            'content' => static function(BlockProp $model) {
+                                return Html::a($model->title, ['block-prop/update', 'id' => $model->id], ['data-pjax' => '0']);
+                            }
+                        ],
                         [
                             'attribute' => 'type',
                             'headerOptions' => ['style' => 'width:150px; text-align:center'],
                             'contentOptions' => ['style' => 'text-align:center'],
-                            'content' => function(BlockProp $row) {
-                                return $row->getTypeName($row->type);
+                            'content' => static function(BlockProp $model) {
+                                return $model->getTypeName();
                             }
                         ],
                         [
                             'attribute' => 'public',
                             'headerOptions' => ['style' => 'width:150px; text-align:center'],
                             'contentOptions' => ['style' => 'text-align:center'],
-                            'content' => function(BlockProp $row) {
-                                return $row->public
-                                    ? '<span class="label label-success">Да</span>'
-                                    : '<span class="label label-default">Нет</span>';
+                            'content' => static function(BlockProp $model) {
+                                return $model->public ? '<span class="label label-success">Да</span>' : '<span class="label label-default">Нет</span>';
                             }
                         ],
                         [
                             'attribute' => 'multi',
                             'headerOptions' => ['style' => 'width:150px; text-align:center'],
                             'contentOptions' => ['style' => 'text-align:center'],
-                            'content' => function(BlockProp $row) {
-                                return $row->multi
-                                    ? '<span class="label label-success">Да</span>'
-                                    : '<span class="label label-default">Нет</span>';
+                            'content' => static function(BlockProp $model) {
+                                return $model->multi ? '<span class="label label-success">Да</span>' : '<span class="label label-default">Нет</span>';
                             }
                         ],
                         [
                             'attribute' => 'required',
                             'headerOptions' => ['style' => 'width:150px; text-align:center'],
                             'contentOptions' => ['style' => 'text-align:center'],
-                            'content' => function(BlockProp $row) {
-                                return $row->required
-                                    ? '<span class="label label-success">Да</span>'
-                                    : '<span class="label label-default">Нет</span>';
+                            'content' => static function(BlockProp $model) {
+                                return $model->required ? '<span class="label label-success">Да</span>' : '<span class="label label-default">Нет</span>';
                             }
                         ],
                         [
@@ -133,6 +143,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'headerOptions' => ['style' => 'width:150px; text-align:center'],
                             'contentOptions' => ['style' => 'text-align:center'],
                         ],
+                        //'block_id',
                         //'sort',
                         //'code',
                         //'in_filter',
@@ -142,10 +153,10 @@ $this->params['breadcrumbs'][] = $this->title;
                             'headerOptions' => ['style' => 'width:50px; text-align:center'],
                             'contentOptions' => ['style' => 'text-align:center'],
                             'controller' => 'block-prop',
-                            'visibleButtons' => ['view' => false]
+                            'template' => '{update}{delete}',
                         ],
                     ],
-                ]); ?>
+                ]) ?>
                 <?php Pjax::end(); ?>
 
             </div>

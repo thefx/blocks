@@ -1,10 +1,8 @@
 <?php
 
-use app\shop\entities\Block\BlockCategory;
-use app\shop\entities\Block\BlockItem;
-use app\shop\entities\Block\BlockItemPropAssignments;
+use thefx\blocks\models\blocks\BlockItem;
+use thefx\blocks\models\blocks\BlockItemPropAssignments;
 use yii\helpers\Html;
-use yii\helpers\Url;
 use yii\web\View;
 
 /* @var $model BlockItemPropAssignments */
@@ -23,6 +21,11 @@ $this->registerJs(" $('#{$inputId}').select2(/*{placeholder: '', allowClear: tru
 <div class="form-group">
 
     <?= HTML::label($model->prop->title); ?>
-    <?= Html::activeDropDownList($model, $attributeName, $relBlockItemList, ['class' => 'form-control select2', 'style'=> 'width: 100%;', 'multiple' => $model->prop->isMulti(), 'prompt' => 'Не выбрано']); ?>
+    <?= Html::activeDropDownList($model, $attributeName, $relBlockItemList, [
+        'class' => 'form-control select2',
+        'style'=> 'width: 100%;',
+        'multiple' => $model->prop->isMulti(),
+        'prompt' => ! $model->prop->isMulti() ? 'Не выбрано' : null
+    ]); ?>
 
 </div>

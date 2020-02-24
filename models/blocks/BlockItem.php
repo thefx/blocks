@@ -249,6 +249,7 @@ class BlockItem extends ActiveRecord
     {
         $block = Block::findOne($block_id);
 
+        /** @var BlockCategory $category */
         $category = BlockCategory::find()
             ->where(['block_id' => $block->id])
             ->getRoot()

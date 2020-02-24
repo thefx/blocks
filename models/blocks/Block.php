@@ -2,9 +2,9 @@
 
 namespace thefx\blocks\models\blocks;
 
-use app\modules\user\models\User;
 use lhs\Yii2SaveRelationsBehavior\SaveRelationsBehavior;
 use thefx\blocks\models\blocks\queries\BlockQuery;
+use thefx\user\models\User;
 use yii\behaviors\AttributesBehavior;
 use yii\db\ActiveRecord;
 

@@ -1,16 +1,22 @@
 <?php
 
-use app\shop\forms\Block\BlockFieldsCategoryForm;
 use app\widgets\switcher\SwitchInput;
 use kartik\select2\Select2;
+use thefx\blocks\forms\BlockFieldsCategoryForm;
+use thefx\blocks\models\blocks\Block;
+use thefx\blocks\models\blocks\BlockCategory;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model app\shop\entities\Block\BlockCategory */
+/* @var $model BlockCategory */
+/* @var $block Block */
 /* @var $form yii\widgets\ActiveForm */
 /* @var $modelFieldsForm BlockFieldsCategoryForm */
 
+
+//var_dump($model->getPhoto('photo_preview'));
+//die;
 ?>
 
 <div class="block-category-form">
@@ -43,6 +49,32 @@ use yii\widgets\ActiveForm;
 <!--                --><?//= $form->field($model, 'photo')->textInput(['maxlength' => true]) ?>
 
 <!--                --><?//= $form->field($model, 'photo_preview')->textInput(['maxlength' => true]) ?>
+
+                <?= $form->field($model, 'photo_preview')->widget(\app\widgets\cropper\FileInputCropper::class, [
+                    'cropAttribute'=>'photo_preview_crop',
+                    'cropConfig'=> [
+                        'savePath' => "{$block->settings->upload_path}",
+                        'dir' => "@app/web/upload/{$block->settings->upload_path}/",
+                        'urlDir' => "/{$block->settings->upload_path}",
+                        'defaultCrop' => [
+                            $block->settings->photo_preview_crop_width,
+                            $block->settings->photo_preview_crop_height,
+                            $block->settings->photo_preview_crop_type
+                        ],
+        //                'crop' => [
+        //                    [300, 300, 'min', 'fit'],
+        //                ]
+                    ],
+                    'pluginOptions' => [
+                        'showUpload' => true,
+                        'browseLabel' => '',
+                        'removeLabel' => '',
+                        'mainClass' => 'input-group-lg',
+                        'imagePreview' => $model->getPhoto('photo_preview') ? Html::img($model->getPhoto('photo_preview')) : '',
+                        'imageUrl' => $model->getPhoto('photo') ? $model->getPhoto('photo') : '',
+                    ]
+                ]); ?>
+
 
 <!--                --><?//= $form->field($model, 'date')->textInput() ?>
 

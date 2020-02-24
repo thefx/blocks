@@ -3,6 +3,7 @@
 namespace thefx\blocks\models\blocks;
 
 use app\behaviors\Slug;
+use app\behaviors\UploadImageBehavior5;
 use paulzi\nestedsets\NestedSetsBehavior;
 use paulzi\nestedsets\NestedSetsQueryTrait;
 use thefx\blocks\models\blocks\queries\BlockCategoryQuery;
@@ -46,6 +47,8 @@ use yii\helpers\ArrayHelper;
 class BlockCategory extends ActiveRecord
 {
     public $type;
+    public $photo_preview_crop;
+    public $photo_crop;
 
     const TYPE_FOLDER = 'folder';
     const TYPE_ITEM = 'item';
@@ -76,16 +79,65 @@ class BlockCategory extends ActiveRecord
     {
         $categories = static::find()->where(['block_id' => $this->block_id])->orderBy('lft')->all();
 
-        $arr =  ArrayHelper::map($categories, 'id', function($row) {
+        return ArrayHelper::map($categories, 'id', function($row) {
             return str_repeat('—', $row->depth) . ' ' . $row->title;
         });
-
-        return $arr;
     }
 
     public function getBlock()
     {
         return $this->hasOne(Block::class, ['id' => 'block_id']);
+    }
+
+    public function getPhoto($attribute = 'photo' /* photo_preview */)
+    {
+        return $this->{$attribute} ? '/upload/blocks/' . $this->{$attribute} : '';
+    }
+
+    public function beforeValidate()
+    {
+        $block = Block::findOne($this->block_id);
+
+        $this->attachBehaviors([
+                'photo_preview' => [
+                    'class' => UploadImageBehavior5::class,
+                    'attributeName' => 'photo_preview',
+                    'cropCoordinatesAttrName' => 'photo_preview_crop',
+                    'savePath' => "@app/web/upload/{$block->settings->upload_path}/",
+                    'generateNewName' => static function () {
+                        return date('Y_m_d_His_') . uniqid('', false);
+                    },
+                    'defaultCrop' => [
+                        $block->settings->photo_preview_crop_width,
+                        $block->settings->photo_preview_crop_height,
+                        $block->settings->photo_preview_crop_type
+                    ],
+//                    'crop' => [
+//                        [300, 300, 'min', 'fit'],
+//                    ]
+                ],
+                'photo' => [
+                    'class' => UploadImageBehavior5::class,
+                    'attributeName' => 'photo',
+                    'cropCoordinatesAttrName' => 'photo_crop',
+                    'savePath' => "@app/web/upload/{$block->settings->upload_path}/",
+                    'generateNewName' => static function () {
+                        return date('Y_m_d_His_') . uniqid('', false);
+                    },
+                    'defaultCrop' => [
+                        $block->settings->photo_crop_width,
+                        $block->settings->photo_crop_height,
+                        $block->settings->photo_crop_type
+                    ],
+                    // только для поселков
+                    'crop' => array_filter($block->id == 12 ? [
+                        [640, 1030, 'mobile', 'widen'],
+                    ] : [])
+                ]
+            ]
+        );
+
+        return parent::beforeValidate();
     }
 
     #########################
@@ -134,7 +186,8 @@ class BlockCategory extends ActiveRecord
             [['anons', 'text'], 'string'],
             [['date', 'create_date', 'update_date'], 'safe'],
 //            [['lft', 'rgt', 'depth'], 'required'],
-            [['title', 'path', 'photo', 'photo_preview', 'seo_title', 'seo_keywords', 'seo_description'], 'string', 'max' => 255],
+            [['title', 'path', 'photo_crop', 'photo_preview_crop', 'seo_title', 'seo_keywords', 'seo_description'], 'string', 'max' => 255],
+            [['photo', 'photo_preview'], 'file', 'mimeTypes' => 'image/*'],
         ];
     }
 

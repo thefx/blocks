@@ -1,18 +1,18 @@
 <?php
 
+use app\widgets\cropper\FileInputCropper;
+use app\widgets\switcher\SwitchInput;
+use app\widgets\yii2CkeditorWidget\CKEditor;
+use thefx\blocks\models\blocks\Block;
+use thefx\blocks\models\blocks\BlockItem;
+use thefx\blocks\models\blocks\BlockItemPropAssignments;
+use yii\helpers\Html;
+use yii\jui\DatePicker;
+
 /** @var BlockItem $model */
 /** @var Block $block */
 /** @var BlockItemPropAssignments $form */
 /** @var string $value - field name */
-
-use app\shop\entities\Block\Block;
-use app\shop\entities\Block\BlockItem;
-use app\shop\entities\Block\BlockItemPropAssignments;
-use app\widgets\cropper\FileInputCropper;
-use app\widgets\switcher\SwitchInput;
-use app\widgets\yii2CkeditorWidget\CKEditor;
-use yii\helpers\Html;
-use yii\jui\DatePicker;
 
 $ckEditorOptions = (!$model->isNewRecord) ? [
     'options' => ['rows' => 6],

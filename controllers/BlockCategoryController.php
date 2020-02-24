@@ -2,6 +2,7 @@
 
 namespace thefx\blocks\controllers;
 
+use app\shop\entities\Image\Image;
 use thefx\blocks\forms\BlockFieldsCategoryForm;
 use thefx\blocks\forms\search\BlockCategorySearch;
 use thefx\blocks\models\blocks\Block;
@@ -163,6 +164,14 @@ class BlockCategoryController extends Controller
     {
         $this->findModel($id)->delete();
         return $this->redirect(['block-category/index', 'parent_id' => (int) $_GET['parent_id']]);
+    }
+
+    public function actionDeletePhoto($id, $field)
+    {
+        $model = $this->findModel($id);
+        (new Image())->removeImage($model->{$field});
+        $model->updateAttributes([$field => null]);
+        return $this->redirect(['update', 'id' => $id, 'parent_id' => $model->parent_id]);
     }
 
     /**

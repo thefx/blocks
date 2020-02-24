@@ -1,10 +1,11 @@
 <?php
 
+use thefx\blocks\models\blocks\BlockSettings;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model app\shop\entities\Block\BlockSettings */
+/* @var $model BlockSettings */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
@@ -27,7 +28,7 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'photo_preview_crop_type')->dropDownList($model->listCropTypes()) ?>
 
     <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

@@ -8,7 +8,7 @@ use yii\grid\GridView;
 /* @var $searchModel app\modules\admin\forms\BlockSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Blocks';
+$this->title = 'Разделы';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 

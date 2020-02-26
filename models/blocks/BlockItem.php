@@ -504,6 +504,21 @@ class BlockItem extends ActiveRecord
     }
 
     /**
+     * @param $blockId
+     * @param $slug
+     * @return BlockItem|array
+     */
+    public static function getBySlug($blockId, $slug)
+    {
+        return BlockItem::find()
+            ->with(['propAssignments.prop', 'propAssignments.propElements', 'propsIndexed'])
+            ->where(['path' => $slug])
+            ->andWhere(['block_id' => $blockId])
+            ->active()
+            ->one();
+    }
+
+    /**
      * @inheritdoc
      * @return BlockItemQuery the active query used by this AR class.
      */

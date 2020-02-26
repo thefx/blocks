@@ -60,6 +60,12 @@ class BlockItemPropAssignments extends ActiveRecord
                 }
                 return $this->propElement->title;
                 break;
+            case BlockProp::TYPE_RELATIVE_BLOCK_ITEM:
+                return BlockItem::find()
+                    ->where(['IN', 'id', explode(';', $this->value)])
+                    ->indexBy('id')
+                    ->all();
+                break;
             case BlockProp::TYPE_RELATIVE_BLOCK_CAT:
                 return BlockItem::find()
                     ->with(['propAssignments.prop'])

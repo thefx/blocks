@@ -55,7 +55,7 @@ class BlockProp extends ActiveRecord
             self::TYPE_INT => 'Число',
             self::TYPE_TEXT => 'Текст',
             self::TYPE_LIST => 'Список',
-//            self::TYPE_FILE => 'Файл',
+            self::TYPE_FILE => 'Файл',
             self::TYPE_IMAGE => 'Фото',
 //            self::TYPE_GALLERY => 'Галлерея',
             self::TYPE_RELATIVE_BLOCK_ITEM => 'Связанный блок (элемент)',

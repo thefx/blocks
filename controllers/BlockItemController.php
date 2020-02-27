@@ -185,6 +185,13 @@ class BlockItemController extends Controller
         return $this->redirect(['update', 'id' => $model->blockItem->id, 'parent_id' => $model->blockItem->parent_id]);
     }
 
+    public function actionDeleteFileProp($id, $name)
+    {
+        $model = BlockItemPropAssignments::findOne($id);
+        $model->deleteFile($name);
+        return $this->redirect(['update', 'id' => $model->blockItem->id, 'parent_id' => $model->blockItem->parent_id]);
+    }
+
     public function actionSortPhotoProp($id)
     {
         $ids = array_filter(Yii::$app->request->post('ids', []));

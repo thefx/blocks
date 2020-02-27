@@ -145,6 +145,7 @@ class BlockItemPropAssignments extends ActiveRecord
             }
             $this->attachBehaviorImageUpload($config);
         }
+        // TODO behaviour for upload files
         return parent::beforeValidate();
     }
 
@@ -179,6 +180,16 @@ class BlockItemPropAssignments extends ActiveRecord
 
         $this->save(false) or die(var_dump($this->errors));
         (new Image())->removeImage($fileName);
+        return $this;
+    }
+
+    public function deleteFile($fileName)
+    {
+        $this->value = str_replace($fileName, '', $this->value);
+        $this->value = str_replace(';;', ';', $this->value);
+        $this->value = trim($this->value, ';');
+
+        $this->save(false) or die(var_dump($this->errors));
         return $this;
     }
 

@@ -7,6 +7,9 @@ use yii\base\Behavior;
 use yii\web\UploadedFile;
 use yii\db\ActiveRecord;
 
+/**
+ * @property ActiveRecord $owner
+ */
 class UploadFileBehavior extends Behavior
 {
     /** @var string model file field name */
@@ -64,7 +67,6 @@ class UploadFileBehavior extends Behavior
 
     public function beforeValidate()
     {
-        /** @var ActiveRecord $model */
         $model = $this->owner;
 
         if (is_array($model->getAttribute($this->attributeName))) {
@@ -94,7 +96,6 @@ class UploadFileBehavior extends Behavior
 
     public function beforeUpdate()
     {
-        /** @var ActiveRecord $model */
         $model = $this->owner;
         $this->loadFiles();
 
@@ -111,7 +112,6 @@ class UploadFileBehavior extends Behavior
 
     protected function loadFiles()
     {
-        /** @var ActiveRecord $model */
         $model = $this->owner;
 
         if (is_array($this->files) && !empty($this->files)) {
@@ -160,7 +160,6 @@ class UploadFileBehavior extends Behavior
         if (!$this->deleteOldFiles) {
             return;
         }
-        /** @var ActiveRecord $model */
         $model = $this->owner;
         if (!$oldFileNames = $model->getOldAttribute($this->attributeName)) {
             return;

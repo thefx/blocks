@@ -30,7 +30,7 @@ use Intervention\Image\ImageManager;
  *              'savePath' => '@webroot/uploads',
  *              'generateNewName' => true,
  *              'protectOldValue' => true,
- *              'defaultCrop' =>[width,height,type_crop (fit or widen)],
+ *              'defaultCrop' => [width,height,type_crop (fit or widen)],
  *              'crop'=>[
  *                   [width,height,prefix,type_crop (fit or widen)],
  *                   [300,150,'min','fit'],
@@ -43,6 +43,7 @@ use Intervention\Image\ImageManager;
  *
  * @author HimikLab
  * @author thefx
+ * @property ActiveRecord $owner
  */
 class UploadImageBehavior extends Behavior
 {
@@ -63,7 +64,7 @@ class UploadImageBehavior extends Behavior
 
     /**
      * Базовый кроп
-     *[850,480]
+     * [850,480]
      * @var array
      */
     public $defaultCrop = [];
@@ -123,7 +124,6 @@ class UploadImageBehavior extends Behavior
 
     public function beforeValidate()
     {
-        /** @var ActiveRecord $model */
         $model = $this->owner;
 
         if (is_array($model->getAttribute($this->attributeName))) {
@@ -158,7 +158,6 @@ class UploadImageBehavior extends Behavior
 
     public function beforeUpdate()
     {
-        /** @var ActiveRecord $model */
         $model = $this->owner;
         $this->loadFiles();
 
@@ -178,7 +177,6 @@ class UploadImageBehavior extends Behavior
 
     protected function loadFiles()
     {
-        /** @var ActiveRecord $model */
         $model = $this->owner;
 
         if (is_array($this->files) && !empty($this->files)) {
@@ -227,7 +225,6 @@ class UploadImageBehavior extends Behavior
         if (!$this->deleteOldImages) {
             return;
         }
-        /** @var ActiveRecord $model */
         $model = $this->owner;
         if (!$oldFileNames = $model->getOldAttribute($this->attributeName)) {
             return;

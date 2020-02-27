@@ -16,6 +16,8 @@ class m190201_191727_create_block_item_table extends Migration
 
         $this->createTable('{{%block_item}}', [
             'id' => $this->primaryKey(),
+//            'id' => Schema::TYPE_PK.' NOT NULL AUTO_INCREMENT',
+//            'id' => 'pk',
             'block_id'  => $this->integer()->null(),
             'title' => $this->string(),
             'path' => $this->string(),
@@ -35,6 +37,9 @@ class m190201_191727_create_block_item_table extends Migration
             'update_user' => $this->integer(),
             'update_date' => $this->dateTime(),
         ], $tableOptions);
+
+//        TODO test auto increment
+//        $this->alterColumn('{{%block_item}}', 'id', ' NOT NULL AUTO_INCREMENT');
 
 //        $this->createIndex('block_item_path', '{{%block_item}}', ['path']);
         $this->createIndex('block_item_parent_id_path', '{{%block_item}}', ['parent_id', 'path']);

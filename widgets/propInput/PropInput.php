@@ -36,6 +36,7 @@ class PropInput extends InputWidget
             'form' => $this->field->form,
 //            'form' => $this->field->form,
             'attributeName' => $this->attribute,
+            'unique' => $this->id,
         ]);
     }
 }

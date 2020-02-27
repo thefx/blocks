@@ -2,9 +2,11 @@
 
 namespace thefx\blocks\models\blocks;
 
-use app\behaviors\UploadImageBehavior5;
-use app\shop\entities\Image\Image;
+use thefx\blocks\behaviours\UploadFileBehavior;
+use thefx\blocks\behaviours\UploadImageBehavior;
 use thefx\blocks\models\blocks\queries\BlockItemPropAssignmentsQuery;
+use thefx\blocks\models\files\Files;
+use thefx\blocks\models\images\Images;
 use yii\db\ActiveRecord;
 
 /**
@@ -145,8 +147,36 @@ class BlockItemPropAssignments extends ActiveRecord
             }
             $this->attachBehaviorImageUpload($config);
         }
+
+        if ($this->prop->isFile()) {
+
+            $config = [
+                'deleteOldFiles' => !$this->prop->isMulti(),
+            ];
+
+            $this->attachBehaviorFileUpload($config);
+        }
+
         // TODO behaviour for upload files
         return parent::beforeValidate();
+    }
+
+    private function attachBehaviorFileUpload($config)
+    {
+        /** @var Block $block */
+        $block = Block::findOne($this->prop->block_id);
+        $savePath = $this->prop->upload_path ?: "@app/web/upload/{$block->settings->upload_path}/";
+
+        $this->attachBehavior('value_file', [
+            'class' => UploadFileBehavior::class,
+            'attributeName' => 'value',
+//            'extensions' => 'pdf',
+            'generateNewName' => static function () {
+                return date('Y_m_d_His') . uniqid('', true);
+            },
+            'deleteOldFiles' => $config['deleteOldFiles'],
+            'savePath' => $savePath,
+        ]);
     }
 
     private function attachBehaviorImageUpload($config)
@@ -158,7 +188,7 @@ class BlockItemPropAssignments extends ActiveRecord
         if ($watermark === 'null') { $watermark = null; }
 
         $this->attachBehavior('value_photo', [
-            'class' => UploadImageBehavior5::class,
+            'class' => UploadImageBehavior::class,
             'attributeName' => 'value',
 //            'cropCoordinatesAttrName' => 'value_crop',
             'savePath' => $savePath,
@@ -179,7 +209,7 @@ class BlockItemPropAssignments extends ActiveRecord
         $this->value = trim($this->value, ';');
 
         $this->save(false) or die(var_dump($this->errors));
-        (new Image())->removeImage($fileName);
+        (new Images())->removeImage($fileName);
         return $this;
     }
 
@@ -190,20 +220,31 @@ class BlockItemPropAssignments extends ActiveRecord
         $this->value = trim($this->value, ';');
 
         $this->save(false) or die(var_dump($this->errors));
+        (new Files())->removeFile($fileName);
         return $this;
+    }
+
+    public function getFilesPath()
+    {
+        $url = $this->prop->web_path ?: "@web/upload/{$this->getUploadPath()}";
+        $images = [];
+        foreach ($this->getFilesArray() as $image) {
+            $images[$image] = \Yii::getAlias($url) . '/' . $image;
+        }
+        return $images;
     }
 
     public function getImagesPath()
     {
         $url = $this->prop->web_path ?: "@web/upload/{$this->getUploadPath()}";
         $images = [];
-        foreach ($this->getImages() as $image) {
+        foreach ($this->getFilesArray() as $image) {
             $images[$image] = \Yii::getAlias($url) . '/' . $image;
         }
         return $images;
     }
 
-    public function getImages()
+    public function getFilesArray()
     {
         return !is_array($this->getAttribute('value')) ? array_filter(explode(';', $this->getAttribute('value'))) : [];
     }
@@ -240,6 +281,7 @@ class BlockItemPropAssignments extends ActiveRecord
 //            $this->prop->isList() && !$this->prop->isMulti() ? ['value', 'integer'] : false,
 //            $this->prop->isList() && $this->prop->isMulti()? ['value', 'each', 'rule' => ['integer']] : false,
             $this->prop->isImage() ? ['value', 'file' /*, 'mimeTypes' => 'image/*'*/, 'maxFiles' => 10, 'skipOnEmpty' => true] : false,
+            $this->prop->isFile() ? ['value', 'file' /*, 'mimeTypes' => 'image/*'*/, 'maxFiles' => 10, 'skipOnEmpty' => true] : false,
             ['value', 'safe'],
         ]);
     }

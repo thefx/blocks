@@ -5,6 +5,7 @@ namespace thefx\blocks\models\blocks;
 use app\behaviors\Slug;
 use app\behaviors\UploadImageBehavior5;
 use lhs\Yii2SaveRelationsBehavior\SaveRelationsBehavior;
+use thefx\blocks\behaviours\UploadImageBehavior;
 use thefx\blocks\models\blocks\queries\BlockItemQuery;
 use Yii;
 use yii\db\ActiveRecord;
@@ -98,7 +99,7 @@ class BlockItem extends ActiveRecord
             $isset = false;
             foreach ($this->propAssignments as $assignment) {
                 if ($assignment->isForProp($prop->id)) {
-                    if ($prop->isMulti() && !$prop->isImage()) {
+                    if ($prop->isMulti() && !$prop->isImage() && !$prop->isFile()) {
                         $assignment->value = explode(';', $assignment->value);
                     }
 // array
@@ -185,7 +186,7 @@ class BlockItem extends ActiveRecord
             if ($model->prop->isImage() || $model->prop->isFile()) {
                 $model->value = UploadedFile::getInstances($model, "[$i]value");
             }
-            if ($model->prop->isMulti() && !$model->prop->isImage() && is_array($model->value)) {
+            if (is_array($model->value) && $model->prop->isMulti() && !$model->prop->isImage() && !$model->prop->isFile()) {
                 $model->value = array_filter(array_map(static function ($data) {
                     return (int) $data;
                 }, $model->value));
@@ -247,6 +248,7 @@ class BlockItem extends ActiveRecord
 
     private function createRelCat($block_id)
     {
+        /** @var Block $block */
         $block = Block::findOne($block_id);
 
         /** @var BlockCategory $category */
@@ -272,12 +274,15 @@ class BlockItem extends ActiveRecord
 
     public function beforeValidate()
     {
+        /** @var BlockCategory $category */
         $category = BlockCategory::findOne($this->parent_id);
+
+        /** @var Block $block */
         $block = Block::findOne($category->block_id);
 
         $this->attachBehaviors([
             'photo_preview' => [
-                'class' => UploadImageBehavior5::class,
+                'class' => UploadImageBehavior::class,
                     'attributeName' => 'photo_preview',
                     'cropCoordinatesAttrName' => 'photo_preview_crop',
                     'savePath' => "@app/web/upload/{$block->settings->upload_path}/",
@@ -294,7 +299,7 @@ class BlockItem extends ActiveRecord
 //                    ]
                 ],
                 'photo' => [
-                    'class' => UploadImageBehavior5::class,
+                    'class' => UploadImageBehavior::class,
                     'attributeName' => 'photo',
                     'cropCoordinatesAttrName' => 'photo_crop',
                     'savePath' => "@app/web/upload/{$block->settings->upload_path}/",

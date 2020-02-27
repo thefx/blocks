@@ -2,11 +2,11 @@
 
 namespace thefx\blocks\controllers;
 
-use app\shop\entities\Image\Image;
 use thefx\blocks\forms\BlockFieldsCategoryForm;
 use thefx\blocks\forms\search\BlockCategorySearch;
 use thefx\blocks\models\blocks\Block;
 use thefx\blocks\models\blocks\BlockCategory;
+use thefx\blocks\models\images\Images;
 use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -169,7 +169,7 @@ class BlockCategoryController extends Controller
     public function actionDeletePhoto($id, $field)
     {
         $model = $this->findModel($id);
-        (new Image())->removeImage($model->{$field});
+        (new Images())->removeImage($model->{$field});
         $model->updateAttributes([$field => null]);
         return $this->redirect(['update', 'id' => $id, 'parent_id' => $model->parent_id]);
     }

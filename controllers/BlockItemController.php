@@ -2,13 +2,13 @@
 
 namespace thefx\blocks\controllers;
 
-use app\shop\entities\Image\Image;
 use thefx\blocks\forms\BlockFieldsItemForm;
 use thefx\blocks\forms\search\BlockItemSearch;
 use thefx\blocks\models\blocks\Block;
 use thefx\blocks\models\blocks\BlockCategory;
 use thefx\blocks\models\blocks\BlockItem;
 use thefx\blocks\models\blocks\BlockItemPropAssignments;
+use thefx\blocks\models\images\Images;
 use thefx\blocks\widgets\propInput\PropInputAsset;
 use Yii;
 use yii\web\Controller;
@@ -91,14 +91,14 @@ class BlockItemController extends Controller
                 $model->setAttribute('create_user', Yii::$app->user->id);
                 $model->setAttribute('create_date', date('Y-m-d H:i:s'));
                 $model->save();
-                Yii::$app->session->setFlash('success', $block->translate->block_item . " добавлен");
+                Yii::$app->session->setFlash('success', $block->translate->block_item . ' добавлен');
                 return $this->redirect(['block-category/index', 'parent_id' => $parent_id]);
             }
         }
 
         $modelFieldsForm = new BlockFieldsItemForm($block);
 
-        if ($modelFieldsForm->load(Yii::$app->request->post()) && $modelFieldsForm->validate() && $modelFieldsForm->save()) {
+        if ($modelFieldsForm->load(Yii::$app->request->post()) && $modelFieldsForm->save()) {
             Yii::$app->session->setFlash('success', 'Поля сохранены');
             return $this->refresh();
         }
@@ -141,7 +141,7 @@ class BlockItemController extends Controller
                 $model->setAttribute('update_user', Yii::$app->user->id);
                 $model->setAttribute('update_date', date('Y-m-d H:i:s'));
                 $model->save();
-                Yii::$app->session->setFlash('success', $block->translate->block_item . " обновлен");
+                Yii::$app->session->setFlash('success', $block->translate->block_item . ' обновлен');
                 return $this->redirect(['block-category/index', 'parent_id' => $parent_id]);
             }
         }
@@ -166,7 +166,7 @@ class BlockItemController extends Controller
     public function actionDeletePhoto($id, $field)
     {
         $model = $this->findModel($id);
-        (new Image())->removeImage($model->{$field});
+        (new Images())->removeImage($model->{$field});
         $model->updateAttributes([$field => null]);
         return $this->redirect(['update', 'id' => $id, 'parent_id' => $model->parent_id]);
     }
@@ -222,13 +222,8 @@ class BlockItemController extends Controller
         $parentId = $model->parent_id;
         $elementName = $block->translate->block_item;
         $model->delete();
-        Yii::$app->session->setFlash('success', $elementName . " удален");
+        Yii::$app->session->setFlash('success', $elementName . ' удален');
         return $this->redirect(['block-category/index', 'parent_id' => $parentId]);
-    }
-
-    public function saveFields()
-    {
-
     }
 
     /**

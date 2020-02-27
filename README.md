@@ -79,7 +79,7 @@ Modify your application configuration:
 ```
 return [
     'modules' => [
-        'blocks-manage' => [
+        'blocks' => [
             'class' => 'thefx\blocks\Module',
             'layout' => 'page',
             'layoutPath' => '@app/modules/admin/layouts',
@@ -105,5 +105,5 @@ php yii migrate/fresh --migrationPath=@thefx/blocks/migrations
 Create block
 
 ```
-http://site.com/blocks-manage/block
+http://site.com/blocks/block
 ```

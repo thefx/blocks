@@ -31,7 +31,7 @@ use yii\widgets\Pjax;
         <li class="active"><a data-toggle="tab" href="#tab_main">Общая информация</a></li>
         <li><a data-toggle="tab" href="#tab_type_list">Тип: список</a></li>
         <li><a data-toggle="tab" href="#tab_type_rel">Тип: Связанный блок</a></li>
-        <li><a data-toggle="tab" href="#tab_type_file">Тип: Файл</a></li>
+<!--        <li><a data-toggle="tab" href="#tab_type_file">Тип: Файл</a></li>-->
         <li><a data-toggle="tab" href="#tab_extra">Прочее</a></li>
     </ul>
     <div class="tab-content">
@@ -166,15 +166,15 @@ use yii\widgets\Pjax;
             <?= $form->field($model, 'relative_block_cat')->dropDownList($model->getBlocksList(), ['prompt'=>'Значение не выбрано']) ?>
 
         </div>
-        <div id="tab_type_file" class="tab-pane">
-
-            <?= $form->field($model, 'upload_path')->textInput() ?>
-
-            <?= $form->field($model, 'watermark_path')->textInput() ?>
-
-            <?= $form->field($model, 'web_path')->textInput() ?>
-
-        </div>
+<!--        <div id="tab_type_file" class="tab-pane">-->
+<!---->
+<!--            --><?//= $form->field($model, 'upload_path')->textInput() ?>
+<!---->
+<!--            --><?//= $form->field($model, 'watermark_path')->textInput() ?>
+<!---->
+<!--            --><?//= $form->field($model, 'web_path')->textInput() ?>
+<!---->
+<!--        </div>-->
         <div id="tab_extra" class="tab-pane">
 
             <?= $form->field($model, 'hint')->textInput(['maxlength' => true]) ?>

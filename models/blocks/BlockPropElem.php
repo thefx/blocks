@@ -37,7 +37,7 @@ class BlockPropElem extends ActiveRecord
     public function rules()
     {
         return [
-            [[/*'block_prop_id',*/ 'title', /*'code',*/ 'sort'], 'required'],
+            [[/*'block_prop_id',*/ 'title', /*'code', 'sort'*/], 'required'],
             [['block_prop_id', 'sort', 'default'], 'integer'],
             [['title', 'code'], 'string', 'max' => 255],
         ];

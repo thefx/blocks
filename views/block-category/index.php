@@ -44,6 +44,22 @@ $this->params['title_btn'] = (Yii::$app->user->id == 1) ? $this->render('_modal'
         $columns = [];
         foreach ($block->getFieldsCategoryTemplates() as $item) {
             switch ($item['value']) {
+                case 'photo_preview':
+                case 'photo':
+                    $columns[] = [
+                        'attribute' => 'photo_preview',
+                        'headerOptions' => ['style' => 'width:140px; text-align:center'],
+                        'contentOptions' => ['style' => 'width:140px; text-align:center'],
+                        'format' => 'html',
+                        'value' => static function(BlockCategory  $model) use ($category, $item) {
+                            $img = Html::img($model->getPhoto($item['value']), ['style' => 'max-width:100px; max-height:100px']);
+                            if ($model->isFolder()) {
+                                return '<i class="fa fa-folder text-muted position-left"></i> ' . Html::a($img, ['index', 'parent_id' => $model->id]);
+                            }
+                            return Html::a($img, ['block-item/update', 'id' => $model->id, 'parent_id' => $category->id]);
+                        },
+                    ];
+                    break;
                 case 'title':
                     $columns[] = [
                         'attribute' => 'title',
@@ -57,6 +73,13 @@ $this->params['title_btn'] = (Yii::$app->user->id == 1) ? $this->render('_modal'
                         },
                     ];
                     break;
+                case 'sort':
+                    $columns[] = [
+                        'attribute' => 'sort',
+                        'headerOptions' => ['style' => 'width:85px; text-align:center'],
+                        'contentOptions' => ['style' => 'text-align:center'],
+                    ];
+                    break;
                 case 'date':
                     $columns[] = 'date';
                     break;
@@ -64,7 +87,12 @@ $this->params['title_btn'] = (Yii::$app->user->id == 1) ? $this->render('_modal'
                     $columns[] = 'anons';
                     break;
                 case 'text':
-                    $columns[] = 'text';
+                    $columns[] = [
+                        'attribute' => 'text',
+                        'content' => static function(BlockCategory $row) {
+                            return strip_tags($row->text);
+                        }
+                    ];
                     break;
                 case 'public':
                     $columns[] = [

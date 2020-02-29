@@ -224,6 +224,7 @@ class BlockCategory extends ActiveRecord
             'update_user' => 'Редактировал',
             'update_date' => 'Дата редактирования',
             'public' => 'Активность',
+            'sort' => 'Сортировка',
         ];
     }
 

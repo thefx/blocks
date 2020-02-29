@@ -20,7 +20,7 @@ class BlockCategorySearch extends BlockCategory
     public function rules()
     {
         return [
-            [['id', 'block_id', 'parent_id', 'lft', 'rgt', 'depth', 'create_user', 'update_user', 'public'], 'integer'],
+            [['id', 'block_id', 'parent_id', 'lft', 'rgt', 'depth', 'create_user', 'update_user', 'public', 'sort'], 'integer'],
             [['title', 'path', 'anons', 'text', 'photo', 'photo_preview', 'date', 'create_date', 'update_date'], 'safe'],
         ];
     }
@@ -48,7 +48,24 @@ class BlockCategorySearch extends BlockCategory
      */
     public function search($params)
     {
-        $commonFields = ['id', 'title', 'anons', 'text', 'parent_id', 'block_id', 'public', 'anons', 'date', 'create_user', 'create_date', 'update_user', 'update_date'];
+        $commonFields = [
+            'id',
+            'title',
+            'anons',
+            'text',
+            'parent_id',
+            'block_id',
+            'public',
+            'anons',
+            'date',
+            'create_user',
+            'create_date',
+            'update_user',
+            'update_date',
+            'photo_preview',
+            'photo',
+            'sort',
+        ];
 
         $this->load($params);
 
@@ -88,6 +105,7 @@ class BlockCategorySearch extends BlockCategory
                     'title',
                     'anons',
                     'date',
+                    'sort',
                     'type' => [
                         'asc' => ['type' => SORT_ASC],
                         'desc' => ['type' => SORT_DESC],

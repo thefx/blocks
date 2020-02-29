@@ -9,6 +9,7 @@
     background: #eee;
     display: flex;
     align-items: center;
+    justify-content: center;
 }
 .thumbnail img{
     width:100%;

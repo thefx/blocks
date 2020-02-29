@@ -39,19 +39,9 @@ $this->params['breadcrumbs'][] = $this->title;
                         'table',
                         'template',
                         'pagination',
-                        [
-                            'attribute' => 'create_user',
-                            'value' => static function(Block $model) {
-                                return $model->createUser->username;
-                            }
-                        ],
+                        'create_user',
                         'create_date',
-                        [
-                            'attribute' => 'update_user',
-                            'value' => static function(Block $model) {
-                                return $model->updateUser->username;
-                            }
-                        ],
+                        'update_user',
                         'update_date',
                     ],
                 ]) ?>

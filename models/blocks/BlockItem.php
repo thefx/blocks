@@ -2,9 +2,8 @@
 
 namespace thefx\blocks\models\blocks;
 
-use app\behaviors\Slug;
-use app\behaviors\UploadImageBehavior5;
 use lhs\Yii2SaveRelationsBehavior\SaveRelationsBehavior;
+use thefx\blocks\behaviours\Slug;
 use thefx\blocks\behaviours\UploadImageBehavior;
 use thefx\blocks\models\blocks\queries\BlockItemQuery;
 use Yii;
@@ -433,11 +432,7 @@ class BlockItem extends ActiveRecord
     public function behaviors()
     {
         return [
-            'slug' => [
-                'class' => Slug::class,
-                'in_attribute' => 'title',
-                'out_attribute' => 'path'
-            ],
+            Slug::class,
             [
                 'class' => SaveRelationsBehavior::class,
                 'relations' => [

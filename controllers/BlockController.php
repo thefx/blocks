@@ -132,7 +132,7 @@ class BlockController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Block::find()->with(['createUser', 'updateUser'])->where(['id' => $id])->one()) !== null) {
+        if (($model = Block::find()->where(['id' => $id])->one()) !== null) {
             return $model;
         }
 

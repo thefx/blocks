@@ -2,14 +2,14 @@
 
 namespace thefx\blocks\models\blocks\queries;
 
-use app\shop\entities\Block\BlockItem;
+use thefx\blocks\models\blocks\BlockItem;
 use yii\db\ActiveQuery;
 use yii\web\NotFoundHttpException;
 
 /**
  * This is the ActiveQuery class for [[\app\shop\entities\Block\BlockItem]].
  *
- * @see \app\shop\entities\Block\BlockItem
+ * @see \thefx\blocks\models\blocks\BlockItem
  */
 class BlockItemQuery extends ActiveQuery
 {

@@ -39,6 +39,9 @@ class BlockItemPropAssignments extends ActiveRecord
             case BlockProp::TYPE_INT:
                 return $this->value;
                 break;
+            case BlockProp::TYPE_IMAGE:
+                return $this->prop->multi ? explode(';', $this->value) : $this->value;
+                break;
             case BlockProp::TYPE_FILE:
 //                $titles = [];
 //                if ($this->prop->multi) {
@@ -47,7 +50,7 @@ class BlockItemPropAssignments extends ActiveRecord
 //                    }
 //                    return $titles;
 //                }
-                return explode(';', $this->value);
+                return $this->prop->multi ? explode(';', $this->value) : $this->value;
                 break;
             case BlockProp::TYPE_LIST:
                 $titles = [];

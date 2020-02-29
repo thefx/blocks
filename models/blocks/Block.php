@@ -3,6 +3,7 @@
 namespace thefx\blocks\models\blocks;
 
 use lhs\Yii2SaveRelationsBehavior\SaveRelationsBehavior;
+use thefx\blocks\behaviours\Slug;
 use thefx\blocks\models\blocks\queries\BlockQuery;
 use thefx\user\models\User;
 use yii\behaviors\AttributesBehavior;
@@ -213,19 +214,10 @@ class Block extends ActiveRecord
         return $this->hasMany(BlockFields::class, ['block_id' => 'id'])->onCondition(['block_type' => BlockFields::BLOCK_TYPE_CATEGORY]);
     }
 
-    public function getCreateUser()
-    {
-        return $this->hasOne(User::class, ['id' => 'create_user']);
-    }
-
-    public function getUpdateUser()
-    {
-        return $this->hasOne(User::class, ['id' => 'update_user']);
-    }
-
     public function behaviors()
     {
         return [
+            Slug::class,
             [
                 'class' => AttributesBehavior::class,
                 'attributes' => [

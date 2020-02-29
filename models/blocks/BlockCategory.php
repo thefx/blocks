@@ -3,9 +3,9 @@
 namespace thefx\blocks\models\blocks;
 
 use app\behaviors\Slug;
-use app\behaviors\UploadImageBehavior5;
 use paulzi\nestedsets\NestedSetsBehavior;
 use paulzi\nestedsets\NestedSetsQueryTrait;
+use thefx\blocks\behaviours\UploadImageBehavior;
 use thefx\blocks\models\blocks\queries\BlockCategoryQuery;
 use Yii;
 use yii\db\ActiveRecord;
@@ -37,6 +37,7 @@ use yii\helpers\ArrayHelper;
  * @property int $public
  * @property BlockFields[] $fields
  * @property Block $block
+ * @property BlockItem[] $items
  *
  * @mixin NestedSetsBehavior
  * @mixin NestedSetsQueryTrait
@@ -84,6 +85,11 @@ class BlockCategory extends ActiveRecord
         });
     }
 
+    public function getItems()
+    {
+        return $this->hasMany(BlockItem::class, ['parent_id' => 'id']);
+    }
+
     public function getBlock()
     {
         return $this->hasOne(Block::class, ['id' => 'block_id']);
@@ -100,7 +106,7 @@ class BlockCategory extends ActiveRecord
 
         $this->attachBehaviors([
                 'photo_preview' => [
-                    'class' => UploadImageBehavior5::class,
+                    'class' => UploadImageBehavior::class,
                     'attributeName' => 'photo_preview',
                     'cropCoordinatesAttrName' => 'photo_preview_crop',
                     'savePath' => "@app/web/upload/{$block->settings->upload_path}/",
@@ -117,7 +123,7 @@ class BlockCategory extends ActiveRecord
 //                    ]
                 ],
                 'photo' => [
-                    'class' => UploadImageBehavior5::class,
+                    'class' => UploadImageBehavior::class,
                     'attributeName' => 'photo',
                     'cropCoordinatesAttrName' => 'photo_crop',
                     'savePath' => "@app/web/upload/{$block->settings->upload_path}/",

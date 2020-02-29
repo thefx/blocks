@@ -1,7 +1,7 @@
 <?php
 
-use app\shop\entities\Block\BlockItemPropAssignments;
 use app\widgets\yii2CkeditorWidget\CKEditor;
+use thefx\blocks\models\blocks\BlockItemPropAssignments;
 use yii\helpers\Html;
 
 /* @var $model BlockItemPropAssignments */

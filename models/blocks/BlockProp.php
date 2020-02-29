@@ -214,7 +214,7 @@ class BlockProp extends ActiveRecord
     {
         return [
             [['block_id', 'code', 'sort'], 'required'],
-            [['block_id', 'public', 'multi', 'required', 'sort', 'in_filter', 'relative_block_item', 'relative_block_cat'], 'integer'],
+            [['block_id', 'public', 'multi', 'required', 'sort', 'in_filter', 'relative_block_item', 'relative_block_cat', 'redactor'], 'integer'],
             [['title', 'type', 'code', 'hint'], 'string', 'max' => 255],
             [['upload_path', 'watermark_path', 'web_path'], 'string'],
         ];
@@ -242,6 +242,7 @@ class BlockProp extends ActiveRecord
             'upload_path' => 'Путь для загрузки (если отличается от стандартного)',
             'watermark_path' => 'Путь для фонового изображения (если отличается от стандартного)',
             'web_path' => 'Url папки загрузки (если отличается от стандартного)',
+            'redactor' => 'Редактор',
         ];
     }
 

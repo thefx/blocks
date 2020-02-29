@@ -24,6 +24,87 @@ use yii\widgets\Pjax;
 //        'options' => ['data-pjax'=>true]
 ]); ?>
 
+<script>
+
+    // For props elements
+    document.addEventListener("DOMContentLoaded", function () {
+
+        var index = <?=count($model->elements) -1 ?>;
+        var $elem = $('.prop-elem');
+
+        $elem.find('tr').each(function (e) {
+            index = index < e ? e : index;
+        });
+
+        function addNewElem(target, i)
+        {
+            $.ajax({
+                'type': 'GET',
+                'url': '<?= Url::to(['get-elem']) ?>',
+                data:{
+                    ajax:true,
+                    //prop_id:<?//=$model->id?>//,
+                    index:i,
+                },
+                dataType: "html"
+            }).done(function(data){
+                target.find('tbody').append('<tr data-index="' + i + '">' + data + '</tr>');
+                index++;
+            });
+        }
+
+        function delElem(e)
+        {
+            console.log(e);
+        }
+
+        $elem.on('click', '.btn.add-item', function (e) {
+            addNewElem($(e.delegateTarget), index);
+        });
+
+        $elem.on('click', '.btn.del-item', function (e) {
+            e.preventDefault();
+            $(e.target).parents('tr').remove();
+        });
+
+        // Sortable
+
+        document.querySelectorAll('.items-sortable').forEach(function (el) {
+            Sortable.create(el, {
+                draggable: "tr",
+                handle: ".handle",
+            });
+        });
+
+        // Default checkbox
+        $('.items-sortable').on('change', '.default_value', function (e) {
+
+            $(e.delegateTarget).find('.default_value').each(function (index, element) {
+                if (e.target !== element) {
+                    element.checked = false;
+                }
+            });
+            e.target.checked = true;
+
+        });
+
+    });
+
+</script>
+
+<style>
+    .help-block {
+        margin: 0;
+    }
+    .table-prop-items td {
+        vertical-align: middle !important;
+    }
+    .table-prop-items .form-group {
+        margin: 0;
+    }
+</style>
+
+
 <?= $form->errorSummary($model, ['class' => 'alert alert-danger']); ?>
 
 <div class="nav-tabs-custom block-prop-form">
@@ -31,6 +112,7 @@ use yii\widgets\Pjax;
         <li class="active"><a data-toggle="tab" href="#tab_main">Общая информация</a></li>
         <li><a data-toggle="tab" href="#tab_type_list">Тип: список</a></li>
         <li><a data-toggle="tab" href="#tab_type_rel">Тип: Связанный блок</a></li>
+        <li><a data-toggle="tab" href="#tab_type_text">Тип: Текст</a></li>
 <!--        <li><a data-toggle="tab" href="#tab_type_file">Тип: Файл</a></li>-->
         <li><a data-toggle="tab" href="#tab_extra">Прочее</a></li>
     </ul>
@@ -51,85 +133,6 @@ use yii\widgets\Pjax;
 
         </div>
         <div id="tab_type_list" class="tab-pane">
-
-            <script>
-
-                document.addEventListener("DOMContentLoaded", function () {
-
-                    var index = <?=count($model->elements) -1 ?>;
-                    var $elem = $('.prop-elem');
-
-                    $elem.find('tr').each(function (e) {
-                        index = index < e ? e : index;
-                    });
-
-                    function addNewElem(target, i)
-                    {
-                        $.ajax({
-                            'type': 'GET',
-                            'url': '<?= Url::to(['get-elem']) ?>',
-                            data:{
-                                ajax:true,
-                                //prop_id:<?//=$model->id?>//,
-                                index:i,
-                            },
-                            dataType: "html"
-                        }).done(function(data){
-                            target.find('tbody').append('<tr data-index="' + i + '">' + data + '</tr>');
-                            index++;
-                        });
-                    }
-
-                    function delElem(e)
-                    {
-                        console.log(e);
-                    }
-
-                    $elem.on('click', '.btn.add-item', function (e) {
-                        addNewElem($(e.delegateTarget), index);
-                    });
-
-                    $elem.on('click', '.btn.del-item', function (e) {
-                        e.preventDefault();
-                        $(e.target).parents('tr').remove();
-                    });
-
-                    // Sortable
-
-                    document.querySelectorAll('.items-sortable').forEach(function (el) {
-                        Sortable.create(el, {
-                            draggable: "tr",
-                            handle: ".handle",
-                        });
-                    });
-
-                    // Default checkbox
-                    $('.items-sortable').on('change', '.default_value', function (e) {
-
-                        $(e.delegateTarget).find('.default_value').each(function (index, element) {
-                            if (e.target !== element) {
-                                element.checked = false;
-                            }
-                        });
-                        e.target.checked = true;
-
-                    });
-
-                });
-
-            </script>
-
-            <style>
-                .help-block {
-                     margin: 0;
-                }
-                .table-prop-items td {
-                    vertical-align: middle !important;
-                }
-                .table-prop-items .form-group {
-                    margin: 0;
-                }
-            </style>
 
             <div class="prop-elem">
 
@@ -157,6 +160,11 @@ use yii\widgets\Pjax;
                     </table>
                     <div class="btn btn-default add-item">Добавить пункт</div>
             </div>
+
+        </div>
+        <div id="tab_type_text" class="tab-pane">
+
+            <?= $form->field($model, 'redactor')->widget(SwitchInput::class) ?>
 
         </div>
         <div id="tab_type_rel" class="tab-pane">

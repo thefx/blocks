@@ -31,6 +31,17 @@ if ($parents) {
 $this->params['breadcrumbs'][] = $this->title;
 $this->params['title_btn'] = (Yii::$app->user->id == 1) ? $this->render('_modal', ['modelFieldsForm' => $modelFieldsForm]) : null; ?>
 
+<style>
+    .table > thead > tr > th,
+    .table > tbody > tr > th,
+    .table > tfoot > tr > th,
+    .table > thead > tr > td,
+    .table > tbody > tr > td,
+    .table > tfoot > tr > td {
+        vertical-align:middle
+    }
+</style>
+
 <div class="block-category-index">
 
 <!--    --><?php //Pjax::begin(); ?>
@@ -53,10 +64,8 @@ $this->params['title_btn'] = (Yii::$app->user->id == 1) ? $this->render('_modal'
                         'format' => 'html',
                         'value' => static function(BlockCategory  $model) use ($category, $item) {
                             $img = Html::img($model->getPhoto($item['value']), ['style' => 'max-width:100px; max-height:100px']);
-                            if ($model->isFolder()) {
-                                return '<i class="fa fa-folder text-muted position-left"></i> ' . Html::a($img, ['index', 'parent_id' => $model->id]);
-                            }
-                            return Html::a($img, ['block-item/update', 'id' => $model->id, 'parent_id' => $category->id]);
+                            $url = $model->isFolder() ? ['index', 'parent_id' => $model->id] : ['block-item/update', 'id' => $model->id, 'parent_id' => $category->id];
+                            return Html::a($img, $url);
                         },
                     ];
                     break;
@@ -84,7 +93,12 @@ $this->params['title_btn'] = (Yii::$app->user->id == 1) ? $this->render('_modal'
                     $columns[] = 'date';
                     break;
                 case 'anons':
-                    $columns[] = 'anons';
+                    $columns[] = [
+                        'attribute' => 'anons',
+                        'content' => static function(BlockCategory $row) {
+                            return strip_tags($row->anons);
+                        }
+                    ];
                     break;
                 case 'text':
                     $columns[] = [

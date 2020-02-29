@@ -1,7 +1,6 @@
 <?php
 
-use app\shop\entities\Block\BlockItemPropAssignments;
-use app\shop\entities\Block\BlockPropElem;
+use thefx\blocks\models\blocks\BlockItemPropAssignments;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\web\View;

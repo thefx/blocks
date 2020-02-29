@@ -167,7 +167,7 @@ class BlockProp extends ActiveRecord
 
     public function getElements()
     {
-        return $this->hasMany(BlockPropElem::class, ['block_prop_id' => 'id'])->orderBy('sort');
+        return $this->hasMany(BlockPropElem::class, ['block_prop_id' => 'id'])->orderBy('id DESC');
     }
 
     public function getAssignments()
@@ -181,6 +181,7 @@ class BlockProp extends ActiveRecord
             ->select(['id', 'title'])
             ->where(['block_id' => $this->relative_block_item])
             ->andWhere(['public' => 1])
+            ->orderBy('sort DESC, id DESC')
             ->all();
 
         return ArrayHelper::map($items, 'id', static function (BlockItem $row) { return '[' . $row->id . '] ' . $row->title; });

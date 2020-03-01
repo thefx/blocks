@@ -134,7 +134,11 @@ $this->params['breadcrumbs'][] = $this->title;
                             'contentOptions' => ['style' => 'text-align:center'],
                         ],
                         //'block_id',
-                        //'sort',
+                        [
+                            'attribute' => 'sort',
+                            'headerOptions' => ['style' => 'width:75px; text-align:center'],
+                            'contentOptions' => ['style' => 'text-align:center'],
+                        ],
                         //'code',
                         //'in_filter',
                         //'hint',

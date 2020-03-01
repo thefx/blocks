@@ -457,10 +457,10 @@ class BlockItem extends ActiveRecord
     {
         return [
             [['block_id', 'parent_id', 'sort'], 'required'],
-            [['text'], 'string'],
+            [['anons', 'text'], 'string'],
             [['date', 'create_date', 'update_date'], 'safe'],
             [['parent_id', 'public', 'sort', 'create_user', 'update_user'], 'integer'],
-            [['title', 'path', 'anons', 'photo_crop', 'photo_preview_crop', 'seo_title', 'seo_keywords', 'seo_description'], 'string', 'max' => 255],
+            [['title', 'path', 'photo_crop', 'photo_preview_crop', 'seo_title', 'seo_keywords', 'seo_description'], 'string', 'max' => 255],
             [['photo', 'photo_preview'], 'file', 'mimeTypes' => 'image/*'],
         ];
     }

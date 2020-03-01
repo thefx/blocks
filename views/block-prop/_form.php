@@ -1,14 +1,16 @@
 <?php
 
 use app\widgets\switcher\SwitchInput;
+use thefx\blocks\models\blocks\BlockProp;
+use thefx\blocks\models\blocks\BlockPropElem;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 use yii\widgets\Pjax;
 
 /* @var $this yii\web\View */
-/* @var $model app\shop\entities\Block\BlockProp */
-/* @var $elem app\shop\entities\Block\BlockPropElem[] */
+/* @var $model BlockProp */
+/* @var $elem BlockPropElem[] */
 /* @var $form yii\widgets\ActiveForm */
 
 \app\assets\Plugins\SortableJs\SortableJsAsset::register($this);

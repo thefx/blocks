@@ -7,6 +7,7 @@ use thefx\blocks\forms\search\BlockPropSearch;
 use thefx\blocks\models\blocks\BlockProp;
 use thefx\blocks\models\blocks\BlockPropElem;
 use Yii;
+use yii\base\InvalidConfigException;
 use yii\base\Module;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -74,7 +75,7 @@ class BlockPropController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @param $block_id
      * @return mixed
-     * @throws \yii\base\InvalidConfigException
+     * @throws InvalidConfigException
      */
     public function actionCreate($block_id)
     {
@@ -106,7 +107,7 @@ class BlockPropController extends Controller
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
-     * @throws \yii\base\InvalidConfigException
+     * @throws InvalidConfigException
      *
      * @see https://packagist.org/packages/unclead/yii2-multiple-input
      */

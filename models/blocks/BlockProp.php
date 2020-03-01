@@ -47,6 +47,7 @@ class BlockProp extends ActiveRecord
     const TYPE_GALLERY = 'gallery';
     const TYPE_RELATIVE_BLOCK_ITEM = 'relative_block_item';
     const TYPE_RELATIVE_BLOCK_CAT = 'relative_block_cat';
+    const TYPE_SWITCHER = 'switcher';
 
     public function getTypes()
     {
@@ -57,6 +58,7 @@ class BlockProp extends ActiveRecord
             self::TYPE_LIST => 'Список',
             self::TYPE_FILE => 'Файл',
             self::TYPE_IMAGE => 'Фото',
+            self::TYPE_SWITCHER => 'Переключатель',
 //            self::TYPE_GALLERY => 'Галлерея',
             self::TYPE_RELATIVE_BLOCK_ITEM => 'Связанный блок (элемент)',
             self::TYPE_RELATIVE_BLOCK_CAT => 'Связанный блок (группа)',
@@ -216,7 +218,7 @@ class BlockProp extends ActiveRecord
         return [
             [['block_id', 'code', 'sort'], 'required'],
             [['block_id', 'public', 'multi', 'required', 'sort', 'in_filter', 'relative_block_item', 'relative_block_cat', 'redactor'], 'integer'],
-            [['title', 'type', 'code', 'hint'], 'string', 'max' => 255],
+            [['title', 'type', 'code', 'hint', 'default_value'], 'string', 'max' => 255],
             [['upload_path', 'watermark_path', 'web_path'], 'string'],
         ];
     }
@@ -244,6 +246,7 @@ class BlockProp extends ActiveRecord
             'watermark_path' => 'Путь для фонового изображения (если отличается от стандартного)',
             'web_path' => 'Url папки загрузки (если отличается от стандартного)',
             'redactor' => 'Редактор',
+            'default_value' => 'Значение по умолчанию (Для Переключателя - 0 или 1)',
         ];
     }
 

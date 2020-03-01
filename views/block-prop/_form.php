@@ -189,9 +189,12 @@ use yii\widgets\Pjax;
 
             <?= $form->field($model, 'hint')->textInput(['maxlength' => true]) ?>
 
+            <?= $form->field($model, 'default_value')->textInput() ?>
+
             <?= $form->field($model, 'sort')->textInput() ?>
 
             <?= $form->field($model, 'in_filter')->widget(SwitchInput::class) ?>
+
 
         </div>
         </div>

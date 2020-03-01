@@ -99,6 +99,7 @@ class BlockCategoryController extends Controller
         $model = new BlockCategory([
             'block_id' => $block->id,
             'parent_id' => $parent_id,
+            'sort' => 100,
         ]);
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {

@@ -88,6 +88,8 @@ use yii\widgets\ActiveForm;
 
                 <?= $form->field($model, 'public')->widget(SwitchInput::class) ?>
 
+                <?= $form->field($model, 'sort')->textInput() ?>
+
             </div>
             <div id="tab_detail" class="tab-pane"></div>
             <div id="tab_relations" class="tab-pane"></div>

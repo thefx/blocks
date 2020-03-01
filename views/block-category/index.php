@@ -130,6 +130,8 @@ $this->params['title_btn'] = (Yii::$app->user->id == 1) ? $this->render('_modal'
         $columns[] = [
             'class' => 'yii\grid\ActionColumn',
             'template' => '{update}{delete}',
+            'headerOptions' => ['style' => 'width:40px; text-align:center'],
+            'contentOptions' => ['style' => 'text-align:center'],
             'urlCreator' => static function($action, BlockCategory $model, $key, $index) use ($category) {
                 $params = is_array($key) ? $key : ['id' => (string)$key];
                 $params['parent_id'] = $category->id;

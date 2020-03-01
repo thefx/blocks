@@ -188,7 +188,7 @@ class BlockCategory extends ActiveRecord
     {
         return [
             [['title'], 'required'],
-            [['block_id', 'parent_id', 'lft', 'rgt', 'depth', 'create_user', 'update_user', 'public'], 'integer'],
+            [['block_id', 'parent_id', 'lft', 'rgt', 'depth', 'create_user', 'update_user', 'public', 'sort'], 'integer'],
             [['anons', 'text'], 'string'],
             [['date', 'create_date', 'update_date'], 'safe'],
 //            [['lft', 'rgt', 'depth'], 'required'],

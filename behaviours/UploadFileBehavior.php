@@ -75,7 +75,11 @@ class UploadFileBehavior extends Behavior
                 return true;
             }
             $this->files = UploadedFile::getInstances($model, $this->attributeName);
-            $model->setAttribute($this->attributeName, $this->files);
+            if (!empty($this->files)) {
+                $model->setAttribute($this->attributeName, $this->files);
+                return true;
+            }
+            $model->setAttribute($this->attributeName, null);
             return true;
         }
 

@@ -4,6 +4,8 @@ namespace thefx\blocks;
 
 class Module extends \yii\base\Module
 {
+    public $rootUsers = [];
+
     /**
      * @inheritdoc
      */

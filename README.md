@@ -83,6 +83,7 @@ return [
             'class' => 'thefx\blocks\Module',
             'layout' => 'page',
             'layoutPath' => '@app/modules/admin/layouts',
+            'rootUsers' => [1],
         ...
         ]
         ...

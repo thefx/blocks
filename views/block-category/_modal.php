@@ -2,7 +2,7 @@
 
 /* @var $modelFieldsForm BlockFieldsItemForm */
 
-use app\shop\forms\Block\BlockFieldsItemForm;
+use thefx\blocks\forms\BlockFieldsItemForm;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -13,7 +13,10 @@ use yii\widgets\ActiveForm;
 //);
 
 ?>
-<button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#modal_animation"><i class="fa fa-cog"></i></button>
+
+<?php if (in_array(Yii::$app->user->id, $this->context->module->rootUsers)) : ?>
+    <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#modal_animation"><i class="fa fa-cog"></i></button>
+<?php endif; ?>
 
 <div id="modal_animation" class="modal" style="display: none;">
     <div class="modal-dialog modal-lg">

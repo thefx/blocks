@@ -133,6 +133,8 @@ use yii\widgets\Pjax;
 
             <?= $form->field($model, 'required')->widget(SwitchInput::class) ?>
 
+            <?= $form->field($model, 'sort')->textInput() ?>
+
         </div>
         <div id="tab_type_list" class="tab-pane">
 
@@ -191,10 +193,7 @@ use yii\widgets\Pjax;
 
             <?= $form->field($model, 'default_value')->textInput() ?>
 
-            <?= $form->field($model, 'sort')->textInput() ?>
-
             <?= $form->field($model, 'in_filter')->widget(SwitchInput::class) ?>
-
 
         </div>
         </div>

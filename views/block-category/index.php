@@ -29,7 +29,53 @@ if ($parents) {
     $this->params['breadcrumbs'][] = ['label' => $block->translate->categories, 'url' => ['index', 'parent_id' => $category->parent_id]];
 }
 $this->params['breadcrumbs'][] = $this->title;
-$this->params['title_btn'] = (Yii::$app->user->id == 1) ? $this->render('_modal', ['modelFieldsForm' => $modelFieldsForm]) : null; ?>
+$this->params['title_btn'] = (Yii::$app->user->id == 1) ? $this->render('_modal', ['modelFieldsForm' => $modelFieldsForm]) : null;
+
+\app\assets\Plugins\SortableJs\SortableJsAsset::register($this);
+
+?>
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        function sortFolders(data) {
+            if (data.prev.length !== 0) {
+                console.log({'type': 'after', 'item' : data.id, 'node' : data.prev.data('key')});
+                // $unitedStates->insertAfter($australia);
+            } else if (data.next.length !== 0) {
+                console.log({'type': 'before', 'item' : data.id, 'node' : data.next.data('key')});
+            }
+        }
+
+        // Sortable
+        document.querySelectorAll('table tbody').forEach(function (el) {
+            Sortable.create(el, {
+                draggable: 'tr[data-type="folder"]',
+                // handle: ".handle",
+                onEnd: function (/**Event*/evt) {
+                    var data = {
+                        'id'       : $(evt.item).data('key'),
+                        'next'     : $(evt.item).next('tr[data-type="folder"]'),
+                        'prev'     : $(evt.item).prev('tr[data-type="folder"]'),
+                    };
+                    sortFolders(data);
+                    // var itemEl = evt.item;  // dragged HTMLElement
+                    // evt.to;    // target list
+                    // evt.from;  // previous list
+                    // evt.oldIndex;  // element's old index within old parent
+                    // evt.newIndex;  // element's new index within new parent
+                    // evt.oldDraggableIndex; // element's old index within old parent, only counting draggable elements
+                    // evt.newDraggableIndex; // element's new index within new parent, only counting draggable elements
+                    // evt.clone // the clone element
+                    // evt.pullMode;  // when item is in another sortable: `"clone"` if cloning, `true` if moving
+                },
+            });
+        });
+
+    });
+
+</script>
 
 <style>
     .table > thead > tr > th,
@@ -145,6 +191,9 @@ $this->params['title_btn'] = (Yii::$app->user->id == 1) ? $this->render('_modal'
         'dataProvider' => $dataProvider,
 //        'filterModel' => $searchModel,
         'columns' => $columns,
+        'rowOptions' => function ($model, $key, $index, $grid) {
+            return ['data-type' => $model->type];
+        },
     ]) ?>
 <!--    --><?php //Pjax::end(); ?>
 

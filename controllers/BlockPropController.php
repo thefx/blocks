@@ -3,10 +3,10 @@
 namespace thefx\blocks\controllers;
 
 use app\shop\services\TransactionManager;
+use thefx\blocks\forms\search\BlockPropSearch;
 use thefx\blocks\models\blocks\BlockProp;
 use thefx\blocks\models\blocks\BlockPropElem;
 use Yii;
-use app\modules\admin\forms\BlockPropSearch;
 use yii\base\Module;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -117,7 +117,22 @@ class BlockPropController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post())) {
+            $oldKeys = array_column($model->elements, 'id');
             $model->loadRelations(Yii::$app->request->post());
+
+            $newKeys = array_column($model->elements, 'id');
+            $diffKeys = array_diff($oldKeys, $newKeys);
+            if (!empty($diffKeys)) {
+                $elements = array_filter($model->elements, function ($element) use ($diffKeys) {
+                    return !in_array($element->id, $diffKeys);
+                });
+                $model->elements = $elements;
+            }
+
+            // Nothing come
+            if (!array_key_exists('BlockPropElem', Yii::$app->request->post())) {
+                $model->elements = [];
+            }
 
             $sort = 1;
             foreach ($model->elements as $element) {

@@ -136,8 +136,11 @@ class BlockItemPropAssignments extends ActiveRecord
     {
         if ($this->prop->isImage()) {
             $config = [
-                'defaultCrop' => [1920, 1200, 'widen'],
-                'crop' => [[250,250,'prev','widen']],
+                'defaultCrop' => [1920, 0, 'widen'],
+                'crop' => [
+                    [250,250,'square','widen'],
+                    [250,0,'prev','widen']
+                ],
                 'deleteOldImages' => !$this->prop->isMulti(),
             ];
 

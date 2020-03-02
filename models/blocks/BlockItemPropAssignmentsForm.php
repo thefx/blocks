@@ -69,7 +69,7 @@ class BlockItemPropAssignmentsForm extends Model
                 return date('Y_m_d_His') . uniqid('', false);
             },
             'deleteOldImages' => !$this->prop->isMulti(),
-            'defaultCrop' => [1323, 546, 'widen'],
+            'defaultCrop' => [1323, 0, 'widen'],
 //            'crop' => BlockTranslateHelper::PHOTO_PREVIEW['crop']
         ]);
     }

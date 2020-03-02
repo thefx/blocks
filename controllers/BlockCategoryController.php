@@ -6,8 +6,12 @@ use thefx\blocks\forms\BlockFieldsCategoryForm;
 use thefx\blocks\forms\search\BlockCategorySearch;
 use thefx\blocks\models\blocks\Block;
 use thefx\blocks\models\blocks\BlockCategory;
+use thefx\blocks\models\blocks\BlockItem;
 use thefx\blocks\models\images\Images;
+use thefx\pages\components\NestedTreeHelper;
 use Yii;
+use yii\db\Expression;
+use yii\db\Query;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -57,6 +61,17 @@ class BlockCategoryController extends Controller
             Yii::$app->session->setFlash('success', 'Поля сохранены');
             return $this->refresh();
         }
+
+//        $pages = (new Query())
+//            ->from(BlockCategory::tableName())
+//            ->orderBy('lft')
+//            ->all();
+//
+//        $treeArray = NestedTreeHelper::createPagesTree($pages);
+//
+//        var_dump($treeArray);
+//
+//        die();
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -173,6 +188,53 @@ class BlockCategoryController extends Controller
         (new Images())->removeImage($model->{$field});
         $model->updateAttributes([$field => null]);
         return $this->redirect(['update', 'id' => $id, 'parent_id' => $model->parent_id]);
+    }
+
+    public function actionSortCategory($type, $item, $node)
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        $node = BlockCategory::findOne($node);
+        $item = BlockCategory::findOne($item);
+
+        if ($type === 'after') {
+            $item->insertAfter($node)->save() or die(var_dump($item->getErrors()));
+        } elseif ($type === 'before') {
+            $item->insertBefore($node)->save() or die(var_dump($item->getErrors()));
+        }
+
+        return [$type, $item, $node];
+    }
+
+    public function actionSortItems()
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        $ids = filter_var_array($_GET['ids'], FILTER_VALIDATE_INT);
+
+        $items = BlockItem::find()
+            ->where(['IN', 'id', $ids])
+            ->orderBy(new Expression('FIELD(id,'.implode(',', $ids).')'))
+            ->all();
+
+        $i = 1;
+        foreach ($items as $item) {
+            $item->sort = $i++;
+            $item->save();
+        }
+
+        return $items;
+
+//        $node = BlockCategory::findOne($node);
+//        $item = BlockCategory::findOne($item);
+//
+//        if ($type === 'after') {
+//            $item->insertAfter($node)->save() or die(var_dump($item->getErrors()));
+//        } elseif ($type === 'before') {
+//            $item->insertBefore($node)->save() or die(var_dump($item->getErrors()));
+//        }
+//
+//        return [$type, $item, $node];
     }
 
     /**

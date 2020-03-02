@@ -70,15 +70,15 @@ class BlockCategorySearch extends BlockCategory
         $this->load($params);
 
         $query1 = (new Query())
-            ->select(array_merge($commonFields, [ new Expression('"folder" as type') ]))
+            ->select(array_merge($commonFields, [ new Expression('"folder" as type') ], ['`lft`']))
             ->from(BlockCategory::tableName());
 
         $query2 = (new Query())
-            ->select(array_merge($commonFields, [ new Expression('"item" as type') ]))
+            ->select(array_merge($commonFields, [ new Expression('"item" as type') ], ['`sort` AS `lft`']))
             ->from(BlockItem::tableName());
 
         $unionQuery = BlockCategory::find()
-            ->from(['dummy_name' => $query1->union($query2)]);
+            ->from($query1->union($query2));
 
         if ($this->block_id && $this->title) {
             $unionQuery->andFilterWhere(['block_id' => $this->block_id]);
@@ -98,7 +98,7 @@ class BlockCategorySearch extends BlockCategory
             ],
             'sort' => [
 //                'defaultOrder' => ['type' => SORT_ASC, 'update_date' => SORT_DESC, 'id' => SORT_DESC],
-                'defaultOrder' => ['sort' => SORT_DESC, 'id' => SORT_DESC],
+                'defaultOrder' => ['type' => SORT_ASC, 'lft' => SORT_ASC],
                 'attributes' => [
                     'id',
                     'update_date',
@@ -107,10 +107,8 @@ class BlockCategorySearch extends BlockCategory
                     'anons',
                     'date',
                     'sort',
-                    'type' => [
-                        'asc' => ['type' => SORT_ASC],
-                        'desc' => ['type' => SORT_DESC],
-                    ],
+                    'lft',
+                    'type',
                 ]
             ]
         ]);

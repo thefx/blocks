@@ -41,10 +41,11 @@ $this->params['title_btn'] = (Yii::$app->user->id == 1) ? $this->render('_modal'
 
         function sortFolders(data) {
             if (data.prev.length !== 0) {
-                console.log({'type': 'after', 'item' : data.id, 'node' : data.prev.data('key')});
-                // $unitedStates->insertAfter($australia);
+                var dataJson = {'type': 'after', 'item' : data.id, 'node' : data.prev.data('key')};
+                $.get("<?=Url::to(['sort-category'])?>", dataJson);
             } else if (data.next.length !== 0) {
-                console.log({'type': 'before', 'item' : data.id, 'node' : data.next.data('key')});
+                var dataJson = {'type': 'before', 'item' : data.id, 'node' : data.next.data('key')};
+                $.get("<?=Url::to(['sort-category'])?>", dataJson);
             }
         }
 
@@ -52,7 +53,7 @@ $this->params['title_btn'] = (Yii::$app->user->id == 1) ? $this->render('_modal'
         document.querySelectorAll('table tbody').forEach(function (el) {
             Sortable.create(el, {
                 draggable: 'tr[data-type="folder"]',
-                // handle: ".handle",
+                handle: ".handle",
                 onEnd: function (/**Event*/evt) {
                     var data = {
                         'id'       : $(evt.item).data('key'),
@@ -73,6 +74,21 @@ $this->params['title_btn'] = (Yii::$app->user->id == 1) ? $this->render('_modal'
             });
         });
 
+        // Sortable
+        document.querySelectorAll('table tbody').forEach(function (el) {
+            Sortable.create(el, {
+                draggable: 'tr[data-type="item"]',
+                handle: ".handle",
+                onEnd: function (/**Event*/evt) {
+                    var ids = [];
+                    $(evt.target).find('tr[data-type="item"]').each(function (key, element) {
+                        ids.push(element.getAttribute('data-key'));
+                    });
+                    $.get("<?=Url::to(['sort-items'])?>", {'ids': ids});
+                },
+            });
+        });
+
     });
 
 </script>
@@ -85,6 +101,9 @@ $this->params['title_btn'] = (Yii::$app->user->id == 1) ? $this->render('_modal'
     .table > tbody > tr > td,
     .table > tfoot > tr > td {
         vertical-align:middle
+    }
+    .handle {
+        cursor: move;
     }
 </style>
 
@@ -99,6 +118,15 @@ $this->params['title_btn'] = (Yii::$app->user->id == 1) ? $this->render('_modal'
 
     <?php
         $columns = [];
+        $columns[] = [
+            'label' => '',
+            'headerOptions' => ['style' => 'width:40px; text-align:center'],
+            'contentOptions' => ['style' => 'width:40px; text-align:center', 'class' => 'handle'],
+            'format' => 'html',
+            'value' => static function() {
+                return '<i class="fa fa-arrows-alt text-muted" aria-hidden="true"></i>';
+            },
+        ];
         foreach ($block->getFieldsCategoryTemplates() as $item) {
             switch ($item['value']) {
                 case 'photo_preview':
@@ -130,7 +158,8 @@ $this->params['title_btn'] = (Yii::$app->user->id == 1) ? $this->render('_modal'
                     break;
                 case 'sort':
                     $columns[] = [
-                        'attribute' => 'sort',
+                        'label' => 'Сортировка',
+                        'attribute' => 'lft',
                         'headerOptions' => ['style' => 'width:85px; text-align:center'],
                         'contentOptions' => ['style' => 'text-align:center'],
                     ];

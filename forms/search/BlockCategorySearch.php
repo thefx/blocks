@@ -98,7 +98,7 @@ class BlockCategorySearch extends BlockCategory
             ],
             'sort' => [
 //                'defaultOrder' => ['type' => SORT_ASC, 'update_date' => SORT_DESC, 'id' => SORT_DESC],
-                'defaultOrder' => ['type' => SORT_ASC, 'lft' => SORT_ASC],
+                'defaultOrder' => ['type' => SORT_ASC, 'lft' => SORT_ASC, 'id' => SORT_DESC],
                 'attributes' => [
                     'id',
                     'update_date',

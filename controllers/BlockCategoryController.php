@@ -62,17 +62,6 @@ class BlockCategoryController extends Controller
             return $this->refresh();
         }
 
-//        $pages = (new Query())
-//            ->from(BlockCategory::tableName())
-//            ->orderBy('lft')
-//            ->all();
-//
-//        $treeArray = NestedTreeHelper::createPagesTree($pages);
-//
-//        var_dump($treeArray);
-//
-//        die();
-
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -217,24 +206,13 @@ class BlockCategoryController extends Controller
             ->orderBy(new Expression('FIELD(id,'.implode(',', $ids).')'))
             ->all();
 
-        $i = 1;
+        $i = 100;
         foreach ($items as $item) {
-            $item->sort = $i++;
+            $item->sort = $i+=10;
             $item->save();
         }
 
         return $items;
-
-//        $node = BlockCategory::findOne($node);
-//        $item = BlockCategory::findOne($item);
-//
-//        if ($type === 'after') {
-//            $item->insertAfter($node)->save() or die(var_dump($item->getErrors()));
-//        } elseif ($type === 'before') {
-//            $item->insertBefore($node)->save() or die(var_dump($item->getErrors()));
-//        }
-//
-//        return [$type, $item, $node];
     }
 
     /**

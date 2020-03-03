@@ -9,20 +9,15 @@ use paulzi\nestedsets\NestedSetsQueryTrait;
  *
  * @property mixed $root
  *
- * @see thefx\blocks\models\blocks\BlockCategory
+ * @see BlockCategory
  */
 class BlockCategoryQuery extends \yii\db\ActiveQuery
 {
     use NestedSetsQueryTrait;
 
-    /*public function active()
-    {
-        return $this->andWhere('[[status]]=1');
-    }*/
-
     public function withOutRoot()
     {
-        return $this->andWhere('[[id]]!=1');
+        return $this->andWhere('[[depth]]!=0');
     }
 
     public function getRoot()

@@ -222,7 +222,7 @@ class BlockCategory extends ActiveRecord
             'create_user' => 'Создал',
             'create_date' => 'Дата создания',
             'update_user' => 'Редактировал',
-            'update_date' => 'Дата редактирования',
+            'update_date' => 'Дата обн.',
             'public' => 'Активность',
             'sort' => 'Сортировка',
         ];

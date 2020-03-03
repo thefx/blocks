@@ -1,10 +1,11 @@
 <?php
 
+use thefx\blocks\forms\search\BlockCategorySearch;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model app\modules\admin\forms\BlockCategorySearch */
+/* @var $model BlockCategorySearch */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
@@ -39,4 +40,3 @@ use yii\widgets\ActiveForm;
 
 <?php ActiveForm::end(); ?>
 
-</div>

@@ -489,7 +489,7 @@ class BlockItem extends ActiveRecord
             'create_user' => 'Создал',
             'create_date' => 'Дата создания',
             'update_user' => 'Редактировал',
-            'update_date' => 'Дата обновления',
+            'update_date' => 'Дата обн.',
         ];
     }
 

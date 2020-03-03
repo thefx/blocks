@@ -93,9 +93,10 @@ class BlockCategorySearch extends BlockCategory
 
         $dataProvider = new ActiveDataProvider([
             'query' => $unionQuery,
-            'pagination' => [
-                'pageSize' => 20,
-            ],
+//            'pagination' => [
+//                'pageSize' => 20,
+//            ],
+            'pagination' => false,
             'sort' => [
 //                'defaultOrder' => ['type' => SORT_ASC, 'update_date' => SORT_DESC, 'id' => SORT_DESC],
                 'defaultOrder' => ['type' => SORT_ASC, 'lft' => SORT_ASC, 'id' => SORT_DESC],

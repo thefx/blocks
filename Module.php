@@ -2,6 +2,8 @@
 
 namespace thefx\blocks;
 
+use thefx\blocks\assets\BlockAsset\BlockAsset;
+
 class Module extends \yii\base\Module
 {
     public $rootUsers = [];
@@ -11,6 +13,7 @@ class Module extends \yii\base\Module
      */
     public function init()
     {
+        BlockAsset::register(\Yii::$app->view);
         parent::init();
     }
 

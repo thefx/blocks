@@ -139,6 +139,7 @@ class Block extends ActiveRecord
             [ 'type' => 'model', 'value' => 'anons' ],
             [ 'type' => 'model', 'value' => 'public' ],
             [ 'type' => 'model', 'value' => 'id' ],
+            [ 'type' => 'model', 'value' => 'update_date' ],
         ];
     }
 
@@ -180,7 +181,7 @@ class Block extends ActiveRecord
             'create_user' => 'Создал',
             'create_date' => 'Дата создания',
             'update_user' => 'Отредактировал',
-            'update_date' => 'Дата редактирования',
+            'update_date' => 'Дата обн.',
         ];
     }
 

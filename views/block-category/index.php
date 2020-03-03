@@ -75,19 +75,19 @@ $this->params['title_btn'] = (Yii::$app->user->id == 1) ? $this->render('_modal'
         });
 
         // Sortable
-        document.querySelectorAll('table tbody').forEach(function (el) {
-            Sortable.create(el, {
-                draggable: 'tr[data-type="item"]',
-                handle: ".handle",
-                onEnd: function (/**Event*/evt) {
-                    var ids = [];
-                    $(evt.target).find('tr[data-type="item"]').each(function (key, element) {
-                        ids.push(element.getAttribute('data-key'));
-                    });
-                    $.get("<?=Url::to(['sort-items'])?>", {'ids': ids});
-                },
-            });
-        });
+        //document.querySelectorAll('table tbody').forEach(function (el) {
+        //    Sortable.create(el, {
+        //        draggable: 'tr[data-type="item"]',
+        //        handle: ".handle",
+        //        onEnd: function (/**Event*/evt) {
+        //            var ids = [];
+        //            $(evt.target).find('tr[data-type="item"]').each(function (key, element) {
+        //                ids.push(element.getAttribute('data-key'));
+        //            });
+        //            $.get("<?//=Url::to(['sort-items'])?>//", {'ids': ids});
+        //        },
+        //    });
+        //});
 
     });
 
@@ -108,13 +108,6 @@ $this->params['title_btn'] = (Yii::$app->user->id == 1) ? $this->render('_modal'
 </style>
 
 <div class="block-category-index">
-
-<!--    --><?php //Pjax::begin(); ?>
-
-    <?= Html::a($block->translate->block_create, ['block-item/create', 'parent_id' => $category->id], ['class' => 'btn btn-success']) ?>
-    <?= Html::a($block->translate->category_create, ['create', 'parent_id' => $category->id], ['class' => 'btn btn-default']) ?>
-
-    <?= $this->render('_search', ['model' => $searchModel]); ?>
 
     <?php
         $columns = [];
@@ -139,7 +132,7 @@ $this->params['title_btn'] = (Yii::$app->user->id == 1) ? $this->render('_modal'
                         'value' => static function(BlockCategory  $model) use ($category, $item) {
                             $img = Html::img($model->getPhoto($item['value']), ['style' => 'max-width:100px; max-height:100px']);
                             $url = $model->isFolder() ? ['index', 'parent_id' => $model->id] : ['block-item/update', 'id' => $model->id, 'parent_id' => $category->id];
-                            return Html::a($img, $url);
+                            return Html::a($img, $url, ['data-pjax' => '0']);
                         },
                     ];
                     break;
@@ -152,13 +145,13 @@ $this->params['title_btn'] = (Yii::$app->user->id == 1) ? $this->render('_modal'
                             if ($model->isFolder()) {
                                 return '<i class="fa fa-folder text-muted position-left"></i> ' . Html::a($model->title, ['index', 'parent_id' => $model->id]);
                             }
-                            return Html::a($model->title, ['block-item/update', 'id' => $model->id, 'parent_id' => $category->id]);
+                            return Html::a($model->title, ['block-item/update', 'id' => $model->id, 'parent_id' => $category->id], ['data-pjax' => '0']);
                         },
                     ];
                     break;
                 case 'sort':
                     $columns[] = [
-                        'label' => 'Сортировка',
+                        'label' => 'Сорт.',
                         'attribute' => 'lft',
                         'headerOptions' => ['style' => 'width:85px; text-align:center'],
                         'contentOptions' => ['style' => 'text-align:center'],
@@ -193,6 +186,16 @@ $this->params['title_btn'] = (Yii::$app->user->id == 1) ? $this->render('_modal'
                         }
                     ];
                     break;
+                case 'update_date':
+                    $columns[] = [
+                        'attribute' => 'update_date',
+                        'headerOptions' => ['style' => 'width:150px; text-align:center'],
+                        'contentOptions' => ['style' => 'text-align:center'],
+                        'content' => static function(BlockCategory $row) {
+                            return $row->update_date ? date('d.m.Y H:i:s', strtotime($row->update_date)) : date('d.m.Y H:i:s', strtotime($row->create_date));
+                        }
+                    ];
+                    break;
                 case 'id':
                     $columns[] = [
                         'attribute' => 'id',
@@ -216,6 +219,13 @@ $this->params['title_btn'] = (Yii::$app->user->id == 1) ? $this->render('_modal'
         ];
     ?>
 
+<!--    --><?php //\yii\widgets\Pjax::begin(); ?>
+
+    <?= Html::a($block->translate->block_create, ['block-item/create', 'parent_id' => $category->id], ['class' => 'btn btn-success']) ?>
+    <?= Html::a($block->translate->category_create, ['create', 'parent_id' => $category->id], ['class' => 'btn btn-default']) ?>
+
+    <?= $this->render('_search', ['model' => $searchModel]); ?>
+
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
 //        'filterModel' => $searchModel,
@@ -224,6 +234,7 @@ $this->params['title_btn'] = (Yii::$app->user->id == 1) ? $this->render('_modal'
             return ['data-type' => $model->type];
         },
     ]) ?>
-<!--    --><?php //Pjax::end(); ?>
+
+<!--    --><?php //\yii\widgets\Pjax::end(); ?>
 
 </div>

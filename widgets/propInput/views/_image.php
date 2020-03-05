@@ -17,11 +17,11 @@
     <div class="image">
         <img src="<?= $link ?>" alt="">
     </div>
-    <div class="caption">
+<!--    <div class="caption">-->
 <!--        --><?//= Html::submitButton('<span class="fa- fa-trash- text-danger">Удалить</span>', [
 //            'class' => 'btn btn-xs',
 //            'data-confirm' => 'Удалить файл?',
 //            'attr' => $attr
 //        ]) ?>
-    </div>
+<!--    </div>-->
 </div>

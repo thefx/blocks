@@ -82,7 +82,7 @@ switch ($value) {
                 'removeLabel' => '',
                 'mainClass' => 'input-group-lg',
                 'imagePreview' => $model->getPhoto('photo_preview') ? Html::img($model->getPhoto('photo_preview')) : '',
-                'imageUrl' => $model->getPhoto('photo') ? $model->getPhoto('photo') : '',
+                'imageUrl' => $model->getPhoto('photo_preview') ? $model->getPhoto('photo_preview') : '',
             ]
         ]);
         break;

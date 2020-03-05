@@ -19,16 +19,6 @@ class PropInput extends InputWidget
     {
         PropInputAsset::register($this->view);
 
-//        if ($this->model->prop->isString()) {
-//            $view = 'string';
-//        } elseif ($this->model->prop->isInteger()) {
-//            $view = 'integer';
-//        }  elseif ($this->model->prop->isFile()) {
-//            $view = 'file';
-//        } elseif ($this->model->prop->isList()) {
-//            $view = 'file';
-//        }
-
         $view = $this->model->prop->type;
 
         return $this->render($view, [

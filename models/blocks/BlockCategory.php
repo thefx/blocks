@@ -2,9 +2,9 @@
 
 namespace thefx\blocks\models\blocks;
 
-use app\behaviors\Slug;
 use paulzi\nestedsets\NestedSetsBehavior;
 use paulzi\nestedsets\NestedSetsQueryTrait;
+use thefx\blocks\behaviours\Slug;
 use thefx\blocks\behaviours\UploadImageBehavior;
 use thefx\blocks\models\blocks\queries\BlockCategoryQuery;
 use Yii;

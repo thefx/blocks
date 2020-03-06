@@ -8,13 +8,12 @@ use yii\web\View;
 /* @var $model BlockItemPropAssignments */
 /* @var string $attributeName */
 
-//$model->{$attributeName} = ($model->{$attributeName} !== null) ? $model->{$attributeName} : 1;
-
 $relBlockItemList = $model->prop->getAssignBlockItemList();
 $blockItems = BlockItem::find()->where(['parent_id' => $model->value])->all();
 
 $inputId = Html::getInputId($model, $attributeName);
-$this->registerJs(" $('#{$inputId}').select2(/*{placeholder: '', allowClear: true}*/);", View::POS_READY);
+$js = "$('#{$inputId}').select2(/*{placeholder: '', allowClear: true}*/);";
+$this->registerJs($js, View::POS_READY);
 
 ?>
 

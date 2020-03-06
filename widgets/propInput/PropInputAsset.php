@@ -10,6 +10,8 @@ use yii\web\View;
  */
 class PropInputAsset extends AssetBundle
 {
+    public $sourcePath = __DIR__ . '/assets';
+
     public $css = [
         'styles.css',
     ];
@@ -19,9 +21,7 @@ class PropInputAsset extends AssetBundle
     ];
 
     public $depends = [
-//        'app\assets\AppAsset', // yii.js, jquery.js
         'app\assets\Plugins\SortableJs\SortableJsAsset',
-        'yii\web\JqueryAsset', // yii.js, jquery.js
         'yii\web\YiiAsset', // yii.js, jquery.js
     ];
 
@@ -31,8 +31,6 @@ class PropInputAsset extends AssetBundle
 
     public function init()
     {
-        $this->sourcePath = __DIR__ . '/assets';
-
         \Yii::$app->view->registerCss('
             .sortable-chosen {outline: 0 !important}
             .sortable-chosen {border: 1px solid #3c8dbc}

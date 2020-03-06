@@ -1,8 +1,7 @@
 <?php
 
-use app\shop\entities\Block\BlockCategory;
-use app\shop\entities\Block\BlockItem;
-use app\shop\entities\Block\BlockItemPropAssignments;
+use thefx\blocks\models\blocks\BlockItem;
+use thefx\blocks\models\blocks\BlockItemPropAssignments;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\web\View;
@@ -10,13 +9,12 @@ use yii\web\View;
 /* @var $model BlockItemPropAssignments */
 /* @var string $attributeName */
 
-//$model->{$attributeName} = ($model->{$attributeName} !== null) ? $model->{$attributeName} : 1;
-
 $relBlockItemList = $model->prop->getAssignBlockCatList();
 $blockItems = BlockItem::find()->where(['parent_id' => $model->value])->all();
 
 $inputId = Html::getInputId($model, $attributeName);
-$this->registerJs(" $('#{$inputId}').select2(/*{placeholder: '', allowClear: true}*/);", View::POS_READY);
+$js = "$('#{$inputId}').select2(/*{placeholder: '', allowClear: true}*/);";
+$this->registerJs($js, View::POS_READY);
 ?>
 
 <div class="form-group">

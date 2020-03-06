@@ -24,7 +24,6 @@ class PropInput extends InputWidget
         return $this->render($view, [
             'model' => $this->model,
             'form' => $this->field->form,
-//            'form' => $this->field->form,
             'attributeName' => $this->attribute,
             'unique' => $this->id,
         ]);

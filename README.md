@@ -45,14 +45,36 @@ Alternative installation
 ],
 ```
 
+Apply Migrations
+
+```
+php yii migrate --migrationPath=@thefx/blocks/migrations
+```
+
+Modify your application configuration:
+
+```
+return [
+    'modules' => [
+        'blocks' => [
+            'class' => 'thefx\blocks\Module',
+            'layout' => 'page',
+            'layoutPath' => '@app/modules/admin/layouts',
+            'rootUsers' => [1],
+        ...
+        ]
+        ...
+    ],
+];
+```
 
 Usage
 -----
 
-Once the extension is installed, simply use it in your code by  :
+Create block
 
-```php
-<?= \thefx\blocks\AutoloadExample::widget(); ?>
+```
+http://site.com/blocks/block
 ```
 
 
@@ -74,28 +96,6 @@ Either run
 composer require thefx/yii2-blocks:dev-master --prefer-source
 ```
 
-Modify your application configuration:
-
-```
-return [
-    'modules' => [
-        'blocks' => [
-            'class' => 'thefx\blocks\Module',
-            'layout' => 'page',
-            'layoutPath' => '@app/modules/admin/layouts',
-            'rootUsers' => [1],
-        ...
-        ]
-        ...
-    ],
-];
-```
-
-Apply Migrations
-
-```
-php yii migrate --migrationPath=@thefx/blocks/migrations
-```
 
 Refresh Migrations
 
@@ -103,8 +103,3 @@ Refresh Migrations
 php yii migrate/fresh --migrationPath=@thefx/blocks/migrations
 ```
 
-Create block
-
-```
-http://site.com/blocks/block
-```

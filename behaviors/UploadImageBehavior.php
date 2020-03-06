@@ -5,7 +5,7 @@
  * @license http://opensource.org/licenses/MIT MIT
  */
 
-namespace thefx\blocks\behaviours;
+namespace thefx\blocks\behaviors;
 
 use thefx\blocks\models\images\Images;
 use Yii;

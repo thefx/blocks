@@ -1,6 +1,6 @@
 <?php
 
-namespace thefx\blocks\behaviours;
+namespace thefx\blocks\behaviors;
 
 use dosamigos\transliterator\TransliteratorHelper;
 use yii\base\Behavior;

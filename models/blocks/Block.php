@@ -3,7 +3,7 @@
 namespace thefx\blocks\models\blocks;
 
 use lhs\Yii2SaveRelationsBehavior\SaveRelationsBehavior;
-use thefx\blocks\behaviours\Slug;
+use thefx\blocks\behaviors\Slug;
 use thefx\blocks\models\blocks\queries\BlockQuery;
 use thefx\user\models\User;
 use yii\behaviors\AttributesBehavior;

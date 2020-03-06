@@ -4,8 +4,8 @@ namespace thefx\blocks\models\blocks;
 
 use paulzi\nestedsets\NestedSetsBehavior;
 use paulzi\nestedsets\NestedSetsQueryTrait;
-use thefx\blocks\behaviours\Slug;
-use thefx\blocks\behaviours\UploadImageBehavior;
+use thefx\blocks\behaviors\Slug;
+use thefx\blocks\behaviors\UploadImageBehavior;
 use thefx\blocks\models\blocks\queries\BlockCategoryQuery;
 use Yii;
 use yii\db\ActiveRecord;

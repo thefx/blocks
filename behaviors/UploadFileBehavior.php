@@ -1,5 +1,5 @@
 <?php
-namespace thefx\blocks\behaviours;
+namespace thefx\blocks\behaviors;
 
 use thefx\blocks\models\files\Files;
 use Yii;

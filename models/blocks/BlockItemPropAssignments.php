@@ -2,8 +2,8 @@
 
 namespace thefx\blocks\models\blocks;
 
-use thefx\blocks\behaviours\UploadFileBehavior;
-use thefx\blocks\behaviours\UploadImageBehavior;
+use thefx\blocks\behaviors\UploadFileBehavior;
+use thefx\blocks\behaviors\UploadImageBehavior;
 use thefx\blocks\models\blocks\queries\BlockItemPropAssignmentsQuery;
 use thefx\blocks\models\files\Files;
 use thefx\blocks\models\images\Images;

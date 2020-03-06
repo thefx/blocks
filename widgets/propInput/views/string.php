@@ -1,7 +1,9 @@
 <?php
+
+use thefx\blocks\models\blocks\BlockItemPropAssignments;
 use yii\helpers\Html;
 
-/* @var $model \app\shop\entities\Block\BlockItemPropAssignments */
+/* @var $model BlockItemPropAssignments */
 /* @var string $attributeName */
 
 //$model->{$attributeName} = ($model->{$attributeName} !== null) ? $model->{$attributeName} : 1;

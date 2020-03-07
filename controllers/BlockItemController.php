@@ -80,7 +80,8 @@ class BlockItemController extends Controller
         $model = new BlockItem([
             'block_id' => $block->id,
             'parent_id' => $parent_id,
-            'sort' => 100
+            'sort' => 100,
+            'public' => 1,
         ]);
 
         $model->populateAssignments();

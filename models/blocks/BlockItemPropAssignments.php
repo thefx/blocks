@@ -190,8 +190,7 @@ class BlockItemPropAssignments extends ActiveRecord
         /** @var Block $block */
         $block = Block::findOne($this->prop->block_id);
         $savePath = $this->prop->upload_path ?: "@app/web/upload/{$block->settings->upload_path}/";
-        $watermark = $this->prop->watermark_path ?: $_SERVER['DOCUMENT_ROOT'] . '/upload/watermark20.png';
-        if ($watermark === 'null') { $watermark = null; }
+        $watermark = $this->prop->watermark_path ?: null;
 
         $this->attachBehavior('value_photo', [
             'class' => UploadImageBehavior::class,

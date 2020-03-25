@@ -1,10 +1,11 @@
 <?php
 
+use thefx\blocks\models\blocks\BlockPropElem;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model app\shop\entities\Block\BlockPropElem */
+/* @var $model BlockPropElem */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 

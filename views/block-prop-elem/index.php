@@ -1,10 +1,11 @@
 <?php
 
+use thefx\blocks\forms\search\BlockPropElemSearch;
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
 /* @var $this yii\web\View */
-/* @var $searchModel app\modules\admin\forms\BlockPropElemSearch */
+/* @var $searchModel BlockPropElemSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = 'Block Prop Elems';

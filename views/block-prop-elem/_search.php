@@ -1,10 +1,11 @@
 <?php
 
+use thefx\blocks\forms\search\BlockPropElemSearch;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model app\modules\admin\forms\BlockPropElemSearch */
+/* @var $model BlockPropElemSearch */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 

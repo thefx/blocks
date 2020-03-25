@@ -1,10 +1,11 @@
 <?php
 
+use thefx\blocks\models\blocks\BlockPropElem;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model app\shop\entities\Block\BlockPropElem */
+/* @var $model BlockPropElem */
 
 $this->title = $model->title;
 $this->params['breadcrumbs'][] = ['label' => 'Block Prop Elems', 'url' => ['index']];

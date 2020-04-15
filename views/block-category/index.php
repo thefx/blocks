@@ -31,7 +31,7 @@ if ($parents) {
 $this->params['breadcrumbs'][] = $this->title;
 $this->params['title_btn'] = (Yii::$app->user->id == 1) ? $this->render('_modal', ['modelFieldsForm' => $modelFieldsForm]) : null;
 
-\app\assets\Plugins\SortableJs\SortableJsAsset::register($this);
+\thefx\blocks\assets\SortableJs\SortableJsAsset::register($this);
 
 ?>
 
@@ -189,7 +189,7 @@ $this->params['title_btn'] = (Yii::$app->user->id == 1) ? $this->render('_modal'
                 case 'update_date':
                     $columns[] = [
                         'attribute' => 'update_date',
-                        'headerOptions' => ['style' => 'width:150px; text-align:center'],
+                        'headerOptions' => ['style' => 'width:200px; text-align:center'],
                         'contentOptions' => ['style' => 'text-align:center'],
                         'content' => static function(BlockCategory $row) {
                             return $row->update_date ? date('d.m.Y H:i:s', strtotime($row->update_date)) : date('d.m.Y H:i:s', strtotime($row->create_date));

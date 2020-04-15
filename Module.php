@@ -6,6 +6,7 @@ use thefx\blocks\assets\BlockAsset\BlockAsset;
 
 class Module extends \yii\base\Module
 {
+    public $layoutPure = 'pure';
     public $rootUsers = [];
 
     /**

@@ -21,8 +21,9 @@ class PropInputAsset extends AssetBundle
     ];
 
     public $depends = [
-        'app\assets\Plugins\SortableJs\SortableJsAsset',
-        'yii\web\YiiAsset', // yii.js, jquery.js
+        'thefx\blocks\assets\SortableJs\SortableJsAsset',
+        'yii\web\YiiAsset',
+        'kartik\select2\Select2Asset',
     ];
 
     public $jsOptions = [

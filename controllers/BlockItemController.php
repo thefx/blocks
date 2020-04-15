@@ -71,7 +71,7 @@ class BlockItemController extends Controller
      */
     public function actionCreate($parent_id)
     {
-        $this->layout = 'pure';
+        $this->layout = $this->module->layoutPure;
 
         $category = BlockCategory::findOne($parent_id);
         $block = Block::find()->with('fields')->where(['id' => $category->block_id])->one();
@@ -126,7 +126,7 @@ class BlockItemController extends Controller
     {
         PropInputAsset::register($this->view);
 
-        $this->layout = 'pure';
+        $this->layout = $this->module->layoutPure;
 
         $model = $this->findModel($id);
         $category = BlockCategory::findOne($model->parent_id);

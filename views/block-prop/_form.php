@@ -13,7 +13,7 @@ use yii\widgets\Pjax;
 /* @var $elem BlockPropElem[] */
 /* @var $form yii\widgets\ActiveForm */
 
-\app\assets\Plugins\SortableJs\SortableJsAsset::register($this);
+\thefx\blocks\assets\SortableJs\SortableJsAsset::register($this);
 ?>
 
 
@@ -106,39 +106,53 @@ use yii\widgets\Pjax;
     }
 </style>
 
-
 <?= $form->errorSummary($model, ['class' => 'alert alert-danger']); ?>
 
-<div class="nav-tabs-custom block-prop-form">
-    <ul class="nav nav-tabs">
-        <li class="active"><a data-toggle="tab" href="#tab_main">Общая информация</a></li>
-        <li><a data-toggle="tab" href="#tab_type_list">Тип: список</a></li>
-        <li><a data-toggle="tab" href="#tab_type_rel">Тип: Связанный блок</a></li>
-        <li><a data-toggle="tab" href="#tab_type_text">Тип: Текст</a></li>
-<!--        <li><a data-toggle="tab" href="#tab_type_file">Тип: Файл</a></li>-->
-        <li><a data-toggle="tab" href="#tab_extra">Прочее</a></li>
-    </ul>
-    <div class="tab-content">
-        <div id="tab_main" class="tab-pane active">
+<div class="card card-primary card-outline card-outline-tabs">
 
-            <?= $form->field($model, 'public')->widget(SwitchInput::class) ?>
+    <div class="card-header p-0 border-bottom-0">
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="custom-tabs-1-tab" data-toggle="pill" href="#custom-tabs-1" role="tab" aria-controls="custom-tabs-1" aria-selected="true">Краткая информация</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="custom-tabs-2-tab" data-toggle="pill" href="#custom-tabs-2" role="tab" aria-controls="custom-tabs-2" aria-selected="false">Тип: список</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="custom-tabs-3-tab" data-toggle="pill" href="#custom-tabs-3" role="tab" aria-controls="custom-tabs-3" aria-selected="false">Тип: Связанный блок</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="custom-tabs-4-tab" data-toggle="pill" href="#custom-tabs-4" role="tab" aria-controls="custom-tabs-4" aria-selected="false">Тип: Текст</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="custom-tabs-5-tab" data-toggle="pill" href="#custom-tabs-5" role="tab" aria-controls="custom-tabs-5" aria-selected="false">Прочее</a>
+            </li>
+        </ul>
+    </div>
 
-            <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
+    <div class="card-body">
 
-            <?= $form->field($model, 'code')->textInput(['maxlength' => true]) ?>
+        <div class="tab-content">
+            <div class="tab-pane fade active show" id="custom-tabs-1" role="tabpanel" aria-labelledby="custom-tabs-1-tab">
 
-            <?= $form->field($model, 'type')->dropDownList($model->getTypes()) ?>
+                <?= $form->field($model, 'public')->widget(SwitchInput::class) ?>
 
-            <?= $form->field($model, 'multi')->widget(SwitchInput::class) ?>
+                <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
 
-            <?= $form->field($model, 'required')->widget(SwitchInput::class) ?>
+                <?= $form->field($model, 'code')->textInput(['maxlength' => true]) ?>
 
-            <?= $form->field($model, 'sort')->textInput() ?>
+                <?= $form->field($model, 'type')->dropDownList($model->getTypes()) ?>
 
-        </div>
-        <div id="tab_type_list" class="tab-pane">
+                <?= $form->field($model, 'multi')->widget(SwitchInput::class) ?>
 
-            <div class="prop-elem">
+                <?= $form->field($model, 'required')->widget(SwitchInput::class) ?>
+
+                <?= $form->field($model, 'sort')->textInput() ?>
+
+            </div>
+            <div class="tab-pane fade" id="custom-tabs-2" role="tabpanel" aria-labelledby="custom-tabs-2-tab">
+
+                <div class="prop-elem">
 
                     <table class="table table-prop-items">
                         <thead>
@@ -163,42 +177,35 @@ use yii\widgets\Pjax;
                         </tbody>
                     </table>
                     <div class="btn btn-default add-item">Добавить пункт</div>
+                </div>
+
             </div>
+            <div class="tab-pane fade" id="custom-tabs-3" role="tabpanel" aria-labelledby="custom-tabs-3-tab">
 
-        </div>
-        <div id="tab_type_text" class="tab-pane">
+                <?= $form->field($model, 'redactor')->widget(SwitchInput::class) ?>
 
-            <?= $form->field($model, 'redactor')->widget(SwitchInput::class) ?>
+            </div>
+            <div class="tab-pane fade" id="custom-tabs-4" role="tabpanel" aria-labelledby="custom-tabs-4-tab">
 
-        </div>
-        <div id="tab_type_rel" class="tab-pane">
+                <?= $form->field($model, 'relative_block_item')->dropDownList($model->getBlocksList(), ['prompt'=>'Значение не выбрано']) ?>
 
-            <?= $form->field($model, 'relative_block_item')->dropDownList($model->getBlocksList(), ['prompt'=>'Значение не выбрано']) ?>
+                <?= $form->field($model, 'relative_block_cat')->dropDownList($model->getBlocksList(), ['prompt'=>'Значение не выбрано']) ?>
 
-            <?= $form->field($model, 'relative_block_cat')->dropDownList($model->getBlocksList(), ['prompt'=>'Значение не выбрано']) ?>
+            </div>
+            <div class="tab-pane fade" id="custom-tabs-5" role="tabpanel" aria-labelledby="custom-tabs-5-tab">
 
-        </div>
-<!--        <div id="tab_type_file" class="tab-pane">-->
-<!---->
-<!--            --><?//= $form->field($model, 'upload_path')->textInput() ?>
-<!---->
-<!--            --><?//= $form->field($model, 'watermark_path')->textInput() ?>
-<!---->
-<!--            --><?//= $form->field($model, 'web_path')->textInput() ?>
-<!---->
-<!--        </div>-->
-        <div id="tab_extra" class="tab-pane">
+                <?= $form->field($model, 'hint')->textInput(['maxlength' => true]) ?>
 
-            <?= $form->field($model, 'hint')->textInput(['maxlength' => true]) ?>
+                <?= $form->field($model, 'default_value')->textInput() ?>
 
-            <?= $form->field($model, 'default_value')->textInput() ?>
+                <?= $form->field($model, 'in_filter')->widget(SwitchInput::class) ?>
 
-            <?= $form->field($model, 'in_filter')->widget(SwitchInput::class) ?>
-
-        </div>
+            </div>
         </div>
 
-    <div class="panel-body">
+    </div>
+
+    <div class="card-footer clearfix">
         <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>
     </div>
 
@@ -206,4 +213,13 @@ use yii\widgets\Pjax;
 
 <?php ActiveForm::end(); ?>
 <?php Pjax::end(); ?>
+
+
+
+
+
+
+
+
+
 

@@ -19,22 +19,27 @@ use yii\widgets\ActiveForm;
 //die;
 ?>
 
-<div class="block-category-form">
+<?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 
-    <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
+<?= $form->errorSummary($model, ['class' => 'alert alert-danger']); ?>
 
-    <?= $form->errorSummary($model, ['class' => 'alert alert-danger']); ?>
+<div class="card card-primary card-outline card-outline-tabs">
 
-    <div class="nav-tabs-custom goods-form">
-        <ul class="nav nav-tabs">
-            <li class="active"><a data-toggle="tab" href="#tab_anons">Краткая информация</a></li>
-<!--            <li><a data-toggle="tab" href="#tab_detail">Подробная информация</a></li>-->
-<!--            <li><a data-toggle="tab" href="#tab_relations">Связи</a></li>-->
-            <li><a data-toggle="tab" href="#tab_seo">Сео</a></li>
-<!--            <li><a data-toggle="tab" href="#tab_other">Прочее</a></li>-->
+    <div class="card-header p-0 border-bottom-0">
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="custom-tabs-1-tab" data-toggle="pill" href="#custom-tabs-1" role="tab" aria-controls="custom-tabs-1" aria-selected="true">Краткая информация</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="custom-tabs-2-tab" data-toggle="pill" href="#custom-tabs-2" role="tab" aria-controls="custom-tabs-2" aria-selected="false">Сео</a>
+            </li>
         </ul>
+    </div>
+
+    <div class="card-body">
+
         <div class="tab-content">
-            <div id="tab_anons" class="tab-pane active">
+            <div class="tab-pane fade active show" id="custom-tabs-1" role="tabpanel" aria-labelledby="custom-tabs-1-tab">
 
 <!--                --><?//= $form->field($model, 'block_id')->textInput() ?>
 
@@ -46,14 +51,10 @@ use yii\widgets\ActiveForm;
 
                 <?= $form->field($model, 'text')->textarea(['rows' => 6]) ?>
 
-<!--                --><?//= $form->field($model, 'photo')->textInput(['maxlength' => true]) ?>
-
-<!--                --><?//= $form->field($model, 'photo_preview')->textInput(['maxlength' => true]) ?>
-
                 <?= $form->field($model, 'photo_preview')->widget(\app\widgets\cropper\FileInputCropper::class, [
                     'cropAttribute'=>'photo_preview_crop',
                     'cropConfig'=> [
-                        'savePath' => "{$block->settings->upload_path}",
+                        'savePath' => $block->settings->upload_path,
                         'dir' => "@app/web/upload/{$block->settings->upload_path}/",
                         'urlDir' => "/{$block->settings->upload_path}",
                         'defaultCrop' => [
@@ -61,9 +62,9 @@ use yii\widgets\ActiveForm;
                             $block->settings->photo_preview_crop_height,
                             $block->settings->photo_preview_crop_type
                         ],
-        //                'crop' => [
-        //                    [300, 300, 'min', 'fit'],
-        //                ]
+                        //                'crop' => [
+                        //                    [300, 300, 'min', 'fit'],
+                        //                ]
                     ],
                     'pluginOptions' => [
                         'showUpload' => true,
@@ -73,8 +74,7 @@ use yii\widgets\ActiveForm;
                         'imagePreview' => $model->getPhoto('photo_preview') ? Html::img($model->getPhoto('photo_preview')) : '',
                         'imageUrl' => $model->getPhoto('photo_preview') ? $model->getPhoto('photo_preview') : '',
                     ]
-                ]); ?>
-
+                ]) ?>
 
 <!--                --><?//= $form->field($model, 'date')->textInput() ?>
 
@@ -82,18 +82,16 @@ use yii\widgets\ActiveForm;
                     'data' => $model->categoryList(),
                     'options' => ['placeholder' => 'Категория'],
                     'pluginOptions' => [
-                        'allowClear' => true
+                        'allowClear' => false
                     ],
-                ]); ?>
+                ]) ?>
 
                 <?= $form->field($model, 'public')->widget(SwitchInput::class) ?>
 
                 <?= $form->field($model, 'sort')->textInput() ?>
 
             </div>
-            <div id="tab_detail" class="tab-pane"></div>
-            <div id="tab_relations" class="tab-pane"></div>
-            <div id="tab_seo" class="tab-pane">
+            <div class="tab-pane fade" id="custom-tabs-2" role="tabpanel" aria-labelledby="custom-tabs-2-tab">
 
                 <?= $form->field($model, 'seo_title')->textInput(['maxlength' => true]) ?>
 
@@ -102,17 +100,14 @@ use yii\widgets\ActiveForm;
                 <?= $form->field($model, 'seo_description')->textarea(['rows' => 6]) ?>
 
             </div>
-            <div id="tab_other" class="tab-pane"></div>
-        </div>
-
-        <div class="panel-body">
-            <div class="form-group">
-                <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>
-            </div>
         </div>
 
     </div>
 
-    <?php ActiveForm::end(); ?>
+    <div class="card-footer clearfix">
+        <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>
+    </div>
 
 </div>
+
+<?php ActiveForm::end(); ?>

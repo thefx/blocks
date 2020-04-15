@@ -3,6 +3,7 @@
     height:150px;
     /*float: left*/
     position: relative;
+    display: block;
 }
 .thumbnail .image{
     height: 100%;
@@ -15,7 +16,7 @@
     width:100%;
     height: auto;
 }
-.btn-delete {
+.thumbnail .btn-delete {
     position: absolute;
     top: -15px;
     right: -10px;
@@ -24,7 +25,7 @@
     text-shadow: 1px 1px 1px #4e4e4e;
     cursor: pointer;
 }
-.btn-link {
+.thumbnail .btn-link {
     position: absolute;
     bottom: 9px;
     right: 12px;
@@ -33,6 +34,6 @@
     text-shadow: 1px 1px 1px #4e4e4e;
     cursor: pointer;
 }
-.btn-delete:hover {
+.thumbnail .btn-delete:hover {
     color: #c9302c;
 }

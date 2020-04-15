@@ -18,17 +18,29 @@ $this->params['breadcrumbs'][] = ['label' => 'Блоки', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
-<div class="block-view">
+<div class="card card-primary card-outline card-outline-tabs">
 
-    <div class="nav-tabs-custom goods-form">
-        <ul class="nav nav-tabs">
-            <li class="active"><a data-toggle="tab" href="#tab_main">Общая информация</a></li>
-            <li><a data-toggle="tab" href="#tab_translate">Переводы</a></li>
-            <li><a data-toggle="tab" href="#tab_properties">Характеристики</a></li>
-            <li><a data-toggle="tab" href="#tab_settings">Настройки фото</a></li>
+    <div class="card-header p-0 border-bottom-0">
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="custom-tabs-1-tab" data-toggle="pill" href="#custom-tabs-1" role="tab" aria-controls="custom-tabs-1" aria-selected="true">Общая информация</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="custom-tabs-2-tab" data-toggle="pill" href="#custom-tabs-2" role="tab" aria-controls="custom-tabs-2" aria-selected="false">Переводы</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="custom-tabs-3-tab" data-toggle="pill" href="#custom-tabs-3" role="tab" aria-controls="custom-tabs-3" aria-selected="false">Характеристики</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="custom-tabs-4-tab" data-toggle="pill" href="#custom-tabs-4" role="tab" aria-controls="custom-tabs-4" aria-selected="false">Настройки фото</a>
+            </li>
         </ul>
+    </div>
+
+    <div class="card-body">
+
         <div class="tab-content">
-            <div id="tab_main" class="tab-pane active">
+            <div class="tab-pane fade active show" id="custom-tabs-1" role="tabpanel" aria-labelledby="custom-tabs-1-tab">
 
                 <?= DetailView::widget([
                     'model' => $model,
@@ -49,7 +61,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?= Html::a('Редактировать', ['block/update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
 
             </div>
-            <div id="tab_translate" class="tab-pane">
+            <div class="tab-pane fade" id="custom-tabs-2" role="tabpanel" aria-labelledby="custom-tabs-2-tab">
 
                 <?= DetailView::widget([
                     'model' => $model->translate,
@@ -72,7 +84,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?= Html::a('Редактировать', ['block-translate/update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
 
             </div>
-            <div id="tab_properties" class="tab-pane">
+            <div class="tab-pane fade" id="custom-tabs-3" role="tabpanel" aria-labelledby="custom-tabs-3-tab">
 
                 <p>
                     <?= Html::a('Добавить характеристику', ['block-prop/create', 'block_id' => $model->id], ['class' => 'btn btn-success']) ?>
@@ -154,7 +166,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?php Pjax::end(); ?>
 
             </div>
-            <div id="tab_settings" class="tab-pane">
+            <div class="tab-pane fade" id="custom-tabs-4" role="tabpanel" aria-labelledby="custom-tabs-4-tab">
 
                 <?= DetailView::widget([
                     'model' => $model->settings,
@@ -176,3 +188,13 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 
 </div>
+
+
+
+
+
+
+
+
+
+

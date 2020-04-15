@@ -79,7 +79,7 @@ class BlockPropController extends Controller
      */
     public function actionCreate($block_id)
     {
-        $this->layout = 'pure';
+        $this->layout = $this->module->layoutPure;
 
         $model = new BlockProp([
             'sort' => 100,
@@ -113,7 +113,7 @@ class BlockPropController extends Controller
      */
     public function actionUpdate($id)
     {
-        $this->layout = 'pure';
+        $this->layout = $this->module->layoutPure;
 
         $model = $this->findModel($id);
 

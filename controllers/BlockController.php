@@ -53,7 +53,7 @@ class BlockController extends Controller
      */
     public function actionView($id)
     {
-        $this->layout = 'pure';
+        $this->layout = $this->module->layoutPure;
         $block = $this->findModel($id);
 
         $propsSearchModel = new BlockPropSearch();

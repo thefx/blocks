@@ -24,18 +24,16 @@ use yii\widgets\ActiveForm;
     ],
 ]); ?>
 
-<div class="input-group input-group-sm-">
+<?= $form->field($model, 'block_id', ['template' => '{input}'])->hiddenInput() ?>
 
-    <?= $form->field($model, 'block_id', ['template' => "{input}"])->hiddenInput() ?>
+<?= $form->field($model, 'parent_id', ['template' => '{input}'])->hiddenInput() ?>
 
-    <?= $form->field($model, 'title', ['template' => "{input}"])->textInput(['placeholder' => 'Поиск']) ?>
+<div class="input-group mb-3">
+    <?= $form->field($model, 'title', ['template' => '{input}'])->textInput(['placeholder' => 'Поиск']) ?>
 
-    <?= $form->field($model, 'parent_id', ['template' => "{input}"])->hiddenInput() ?>
-
-    <span class="input-group-btn">
-        <?= Html::submitButton('<i class="fas fa-search"></i>', ['class' => 'btn btn-primary']) ?>
-    </span>
-
+    <div class="input-group-append">
+        <?= Html::submitButton('<i class="fas fa-search"></i>', ['class' => 'btn btn-outline-secondary']) ?>
+    </div>
 </div>
 
 <?php ActiveForm::end(); ?>

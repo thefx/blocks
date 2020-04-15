@@ -14,47 +14,57 @@ use yii\widgets\ActiveForm;
 
 ?>
 
-<div class="block-item-form">
+<?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 
-    <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
+<?= $form->errorSummary($model, ['class' => 'alert alert-danger']) ?>
 
-    <?= $form->errorSummary($model, ['class' => 'alert alert-danger']); ?>
+<div class="card card-primary card-outline card-outline-tabs">
 
-    <div class="nav-tabs-custom goods-form">
-        <ul class="nav nav-tabs">
+    <div class="card-header p-0 border-bottom-0">
+        <ul class="nav nav-tabs" role="tablist">
 
             <?php $i = 0 ?>
 
             <?php foreach ($block->getFieldsTemplates() as $tab => $items) : ?>
-                <?php $class = ($i == 0) ? 'active' : '' ?>
+                <?php $selected = ($i === 0) ? 'true' : 'false' ?>
+                <?php $class = ($i === 0) ? 'active' : '' ?>
                 <?php $i++ ?>
-                <li class="<?= $class ?>"><a data-toggle="tab" href="#tab_<?= $i ?>"><?= $tab ?></a></li>
+
+                <li class="nav-item">
+                    <a class="nav-link <?= $class ?>" id="custom-tabs-<?= $i ?>-tab" data-toggle="pill" href="#custom-tabs-<?= $i ?>" role="tab" aria-controls="custom-tabs-<?= $i ?>" aria-selected="<?= $selected ?>"><?= $tab ?></a>
+                </li>
+
             <?php endforeach; ?>
 
         </ul>
+    </div>
+
+    <div class="card-body">
+
         <div class="tab-content">
 
             <?php $i = 0 ?>
 
             <?php foreach ($block->getFieldsTemplates() as $tab => $items) : ?>
-                <?php $class = ($i == 0) ? 'active' : '' ?>
+                <?php $class = ($i === 0) ? 'active show' : '' ?>
                 <?php $i++ ?>
-                <div id="tab_<?= $i ?>" class="tab-pane <?= $class ?>">
+
+                <div class="tab-pane fade <?= $class ?>" id="custom-tabs-<?= $i ?>" role="tabpanel" aria-labelledby="custom-tabs-<?= $i ?>-tab">
                     <?php foreach ($items as $item) : ?>
                         <?= $this->render('_type_' . $item['type'], ['form' => $form, 'model' => $model, 'block' => $block, 'value' => $item['value']]) ?>
                     <?php endforeach; ?>
                 </div>
+
             <?php endforeach; ?>
 
         </div>
 
-        <div class="box-footer">
-            <div class="form-group">
-                <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>
-            </div>
-        </div>
     </div>
 
-    <?php ActiveForm::end(); ?>
+    <div class="card-footer clearfix">
+        <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>
+    </div>
 
 </div>
+<?php ActiveForm::end(); ?>
+

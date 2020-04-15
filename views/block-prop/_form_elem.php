@@ -7,28 +7,28 @@
 
 use thefx\blocks\models\blocks\BlockPropElem; ?>
 
-<td class="col-sm-1 text-center handle">
+<td class="text-center handle" style="width: 70px">
     <?= $model->id ?>
     <?= $form->field($model, "[$index]id")->hiddenInput(['maxlength' => true])->label(false) ?>
 </td>
 
-<td class="col-sm-6">
+<td class="">
     <?= $form->field($model, "[$index]title")->textInput(['maxlength' => true])->label(false) ?>
 </td>
 
-<td class="col-sm-2">
+<td class="">
     <?= $form->field($model, "[$index]code")->textInput(['maxlength' => true])->label(false) ?>
 </td>
 
-<td class="col-sm-1 text-center">
+<td class="text-center" style="width: 120px">
 <!--    --><?//= $form->field($model, "[$index]sort")->textInput()->label(false) ?>
     <?= $model->sort ?>
 </td>
 
-<td class="col-sm-1 text-center">
+<td class="text-center" style="width: 150px">
     <?= $form->field($model, "[$index]default")->checkbox(['class' => 'default_value'])->label(false) ?>
 </td>
 
-<td class="col-sm-1 text-center">
+<td class="text-center">
     <button class="btn btn-sm btn-danger del-item"><i class="fa fa-trash"></i></button>
 </td>

@@ -80,8 +80,8 @@ class BlockCategory extends ActiveRecord
     {
         $categories = static::find()->where(['block_id' => $this->block_id])->orderBy('lft')->all();
 
-        return ArrayHelper::map($categories, 'id', function($row) {
-            return str_repeat('—', $row->depth) . ' ' . $row->title;
+        return ArrayHelper::map($categories, 'id', static function($row) {
+            return str_repeat('-', $row->depth) . '' . $row->title;
         });
     }
 

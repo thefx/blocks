@@ -94,7 +94,7 @@ class BlockCategoryController extends Controller
      */
     public function actionCreate($parent_id)
     {
-        $this->layout = 'pure';
+        $this->layout = $this->module->layoutPure;
 
         $category = BlockCategory::findOne($parent_id);
         $block = Block::findOne($category->block_id);
@@ -132,7 +132,7 @@ class BlockCategoryController extends Controller
      */
     public function actionUpdate($id, $parent_id)
     {
-        $this->layout = 'pure';
+        $this->layout = $this->module->layoutPure;
 
         $model = $this->findModel($id);
 

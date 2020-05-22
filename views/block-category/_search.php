@@ -32,7 +32,7 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'title', ['template' => '{input}'])->textInput(['placeholder' => 'Поиск']) ?>
 
     <div class="input-group-append">
-        <?= Html::submitButton('<i class="fas fa-search"></i>', ['class' => 'btn btn-outline-secondary']) ?>
+        <?= Html::submitButton('<i class="fas fa-search"></i>', ['class' => 'btn btn-default']) ?>
     </div>
 </div>
 

@@ -13,7 +13,8 @@
     "require": {
         "yiisoft/yii2": "~2.0.5",
         "la-haute-societe/yii2-save-relations-behavior": "^1.2",
-        "paulzi/yii2-nested-sets": "^1.0"
+        "paulzi/yii2-nested-sets": "^1.0",
+        "vova07/yii2-imperavi-widget": "*"
     },
     "autoload": {
         "psr-4": {

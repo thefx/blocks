@@ -38,6 +38,7 @@ use yii\helpers\ArrayHelper;
  * @property BlockFields[] $fields
  * @property Block $block
  * @property BlockItem[] $items
+ * @property int $sort [int(11)]
  *
  * @mixin NestedSetsBehavior
  * @mixin NestedSetsQueryTrait
@@ -212,7 +213,7 @@ class BlockCategory extends ActiveRecord
             'photo' => 'Фото',
             'photo_preview' => 'Фото для анонса',
             'date' => 'Дата создания',
-            'parent_id' => 'Parent ID',
+            'parent_id' => 'Категория',
             'lft' => 'Lft',
             'rgt' => 'Rgt',
             'depth' => 'Depth',

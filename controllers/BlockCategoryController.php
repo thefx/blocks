@@ -8,10 +8,8 @@ use thefx\blocks\models\blocks\Block;
 use thefx\blocks\models\blocks\BlockCategory;
 use thefx\blocks\models\blocks\BlockItem;
 use thefx\blocks\models\images\Images;
-use thefx\pages\components\NestedTreeHelper;
 use Yii;
 use yii\db\Expression;
-use yii\db\Query;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -33,6 +31,38 @@ class BlockCategoryController extends Controller
                     'delete' => ['POST'],
                 ],
             ],
+        ];
+    }
+
+    public function actions()
+    {
+        return [
+            'upload-image' => [
+                'class' => 'vova07\imperavi\actions\UploadFileAction',
+                'url' => '/statics/',
+                'path' => \Yii::getAlias("@webroot") . '/statics',
+                'unique' => true,
+                'validatorOptions' => [
+                    'maxWidth' => 2000,
+                    'maxHeight' => 2000
+                ]
+            ],
+            'get-uploaded-images' => [
+                'class' => 'vova07\imperavi\actions\GetImagesAction',
+                'url' => '/statics/',
+                'path' => \Yii::getAlias("@webroot") . '/statics',
+                'options' => ['only' => ['*.jpg', '*.jpeg', '*.png', '*.gif', '*.ico']],
+            ]
+//            'file-upload' => [
+//                'class' => 'vova07\imperavi\actions\UploadFileAction',
+//                'url' => '/statics/',
+//                'path' => \Yii::getAlias("@webroot") . '/statics',
+//                'uploadOnlyImage' => false,
+//                'translit' => true,
+//                'validatorOptions' => [
+//                    'maxSize' => 40000
+//                ]
+//            ]
         ];
     }
 

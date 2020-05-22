@@ -6,6 +6,7 @@ use thefx\blocks\forms\BlockFieldsCategoryForm;
 use thefx\blocks\models\blocks\Block;
 use thefx\blocks\models\blocks\BlockCategory;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
@@ -14,14 +15,11 @@ use yii\widgets\ActiveForm;
 /* @var $form yii\widgets\ActiveForm */
 /* @var $modelFieldsForm BlockFieldsCategoryForm */
 
-
-//var_dump($model->getPhoto('photo_preview'));
-//die;
 ?>
 
 <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 
-<?= $form->errorSummary($model, ['class' => 'alert alert-danger']); ?>
+<?= $form->errorSummary($model, ['class' => 'alert alert-danger']) ?>
 
 <div class="card card-primary card-outline card-outline-tabs">
 
@@ -41,15 +39,27 @@ use yii\widgets\ActiveForm;
         <div class="tab-content">
             <div class="tab-pane fade active show" id="custom-tabs-1" role="tabpanel" aria-labelledby="custom-tabs-1-tab">
 
-<!--                --><?//= $form->field($model, 'block_id')->textInput() ?>
-
                 <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
 
                 <?= $form->field($model, 'path')->textInput(['maxlength' => true]) ?>
 
-                <?= $form->field($model, 'anons')->textarea(['rows' => 6]) ?>
+                <?= $form->field($model, 'anons')->widget(\vova07\imperavi\Widget::class, [
+                        'settings' => [
+                            'image' => [
+                                'upload' => Url::to(['upload-image', 'id' => $model->id]),
+                                'select' => Url::to(['get-uploaded-images', 'id' => $model->id])
+                            ],
+                        ]
+                ]) ?>
 
-                <?= $form->field($model, 'text')->textarea(['rows' => 6]) ?>
+                <?= $form->field($model, 'text')->widget(\vova07\imperavi\Widget::class, [
+                    'settings' => [
+                        'image' => [
+                            'upload' => Url::to(['upload-image', 'id' => $model->id]),
+                            'select' => Url::to(['get-uploaded-images', 'id' => $model->id])
+                        ],
+                    ]
+                ]) ?>
 
                 <?= $form->field($model, 'photo_preview')->widget(\app\widgets\cropper\FileInputCropper::class, [
                     'cropAttribute'=>'photo_preview_crop',

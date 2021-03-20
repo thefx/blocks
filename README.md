@@ -103,3 +103,4 @@ Refresh Migrations
 php yii migrate/fresh --migrationPath=@thefx/blocks/migrations
 ```
 
+

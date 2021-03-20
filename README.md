@@ -77,7 +77,6 @@ Create block
 http://site.com/blocks/block
 ```
 
-
 For Development
 -----
 
@@ -85,7 +84,10 @@ For Development
 "repositories":[
     {
         "type": "path",
-        "url": "extensions/thefx/*"
+        "url": "extensions/thefx/*",
+        "options": {
+            "symlink": false
+        }
     }
 ]
 ```
@@ -102,5 +104,4 @@ Refresh Migrations
 ```
 php yii migrate/fresh --migrationPath=@thefx/blocks/migrations
 ```
-
 

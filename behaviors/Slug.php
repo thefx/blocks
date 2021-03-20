@@ -37,10 +37,10 @@ class Slug extends Behavior
         $slug = $this->slugify( $slug );
         if ( $this->checkUniqueSlug( $slug ) ) {
             return $slug;
-        } else {
-            for ( $suffix = 2; !$this->checkUniqueSlug( $new_slug = $slug . '_' . $suffix ); $suffix++ ) {}
-            return $new_slug;
         }
+
+        for ( $suffix = 2; !$this->checkUniqueSlug( $new_slug = $slug . '_' . $suffix ); $suffix++ ) {}
+        return $new_slug;
     }
 
     private function slugify( $slug )

@@ -313,16 +313,27 @@ class UploadImageBehavior extends Behavior
         }
     }
 
+    /**
+     * @param $w
+     * @param $h
+     * @param $img
+     * @throws ServerErrorHttpException
+     */
     protected function cropWidenOrFit($w, $h, $img)
     {
-        if ($w == 0 && $h == 0)
+        if ($w == 0 && $h == 0) {
             throw new ServerErrorHttpException('UploadFileBehavior: Ширина и высота одновременно не могу быть равны 0 (измените либо в модели, либо в конфигурационном файле).)');
-        elseif ($w !== 0 && $h !== 0) {
+        }
+
+        if ($w !== 0 && $h !== 0) {
             $img->fit($w, $h);
-        } elseif ($h == 0)
+        } elseif ($h == 0) {
             $img->widen($w, function ($constraint) {
                 $constraint->upsize();
             });
-        else $img->heighten($h);
+        }
+        else {
+            $img->heighten($h);
+        }
     }
 }

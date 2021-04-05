@@ -6,7 +6,7 @@
 
 ?>
 
-<div class="mb-10 mr-10 thumbnail pull-left" style="" data-key="<?= $data_key ?>">
+<div class="mr-2 mb-2 thumbnail pull-left" style="" data-key="<?= $data_key ?>">
     <a class="btn-delete"
        href="<?= $deleteLink ?>"
        title="Удалить изображение"
@@ -17,11 +17,4 @@
     <div class="image">
         <img src="<?= $link ?>" alt="">
     </div>
-<!--    <div class="caption">-->
-<!--        --><?//= Html::submitButton('<span class="fa- fa-trash- text-danger">Удалить</span>', [
-//            'class' => 'btn btn-xs',
-//            'data-confirm' => 'Удалить файл?',
-//            'attr' => $attr
-//        ]) ?>
-<!--    </div>-->
 </div>

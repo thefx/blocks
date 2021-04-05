@@ -9,31 +9,31 @@ use yii\web\View;
 /* @var $model BlockItemPropAssignments */
 /* @var string $attributeName */
 
-$relBlockItemList = $model->prop->getAssignBlockCatList();
+//$relBlockItemList = $model->prop->getAssignBlockCatList();
 $blockItems = BlockItem::find()->where(['parent_id' => $model->value])->all();
 
-$inputId = Html::getInputId($model, $attributeName);
-$js = "$('#{$inputId}').select2(/*{placeholder: '', allowClear: true}*/);";
-$this->registerJs($js, View::POS_READY);
+//$inputId = Html::getInputId($model, $attributeName);
+//$js = "$('#{$inputId}').select2(/*{placeholder: '', allowClear: true}*/);";
+//$this->registerJs($js, View::POS_READY);
 ?>
 
 <div class="form-group">
 
     <?= HTML::label($model->prop->title); ?>
 
-    <div class="hide">
-        <?= Html::activeDropDownList($model, $attributeName, $relBlockItemList, ['class' => 'form-control select2', 'style'=> 'width: 100%;', 'multiple' => $model->prop->isMulti(), 'prompt' => 'Не выбрано', 'disabled' => 'disabled']); ?>
-    </div>
+<!--    <div class="hide">-->
+<!--        --><?//= Html::activeDropDownList($model, $attributeName, $relBlockItemList, ['class' => 'form-control select2', 'style'=> 'width: 100%;', 'multiple' => $model->prop->isMulti(), 'prompt' => 'Не выбрано', 'disabled' => 'disabled']); ?>
+<!--    </div>-->
 
     <?php if ($blockItems) : ?>
-        <table class="table table-bordered">
+        <table class="table">
             <tbody>
             <?php foreach ($blockItems as $item) : ?>
                 <tr>
                     <td style="width: 10px" class="text-center"><i class="<?= $item->getPropValue('STRING_ICON') ?>"></i></td>
-                    <td><?= $item->title; ?></td>
+                    <td><?= $item->title ?></td>
                     <td><?= strip_tags($item->anons) ?></td>
-                    <td><?= $item->public ? '<span class="label label-success">Активен</span>' : '<span class="label label-default">Скрыт</span>'; ?></td>
+                    <td><?= $item->public ? '<span class="badge badge-success">Активен</span>' : '<span class="badge">Скрыт</span>' ?></td>
                     <td style="width: 20px">
                         <div role="presentation" class="dropdown navbar-right" style="margin: 0">
                             <a href="#" class="dropdown-toggle" id="drop4" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> <i class="fa fa-bars"></i> </a>

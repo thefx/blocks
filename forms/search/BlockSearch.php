@@ -9,8 +9,19 @@ use yii\data\ActiveDataProvider;
 /**
  * BlockSearch represents the model behind the search form of `app\shop\entities\Block\Block`.
  */
-class BlockSearch extends Block
+class BlockSearch extends Model
 {
+    public $id;
+    public $title;
+    public $path;
+    public $table;
+    public $template;
+    public $pagination;
+    public $create_user;
+    public $update_user;
+    public $create_date;
+    public $update_date;
+
     /**
      * @inheritdoc
      */
@@ -41,8 +52,6 @@ class BlockSearch extends Block
     public function search($params)
     {
         $query = Block::find();
-
-        // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

@@ -1,16 +1,17 @@
 <?php
 
 /* @var $this yii\web\View */
-/* @var $model app\shop\entities\Block\BlockItem */
+/* @var $model BlockItem */
 /* @var $block Block */
 /* @var $category BlockCategory */
 /* @var $parents BlockCategory[] */
 /* @var $modelFieldsForm BlockFieldsItemForm */
 /* @var $elem */
 
-use app\shop\entities\Block\Block;
-use app\shop\entities\Block\BlockCategory;
-use app\shop\forms\Block\BlockFieldsItemForm;
+use thefx\blocks\models\blocks\Block;
+use thefx\blocks\models\blocks\BlockCategory;
+use thefx\blocks\forms\BlockFieldsItemForm;
+use thefx\blocks\models\blocks\BlockItem;
 
 $this->title = $block->translate->block_update;
 foreach ($parents as $parent) {

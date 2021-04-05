@@ -17,7 +17,7 @@ class PropInput extends InputWidget
      */
     public function run()
     {
-        PropInputAsset::register($this->view);
+        \thefx\blocks\assets\PropInputAsset\PropInputAsset::register($this->view);
 
         $view = $this->model->prop->type;
 

@@ -1,12 +1,14 @@
 <?php
 
-use app\widgets\cropper\FileInputCropper;
-use app\widgets\switcher\SwitchInput;
-use app\widgets\yii2CkeditorWidget\CKEditor;
+use thefx\blocks\widgets\select\Select2Input;
+use thefx\widgetsCropper\FileInputCropper;
+use thefx\blocks\widgets\switcher\SwitchInput;
 use thefx\blocks\models\blocks\Block;
 use thefx\blocks\models\blocks\BlockItem;
 use thefx\blocks\models\blocks\BlockItemPropAssignments;
+use vova07\imperavi\Widget;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\jui\DatePicker;
 
 /** @var BlockItem $model */
@@ -14,57 +16,73 @@ use yii\jui\DatePicker;
 /** @var BlockItemPropAssignments $form */
 /** @var string $value - field name */
 
-$ckEditorOptions = (!$model->isNewRecord) ? [
-    'options' => ['rows' => 6],
-    'preset' => 'full',
-    'enableKCFinder' => true,
-    'kcfOptions' => [
-        'uploadURL' => $model->getEditorPath(),
-        'access' => [
-            'files' => [
-                'upload' => true,
-                'delete' => true,
-                'copy' => true,
-                'move' => false,
-                'rename' => true,
-            ],
-            'dirs' => [
-                'create' => false,
-                'delete' => false,
-                'rename' => false,
-            ],
-        ],
-        'types' => array(
-            $model->getPrimaryKey()  =>  Yii::$app->params['editor.files'],
-        ),
-    ]
-] : [
-    'options' => ['rows' => 6],
-    'preset' => 'full',
-];
+//$ckEditorOptions = (!$model->isNewRecord) ? [
+//    'options' => ['rows' => 6],
+//    'preset' => 'full',
+//    'enableKCFinder' => true,
+//    'kcfOptions' => [
+//        'uploadURL' => $model->getEditorPath(),
+//        'access' => [
+//            'files' => [
+//                'upload' => true,
+//                'delete' => true,
+//                'copy' => true,
+//                'move' => false,
+//                'rename' => true,
+//            ],
+//            'dirs' => [
+//                'create' => false,
+//                'delete' => false,
+//                'rename' => false,
+//            ],
+//        ],
+//        'types' => array(
+//            $model->getPrimaryKey()  =>  Yii::$app->params['editor.files'],
+//        ),
+//    ]
+//] : [
+//    'options' => ['rows' => 6],
+//    'preset' => 'full',
+//];
+
+if (!$model->hasProperty($value)) {
+    return '';
+}
 
 switch ($value) {
+    case 'seo_title':
+    case 'path':
     case 'title':
-        echo $form->field($model, 'title')->textInput(['maxlength' => true]);
+    case 'article':
+    case 'price':
+    case 'price_old':
+    case 'currency':
+    case 'unit':
+
+        echo $form->field($model, $value)->textInput(['maxlength' => true]);
         break;
 
     case 'date':
-        echo $form->field($model, 'date')->widget(DatePicker::class);
-        break;
-
-    case 'path':
-        echo $form->field($model, 'path')->textInput(['maxlength' => true]);
+        echo $form->field($model, $value)->widget(DatePicker::class);
         break;
 
     case 'anons':
-        echo $form->field($model, 'anons')->widget(CKEditor::class, $ckEditorOptions);
+//        echo $form->field($model, 'anons')->widget(CKEditor::class, $ckEditorOptions);
+        echo $form->field($model, $value)->widget(Widget::class, [
+            'settings' => [
+                'image' => [
+                    'upload' => Url::to(['upload-image', 'id' => $model->id]),
+                    'select' => Url::to(['get-uploaded-images', 'id' => $model->id])
+                ],
+            ]
+        ]);
         break;
 
     case 'photo_preview':
-        echo $form->field($model, 'photo_preview')->widget(FileInputCropper::class,[
+        echo $form->field($model, $value)->widget(FileInputCropper::class,[
             'cropAttribute'=>'photo_preview_crop',
             'cropConfig'=> [
-                'savePath' => "{$block->settings->upload_path}",
+                'savePath' => $block->settings->upload_path,
                 'dir' => "@app/web/upload/{$block->settings->upload_path}/",
                 'urlDir' => "/{$block->settings->upload_path}",
                 'defaultCrop' => [
@@ -81,19 +99,19 @@ switch ($value) {
                 'browseLabel' => '',
                 'removeLabel' => '',
                 'mainClass' => 'input-group-lg',
-                'imagePreview' => $model->getPhoto('photo_preview') ? Html::img($model->getPhoto('photo_preview')) : '',
-                'imageUrl' => $model->getPhoto('photo_preview') ? $model->getPhoto('photo_preview') : '',
+                'imagePreview' => $model->getPhoto($value) ? Html::img($model->getPhoto($value)) : '',
+                'imageUrl' => $model->getPhoto($value) ?: '',
             ]
         ]);
         break;
 
     case 'photo':
-        echo $form->field($model, 'photo')->widget(FileInputCropper::class,[
+        echo $form->field($model, $value)->widget(FileInputCropper::class,[
             'cropAttribute'=>'photo_crop',
             'cropConfig'=> [
-                'savePath' => "{$block->settings->upload_path}",
+                'savePath' => $block->settings->upload_path,
                 'dir' => "@app/web/upload/{$block->settings->upload_path}/",
-                'urlDir' => "/{$block->settings->upload_path}",
+                'urlDir' => '/' . $block->settings->upload_path,
                 'defaultCrop' => [
                     $block->settings->photo_crop_width,
                     $block->settings->photo_crop_height,
@@ -109,39 +127,45 @@ switch ($value) {
                 'browseLabel' => '',
                 'removeLabel' => '',
                 'mainClass' => 'input-group-lg',
-                'imagePreview' => $model->getPhoto('photo') ? Html::img($model->getPhoto('photo')) : '',
-                'imageUrl' => $model->getPhoto('photo') ? $model->getPhoto('photo') : '',
+                'imagePreview' => $model->getPhoto() ? Html::img($model->getPhoto()) : '',
+                'imageUrl' => $model->getPhoto() ?: '',
             ]
         ]);
         break;
 
     case 'parent_id':
-        echo $form->field($model, 'parent_id')->dropDownList($model->categoryList(), [
-            'placeholder' => 'Категория'
+        echo $form->field($model, $value)->widget(Select2Input::class, [
+            'data' => $model->categoryList(),
+            'options' => ['placeholder' => 'Категория'],
+            'pluginOptions' => [
+                'allowClear' => false
+            ],
         ]);
         break;
 
     case 'public':
-        echo $form->field($model, 'public')->widget(SwitchInput::class);
+        echo $form->field($model, $value)->widget(SwitchInput::class);
         break;
 
     case 'sort':
-        echo $form->field($model, 'sort')->textInput();
+        echo $form->field($model, $value)->textInput();
         break;
 
     case 'text':
-        echo $form->field($model, 'text')->widget(CKEditor::class, $ckEditorOptions);
-        break;
-
-    case 'seo_title':
-        echo $form->field($model, 'seo_title')->textInput(['maxlength' => true]);
-        break;
-
-    case 'seo_keywords':
-        echo $form->field($model, 'seo_keywords')->textarea(['rows' => 6]);
+//        echo $form->field($model, 'text')->widget(CKEditor::class, $ckEditorOptions);
+        echo $form->field($model, $value)->widget(Widget::class, [
+            'settings' => [
+                'image' => [
+                    'upload' => Url::to(['upload-image', 'id' => $model->id]),
+                    'select' => Url::to(['get-uploaded-images', 'id' => $model->id])
+                ],
+            ]
+        ]);
         break;
 
     case 'seo_description':
-        echo $form->field($model, 'seo_description')->textarea(['rows' => 6]);
+    case 'seo_keywords':
+        echo $form->field($model, $value)->textarea(['rows' => 6]);
         break;
+
 }

@@ -111,15 +111,15 @@ $this->params['title_btn'] = (Yii::$app->user->id == 1) ? $this->render('_modal'
 
     <?php
         $columns = [];
-        $columns[] = [
-            'label' => '',
-            'headerOptions' => ['style' => 'width:40px; text-align:center'],
-            'contentOptions' => ['style' => 'width:40px; text-align:center', 'class' => 'handle'],
-            'format' => 'html',
-            'value' => static function() {
-                return '<i class="fa fa-arrows-alt text-muted" aria-hidden="true"></i>';
-            },
-        ];
+//        $columns[] = [
+//            'label' => '',
+//            'headerOptions' => ['style' => 'width:40px; text-align:center'],
+//            'contentOptions' => ['style' => 'width:40px; text-align:center', 'class' => 'handle'],
+//            'format' => 'html',
+//            'value' => static function() {
+//                return '<i class="fa fa-arrows-alt text-muted" aria-hidden="true"></i>';
+//            },
+//        ];
         foreach ($block->getFieldsCategoryTemplates() as $item) {
             switch ($item['value']) {
                 case 'photo_preview':
@@ -182,7 +182,7 @@ $this->params['title_btn'] = (Yii::$app->user->id == 1) ? $this->render('_modal'
                         'headerOptions' => ['style' => 'width:85px; text-align:center'],
                         'contentOptions' => ['style' => 'text-align:center'],
                         'content' => static function(BlockCategory $row) {
-                            return $row->public ? '<span class="label label-success">Да</span>' : '<span class="label label-default">Нет</span>';
+                            return $row->public ? '<span class="badge badge-success">Да</span>' : '<span class="badge">Нет</span>';
                         }
                     ];
                     break;

@@ -30,6 +30,7 @@ use yii\helpers\ArrayHelper;
  * @property string $upload_path
  * @property string $watermark_path
  * @property string $web_path
+ * @property string $default_value [varchar(255)]
  *
  * @mixin SaveRelationsBehavior
  */
@@ -65,51 +66,51 @@ class BlockProp extends ActiveRecord
         ];
     }
 
-    public function getTypeName()
+    public function getTypeName(): string
     {
         return $this->getTypes()[$this->type];
     }
 
-    public function getBlocksList()
+    public function getBlocksList(): array
     {
         $blocks = Block::find()->select(['id', 'title'])->all();
 
         return ArrayHelper::map($blocks, 'id', 'title');
     }
 
-    public function isRequired()
+    public function isRequired(): bool
     {
-        return $this->required == 1;
+        return $this->required === 1;
     }
 
-    public function isMulti()
+    public function isMulti(): bool
     {
-        return $this->multi == 1;
+        return $this->multi === 1;
     }
 
-    public function isString()
+    public function isString(): bool
     {
-        return $this->type == self::TYPE_STRING;
+        return $this->type === self::TYPE_STRING;
     }
 
-    public function isInteger()
+    public function isInteger(): bool
     {
-        return $this->type == self::TYPE_INT;
+        return $this->type === self::TYPE_INT;
     }
 
-    public function isFile()
+    public function isFile(): bool
     {
-        return $this->type == self::TYPE_FILE;
+        return $this->type === self::TYPE_FILE;
     }
 
-    public function isImage()
+    public function isImage(): bool
     {
-        return $this->type == self::TYPE_IMAGE;
+        return $this->type === self::TYPE_IMAGE;
     }
 
-    public function isList()
+    public function isList(): bool
     {
-        return $this->type == self::TYPE_LIST;
+        return $this->type === self::TYPE_LIST;
     }
 
 //    public function beforeValidate()
@@ -162,22 +163,22 @@ class BlockProp extends ActiveRecord
         $this->elements = [];
     }
 
-    public function getBlock()
+    public function getBlock(): \yii\db\ActiveQuery
     {
         return $this->hasOne(Block::class, ['id' => 'block_id']);
     }
 
-    public function getElements()
+    public function getElements(): \yii\db\ActiveQuery
     {
         return $this->hasMany(BlockPropElem::class, ['block_prop_id' => 'id'])->orderBy('sort ASC, id DESC');
     }
 
-    public function getAssignments()
+    public function getAssignments(): \yii\db\ActiveQuery
     {
         return $this->hasMany(BlockItemPropAssignments::class, ['prop_id' => 'id']);
     }
 
-    public function getAssignBlockItemList()
+    public function getAssignBlockItemList(): array
     {
         $items = BlockItem::find()
             ->select(['id', 'title'])
@@ -189,7 +190,7 @@ class BlockProp extends ActiveRecord
         return ArrayHelper::map($items, 'id', static function (BlockItem $row) { return '[' . $row->id . '] ' . $row->title; });
     }
 
-    public function getAssignBlockCatList()
+    public function getAssignBlockCatList(): array
     {
         $items = BlockCategory::find()
             ->select(['id', 'title'])
@@ -205,7 +206,7 @@ class BlockProp extends ActiveRecord
     /**
      * @inheritdoc
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return '{{%block_prop}}';
     }
@@ -226,7 +227,7 @@ class BlockProp extends ActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'id' => 'ID',
@@ -250,7 +251,7 @@ class BlockProp extends ActiveRecord
         ];
     }
 
-    public function behaviors()
+    public function behaviors(): array
     {
         return [
             [
@@ -260,7 +261,7 @@ class BlockProp extends ActiveRecord
         ];
     }
 
-    public function transactions()
+    public function transactions(): array
     {
         return [
             self::SCENARIO_DEFAULT => self::OP_ALL,
@@ -271,7 +272,7 @@ class BlockProp extends ActiveRecord
      * @inheritdoc
      * @return BlockPropQuery the active query used by this AR class.
      */
-    public static function find()
+    public static function find(): BlockPropQuery
     {
         return new BlockPropQuery(static::class);
     }

@@ -2,7 +2,7 @@
 
 namespace thefx\blocks\controllers;
 
-use app\shop\services\TransactionManager;
+use thefx\blocks\services\TransactionManager;
 use thefx\blocks\forms\search\BlockPropSearch;
 use thefx\blocks\models\blocks\BlockProp;
 use thefx\blocks\models\blocks\BlockPropElem;

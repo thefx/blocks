@@ -15,12 +15,12 @@ class BlockAsset extends AssetBundle
         'css/style.css',
     ];
 
-    public function init()
-    {
-        parent::init();
-        // fix select2
-        \Yii::$app->assetManager->bundles['yii\\bootstrap\\BootstrapAsset'] = [
-            'css' => []
-        ];
-    }
+//    public function init()
+//    {
+//        parent::init();
+//        // fix select2
+//        \Yii::$app->assetManager->bundles['yii\\bootstrap\\BootstrapAsset'] = [
+//            'css' => []
+//        ];
+//    }
 }

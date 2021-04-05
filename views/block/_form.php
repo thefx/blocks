@@ -15,7 +15,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'path')->textInput(['maxlength' => true]) ?>
+<!--    --><?//= $form->field($model, 'path')->textInput(['maxlength' => true]) ?>
 
 <!--    --><?//= $form->field($model, 'table')->textInput(['maxlength' => true]) ?>
 

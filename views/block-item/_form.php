@@ -1,8 +1,8 @@
 <?php
 
+use thefx\blocks\assets\Select2Asset\Select2Asset;
 use thefx\blocks\models\blocks\Block;
 use thefx\blocks\models\blocks\BlockItem;
-use thefx\blocks\models\blocks\BlockItemPropAssignments;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -10,8 +10,8 @@ use yii\widgets\ActiveForm;
 /* @var $model BlockItem */
 /* @var $form yii\widgets\ActiveForm */
 /* @var $block Block */
-/* @var $elem BlockItemPropAssignments[] */
 
+Select2Asset::register($this);
 ?>
 
 <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
@@ -31,7 +31,12 @@ use yii\widgets\ActiveForm;
                 <?php $i++ ?>
 
                 <li class="nav-item">
-                    <a class="nav-link <?= $class ?>" id="custom-tabs-<?= $i ?>-tab" data-toggle="pill" href="#custom-tabs-<?= $i ?>" role="tab" aria-controls="custom-tabs-<?= $i ?>" aria-selected="<?= $selected ?>"><?= $tab ?></a>
+                    <a class="nav-link <?= $class ?>"
+                       id="custom-tabs-<?= $i ?>-tab"
+                       data-toggle="pill"
+                       href="#custom-tabs-<?= $i ?>" role="tab"
+                       aria-controls="custom-tabs-<?= $i ?>"
+                       aria-selected="<?= $selected ?>"><?= $tab ?></a>
                 </li>
 
             <?php endforeach; ?>
@@ -40,7 +45,6 @@ use yii\widgets\ActiveForm;
     </div>
 
     <div class="card-body">
-
         <div class="tab-content">
 
             <?php $i = 0 ?>
@@ -58,7 +62,6 @@ use yii\widgets\ActiveForm;
             <?php endforeach; ?>
 
         </div>
-
     </div>
 
     <div class="card-footer clearfix">

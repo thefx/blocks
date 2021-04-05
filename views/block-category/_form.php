@@ -1,18 +1,20 @@
 <?php
 
-use app\widgets\switcher\SwitchInput;
-use kartik\select2\Select2;
+use thefx\blocks\widgets\select\Select2Input;
+use thefx\blocks\widgets\switcher\SwitchInput;
 use thefx\blocks\forms\BlockFieldsCategoryForm;
 use thefx\blocks\models\blocks\Block;
 use thefx\blocks\models\blocks\BlockCategory;
+use thefx\widgetsCropper\FileInputCropper;
+use vova07\imperavi\Widget;
+use yii\bootstrap4\ActiveForm;
 use yii\helpers\Html;
 use yii\helpers\Url;
-use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $model BlockCategory */
 /* @var $block Block */
-/* @var $form yii\widgets\ActiveForm */
+/* @var $form ActiveForm */
 /* @var $modelFieldsForm BlockFieldsCategoryForm */
 
 ?>
@@ -43,16 +45,7 @@ use yii\widgets\ActiveForm;
 
                 <?= $form->field($model, 'path')->textInput(['maxlength' => true]) ?>
 
-                <?= $form->field($model, 'anons')->widget(\vova07\imperavi\Widget::class, [
-                        'settings' => [
-                            'image' => [
-                                'upload' => Url::to(['upload-image', 'id' => $model->id]),
-                                'select' => Url::to(['get-uploaded-images', 'id' => $model->id])
-                            ],
-                        ]
-                ]) ?>
-
-                <?= $form->field($model, 'text')->widget(\vova07\imperavi\Widget::class, [
+                <?= $form->field($model, 'anons')->widget(Widget::class, [
                     'settings' => [
                         'image' => [
                             'upload' => Url::to(['upload-image', 'id' => $model->id]),
@@ -61,7 +54,16 @@ use yii\widgets\ActiveForm;
                     ]
                 ]) ?>
 
-                <?= $form->field($model, 'photo_preview')->widget(\app\widgets\cropper\FileInputCropper::class, [
+                <?= $form->field($model, 'text')->widget(Widget::class, [
+                    'settings' => [
+                        'image' => [
+                            'upload' => Url::to(['upload-image', 'id' => $model->id]),
+                            'select' => Url::to(['get-uploaded-images', 'id' => $model->id])
+                        ],
+                    ]
+                ]) ?>
+
+                <?= $form->field($model, 'photo_preview')->widget(FileInputCropper::class, [
                     'cropAttribute'=>'photo_preview_crop',
                     'cropConfig'=> [
                         'savePath' => $block->settings->upload_path,
@@ -82,13 +84,13 @@ use yii\widgets\ActiveForm;
                         'removeLabel' => '',
                         'mainClass' => 'input-group-lg',
                         'imagePreview' => $model->getPhoto('photo_preview') ? Html::img($model->getPhoto('photo_preview')) : '',
-                        'imageUrl' => $model->getPhoto('photo_preview') ? $model->getPhoto('photo_preview') : '',
+                        'imageUrl' => $model->getPhoto('photo_preview') ?: '',
                     ]
                 ]) ?>
 
 <!--                --><?//= $form->field($model, 'date')->textInput() ?>
 
-                <?= $form->field($model, 'parent_id')->widget(Select2::class, [
+                <?= $form->field($model, 'parent_id')->widget(Select2Input::class, [
                     'data' => $model->categoryList(),
                     'options' => ['placeholder' => 'Категория'],
                     'pluginOptions' => [

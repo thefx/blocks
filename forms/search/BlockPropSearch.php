@@ -45,7 +45,8 @@ class BlockPropSearch extends BlockProp
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'sort' => ['defaultOrder' => ['sort' => SORT_ASC, 'id' => SORT_ASC]]
+            'sort' => ['defaultOrder' => ['sort' => SORT_ASC, 'id' => SORT_ASC]],
+            'pagination' => false,
         ]);
 
         $this->load($params);

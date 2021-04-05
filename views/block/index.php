@@ -1,11 +1,12 @@
 <?php
 
+use thefx\blocks\forms\search\BlockSearch;
 use thefx\blocks\models\blocks\Block;
 use yii\helpers\Html;
 use yii\grid\GridView;
 
 /* @var $this yii\web\View */
-/* @var $searchModel app\modules\admin\forms\BlockSearch */
+/* @var $searchModel BlockSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = 'Разделы';
@@ -36,8 +37,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     return Html::a($model->title, ['block/view', 'id' => $model->id]);
                 },
             ],
-            'title',
-            'path',
 //            'table',
 //            'template',
             //'pagination',

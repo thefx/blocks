@@ -22,7 +22,7 @@ class BlockFields extends ActiveRecord
     const BLOCK_TYPE_ITEM = 'item';
     const BLOCK_TYPE_CATEGORY = 'category';
 
-    public static function create($name, $block_type)
+    public static function create($name, $block_type): BlockFields
     {
         $model = new self();
         $model->type = 'group';
@@ -33,7 +33,7 @@ class BlockFields extends ActiveRecord
         return $model;
     }
 
-    public static function createChild($block_id, $type, $value, $sort, $block_type)
+    public static function createChild($block_id, $type, $value, $sort, $block_type): BlockFields
     {
         $model = new self();
         $model->block_id = $block_id;
@@ -44,12 +44,12 @@ class BlockFields extends ActiveRecord
         return $model;
     }
 
-    public function getChildren()
+    public function getChildren(): \yii\db\ActiveQuery
     {
         return $this->hasMany(__CLASS__, ['parent_id' => 'id']);
     }
 
-    public function behaviors()
+    public function behaviors(): array
     {
         return [
             [
@@ -59,7 +59,7 @@ class BlockFields extends ActiveRecord
         ];
     }
 
-    public function transactions()
+    public function transactions(): array
     {
         return [
             self::SCENARIO_DEFAULT => self::OP_ALL,
@@ -71,7 +71,7 @@ class BlockFields extends ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return '{{%block_fields}}';
     }
@@ -79,7 +79,7 @@ class BlockFields extends ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function rules()
+    public function rules(): array
     {
         return [
 //            [['id'], 'required'],
@@ -93,7 +93,7 @@ class BlockFields extends ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'id' => 'ID',

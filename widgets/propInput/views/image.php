@@ -19,17 +19,16 @@ $random = uniqid();
 
 ?>
 
-
 <script>
     document.addEventListener("DOMContentLoaded", function () {
 
-        enableImageGalleryDng('#well-<?= $random ?> .image-wrapper', <?= $model->id ?>);
+        enableImageGalleryDng('#card-<?= $random ?> .image-wrapper', <?= $model->id ?>);
 
-        $('.well-<?= $random ?>').on('change', 'input', previewFileWrapper.upload);
+        $('.card-<?= $random ?>').on('change', 'input', previewFileWrapper.upload);
     });
 </script>
 
-<div class="well well-<?= $random ?>" id="well-<?= $random ?>">
+<div class="card card-body bg-light card-<?= $random ?>" id="card-<?= $random ?>">
 
     <?php
 

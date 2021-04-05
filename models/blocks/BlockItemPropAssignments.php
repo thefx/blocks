@@ -3,7 +3,7 @@
 namespace thefx\blocks\models\blocks;
 
 use thefx\blocks\behaviors\UploadFileBehavior;
-use thefx\blocks\behaviors\UploadImageBehavior;
+use thefx\blocks\behaviors\UploadImageBehavior5;
 use thefx\blocks\models\blocks\queries\BlockItemPropAssignmentsQuery;
 use thefx\blocks\models\files\Files;
 use thefx\blocks\models\images\Images;
@@ -38,10 +38,8 @@ class BlockItemPropAssignments extends ActiveRecord
             case BlockProp::TYPE_TEXT:
             case BlockProp::TYPE_INT:
                 return $this->value;
-                break;
             case BlockProp::TYPE_IMAGE:
                 return $this->prop->multi ? explode(';', $this->value) : $this->value;
-                break;
             case BlockProp::TYPE_FILE:
 //                $titles = [];
 //                if ($this->prop->multi) {
@@ -51,7 +49,6 @@ class BlockItemPropAssignments extends ActiveRecord
 //                    return $titles;
 //                }
                 return $this->prop->multi ? explode(';', $this->value) : $this->value;
-                break;
             case BlockProp::TYPE_LIST:
                 $titles = [];
                 if ($this->prop->multi) {
@@ -64,18 +61,15 @@ class BlockItemPropAssignments extends ActiveRecord
                     return $titles;
                 }
                 return $this->propElement->title;
-                break;
             case BlockProp::TYPE_RELATIVE_BLOCK_ITEM:
                 return BlockItem::find()
                     ->where(['IN', 'id', explode(';', $this->value)])
                     ->indexBy('id')
                     ->all();
-                break;
             case BlockProp::TYPE_RELATIVE_BLOCK_CAT:
                 return BlockItem::find()
                     ->with(['propAssignments.prop'])
                     ->where(['parent_id' => $this->value])->all();
-                break;
             default:
                return null;
         }
@@ -96,7 +90,6 @@ class BlockItemPropAssignments extends ActiveRecord
                     return $titles;
                 }
                 return $this->propElement->code;
-                break;
             default:
                 return null;
         }
@@ -135,6 +128,7 @@ class BlockItemPropAssignments extends ActiveRecord
     public function beforeValidate()
     {
         if ($this->prop->isImage()) {
+
             $config = [
                 'defaultCrop' => [1920, 0, 'widen'],
                 'crop' => [
@@ -193,7 +187,7 @@ class BlockItemPropAssignments extends ActiveRecord
         $watermark = $this->prop->watermark_path ?: null;
 
         $this->attachBehavior('value_photo', [
-            'class' => UploadImageBehavior::class,
+            'class' => UploadImageBehavior5::class,
             'attributeName' => 'value',
 //            'cropCoordinatesAttrName' => 'value_crop',
             'savePath' => $savePath,

@@ -5,6 +5,7 @@ namespace thefx\blocks\models\blocks;
 use lhs\Yii2SaveRelationsBehavior\SaveRelationsBehavior;
 use thefx\blocks\behaviors\Slug;
 use thefx\blocks\behaviors\UploadImageBehavior;
+use thefx\blocks\behaviors\UploadImageBehavior5;
 use thefx\blocks\models\blocks\queries\BlockItemQuery;
 use Yii;
 use yii\db\ActiveRecord;
@@ -16,24 +17,29 @@ use yii\web\UploadedFile;
  * This is the model class for table "{{%block_item}}".
  *
  * @property int $id
- * @property string $title
- * @property string $path
- * @property string $anons
- * @property string $text
- * @property string $photo
- * @property string $photo_preview
- * @property string $date
- * @property string $seo_title
- * @property string $seo_keywords
- * @property string $seo_description
- * @property int $block_id
+ * @property int|null $block_id
+ * @property string|null $title
+ * @property string|null $path
+ * @property string|null $anons
+ * @property string|null $text
+ * @property string|null $photo
+ * @property string|null $photo_preview
+ * @property string|null $date
  * @property int $parent_id
  * @property int $public
  * @property int $sort
- * @property int $create_user
- * @property string $create_date
- * @property int $update_user
- * @property string $update_date
+ * @property string|null $seo_title
+ * @property string|null $seo_keywords
+ * @property string|null $seo_description
+ * @property int|null $create_user
+ * @property string|null $create_date
+ * @property int|null $update_user
+ * @property string|null $update_date
+ * @property string|null $article
+ * @property float|null $price
+ * @property float|null $price_old
+ * @property string|null $currency
+ * @property string|null $unit
  * @property BlockCategory $category
  * @property BlockProp[] $propAll
  * @property BlockItemPropAssignments[] $propAssignments
@@ -281,7 +287,7 @@ class BlockItem extends ActiveRecord
 
         $this->attachBehaviors([
             'photo_preview' => [
-                'class' => UploadImageBehavior::class,
+                'class' => UploadImageBehavior5::class,
                     'attributeName' => 'photo_preview',
                     'cropCoordinatesAttrName' => 'photo_preview_crop',
                     'savePath' => "@app/web/upload/{$block->settings->upload_path}/",
@@ -298,7 +304,7 @@ class BlockItem extends ActiveRecord
 //                    ]
                 ],
                 'photo' => [
-                    'class' => UploadImageBehavior::class,
+                    'class' => UploadImageBehavior5::class,
                     'attributeName' => 'photo',
                     'cropCoordinatesAttrName' => 'photo_crop',
                     'savePath' => "@app/web/upload/{$block->settings->upload_path}/",
@@ -459,9 +465,13 @@ class BlockItem extends ActiveRecord
             [['block_id', 'parent_id', 'sort'], 'required'],
             [['anons', 'text'], 'string'],
             [['date', 'create_date', 'update_date'], 'safe'],
-            [['parent_id', 'public', 'sort', 'create_user', 'update_user'], 'integer'],
-            [['title', 'path', 'photo_crop', 'photo_preview_crop', 'seo_title', 'seo_keywords', 'seo_description'], 'string', 'max' => 255],
+            [['block_id', 'parent_id', 'public', 'sort', 'create_user', 'update_user'], 'integer'],
+            [['title', 'path', /*'photo', 'photo_preview',*/ 'photo_crop', 'photo_preview_crop', 'seo_title', 'seo_keywords', 'seo_description'], 'string', 'max' => 255],
             [['photo', 'photo_preview'], 'file', 'mimeTypes' => 'image/*'],
+
+//            [['price', 'price_old'], 'number'],
+//            [['article'], 'string', 'max' => 50],
+//            [['currency', 'unit'], 'string', 'max' => 10],
         ];
     }
 
@@ -490,6 +500,12 @@ class BlockItem extends ActiveRecord
             'create_date' => 'Дата создания',
             'update_user' => 'Редактировал',
             'update_date' => 'Дата обн.',
+
+            'article' => 'Артикул',
+            'price' => 'Цена',
+            'price_old' => 'Старая цена',
+            'currency' => 'Валюта',
+            'unit' => 'Ед. измерения',
         ];
     }
 

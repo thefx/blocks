@@ -109,6 +109,13 @@ class Block extends ActiveRecord
                 [ 'type' => 'model', 'value' => 'text' ],
             ],
             'Характеристики' => $propsRows,
+            'Каталог' => [
+                [ 'type' => 'model', 'value' => 'article' ],
+                [ 'type' => 'model', 'value' => 'price' ],
+                [ 'type' => 'model', 'value' => 'price_old' ],
+                [ 'type' => 'model', 'value' => 'currency' ],
+                [ 'type' => 'model', 'value' => 'unit' ],
+            ],
             'Сео' => [
                 [ 'type' => 'model', 'value' => 'seo_title' ],
                 [ 'type' => 'model', 'value' => 'seo_keywords' ],

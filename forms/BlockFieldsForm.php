@@ -2,7 +2,7 @@
 
 namespace thefx\blocks\forms;
 
-use app\shop\services\TransactionManager;
+use thefx\blocks\services\TransactionManager;
 use thefx\blocks\models\blocks\Block;
 use Yii;
 use yii\base\Model;
@@ -37,7 +37,7 @@ abstract class BlockFieldsForm extends Model
         parent::__construct($config);
     }
 
-    public function rules()
+    public function rules(): array
     {
         return [
             [['textarea', 'type', 'value', 'block_type'], 'string'],
@@ -54,7 +54,7 @@ abstract class BlockFieldsForm extends Model
     /**
      * @return Block
      */
-    public function getBlock()
+    public function getBlock(): Block
     {
         return $this->block;
     }

@@ -1,10 +1,11 @@
 <?php
 
+use thefx\blocks\models\blocks\BlockCategory;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model app\shop\entities\Block\BlockCategory */
+/* @var $model BlockCategory */
 
 $this->title = $model->title;
 $this->params['breadcrumbs'][] = ['label' => 'Block Categories', 'url' => ['index']];

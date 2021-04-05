@@ -18,29 +18,27 @@ $this->params['breadcrumbs'][] = ['label' => 'Блоки', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
-<div class="card card-primary card-outline card-outline-tabs">
 
+<div class="card card-primary card-outline card-outline-tabs">
     <div class="card-header p-0 border-bottom-0">
-        <ul class="nav nav-tabs" role="tablist">
+        <ul class="nav nav-tabs" id="custom-tabs-four-tab" role="tablist">
             <li class="nav-item">
-                <a class="nav-link active" id="custom-tabs-1-tab" data-toggle="pill" href="#custom-tabs-1" role="tab" aria-controls="custom-tabs-1" aria-selected="true">Общая информация</a>
+                <a class="nav-link active" data-toggle="pill" href="#tab-1" role="tab" aria-selected="true">Общая информация</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="custom-tabs-2-tab" data-toggle="pill" href="#custom-tabs-2" role="tab" aria-controls="custom-tabs-2" aria-selected="false">Переводы</a>
+                <a class="nav-link" data-toggle="pill" href="#tab-2" role="tab" aria-selected="false">Переводы</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="custom-tabs-3-tab" data-toggle="pill" href="#custom-tabs-3" role="tab" aria-controls="custom-tabs-3" aria-selected="false">Характеристики</a>
+                <a class="nav-link" data-toggle="pill" href="#tab-3" role="tab" aria-selected="false">Характеристики</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="custom-tabs-4-tab" data-toggle="pill" href="#custom-tabs-4" role="tab" aria-controls="custom-tabs-4" aria-selected="false">Настройки фото</a>
+                <a class="nav-link" data-toggle="pill" href="#tab-4" role="tab" aria-selected="false">Настройки фото</a>
             </li>
         </ul>
     </div>
-
     <div class="card-body">
-
-        <div class="tab-content">
-            <div class="tab-pane fade active show" id="custom-tabs-1" role="tabpanel" aria-labelledby="custom-tabs-1-tab">
+        <div class="tab-content" id="custom-tabs-four-tabContent">
+            <div class="tab-pane fade active show" id="tab-1" role="tabpanel">
 
                 <?= DetailView::widget([
                     'model' => $model,
@@ -61,7 +59,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?= Html::a('Редактировать', ['block/update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
 
             </div>
-            <div class="tab-pane fade" id="custom-tabs-2" role="tabpanel" aria-labelledby="custom-tabs-2-tab">
+            <div class="tab-pane fade" id="tab-2" role="tabpanel">
 
                 <?= DetailView::widget([
                     'model' => $model->translate,
@@ -84,7 +82,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?= Html::a('Редактировать', ['block-translate/update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
 
             </div>
-            <div class="tab-pane fade" id="custom-tabs-3" role="tabpanel" aria-labelledby="custom-tabs-3-tab">
+            <div class="tab-pane fade" id="tab-3" role="tabpanel">
 
                 <p>
                     <?= Html::a('Добавить характеристику', ['block-prop/create', 'block_id' => $model->id], ['class' => 'btn btn-success']) ?>
@@ -102,8 +100,6 @@ $this->params['breadcrumbs'][] = $this->title;
                         ],
                         [
                             'attribute' => 'title',
-                            'headerOptions' => ['style' => 'width:150px; text-align:center'],
-                            'contentOptions' => ['style' => 'text-align:center'],
                             'content' => static function(BlockProp $model) {
                                 return Html::a($model->title, ['block-prop/update', 'id' => $model->id], ['data-pjax' => '0']);
                             }
@@ -121,7 +117,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'headerOptions' => ['style' => 'width:150px; text-align:center'],
                             'contentOptions' => ['style' => 'text-align:center'],
                             'content' => static function(BlockProp $model) {
-                                return $model->public ? '<span class="label label-success">Да</span>' : '<span class="label label-default">Нет</span>';
+                                return $model->public ? '<span class="badge badge-success">Да</span>' : '<span class="badge">Нет</span>';
                             }
                         ],
                         [
@@ -129,7 +125,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'headerOptions' => ['style' => 'width:150px; text-align:center'],
                             'contentOptions' => ['style' => 'text-align:center'],
                             'content' => static function(BlockProp $model) {
-                                return $model->multi ? '<span class="label label-success">Да</span>' : '<span class="label label-default">Нет</span>';
+                                return $model->multi ? '<span class="badge badge-success">Да</span>' : '<span class="badge">Нет</span>';
                             }
                         ],
                         [
@@ -137,7 +133,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'headerOptions' => ['style' => 'width:150px; text-align:center'],
                             'contentOptions' => ['style' => 'text-align:center'],
                             'content' => static function(BlockProp $model) {
-                                return $model->required ? '<span class="label label-success">Да</span>' : '<span class="label label-default">Нет</span>';
+                                return $model->required ? '<span class="badge badge-success">Да</span>' : '<span class="badge">Нет</span>';
                             }
                         ],
                         [
@@ -166,7 +162,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?php Pjax::end(); ?>
 
             </div>
-            <div class="tab-pane fade" id="custom-tabs-4" role="tabpanel" aria-labelledby="custom-tabs-4-tab">
+            <div class="tab-pane fade" id="tab-4" role="tabpanel">
 
                 <?= DetailView::widget([
                     'model' => $model->settings,
@@ -186,15 +182,5 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
         </div>
     </div>
-
+    <!-- /.card -->
 </div>
-
-
-
-
-
-
-
-
-
-

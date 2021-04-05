@@ -19,12 +19,12 @@ echo HTML::label($model->prop->title);
 
 ?>
 
-<div class="well" id="<?= $unique ?>">
+<div class="card card-body bg-light " id="card-<?= $unique ?>">
 
     <?php if ($files = $model->getFilesPath()) : ?>
         <?php foreach ($files as $filename => $path) : ?>
 
-            <div class="mb-10" data-key="<?= $filename ?>">
+            <div class="mb-3" data-key="<?= $filename ?>">
                 <a href="<?= $path ?>" target="_blank"><?= $filename ?></a>
                 <a class="btn btn-danger btn-xs"
                    href="<?= Url::to(['delete-file-prop', 'name' => $filename, 'id' => $model->id]) ?>"

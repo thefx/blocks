@@ -124,8 +124,6 @@ class BlockItemController extends Controller
      */
     public function actionUpdate($id, $parent_id)
     {
-        PropInputAsset::register($this->view);
-
         $this->layout = $this->module->layoutPure;
 
         $model = $this->findModel($id);

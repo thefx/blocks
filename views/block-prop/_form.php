@@ -1,8 +1,9 @@
 <?php
 
-use app\widgets\switcher\SwitchInput;
+use thefx\blocks\assets\SortableJs\SortableJsAsset;
+use thefx\blocks\widgets\switcher\SwitchInput;
 use thefx\blocks\models\blocks\BlockProp;
-use thefx\blocks\models\blocks\BlockPropElem;
+use thefx\pages\widgets\select\Select2Input;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\ActiveForm;
@@ -10,10 +11,9 @@ use yii\widgets\Pjax;
 
 /* @var $this yii\web\View */
 /* @var $model BlockProp */
-/* @var $elem BlockPropElem[] */
 /* @var $form yii\widgets\ActiveForm */
 
-\thefx\blocks\assets\SortableJs\SortableJsAsset::register($this);
+SortableJsAsset::register($this);
 ?>
 
 
@@ -119,10 +119,10 @@ use yii\widgets\Pjax;
                 <a class="nav-link" id="custom-tabs-2-tab" data-toggle="pill" href="#custom-tabs-2" role="tab" aria-controls="custom-tabs-2" aria-selected="false">Тип: список</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="custom-tabs-3-tab" data-toggle="pill" href="#custom-tabs-3" role="tab" aria-controls="custom-tabs-3" aria-selected="false">Тип: Связанный блок</a>
+                <a class="nav-link" id="custom-tabs-3-tab" data-toggle="pill" href="#custom-tabs-3" role="tab" aria-controls="custom-tabs-3" aria-selected="false">Тип: Текст</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="custom-tabs-4-tab" data-toggle="pill" href="#custom-tabs-4" role="tab" aria-controls="custom-tabs-4" aria-selected="false">Тип: Текст</a>
+                <a class="nav-link" id="custom-tabs-4-tab" data-toggle="pill" href="#custom-tabs-4" role="tab" aria-controls="custom-tabs-4" aria-selected="false">Тип: Связанный блок</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" id="custom-tabs-5-tab" data-toggle="pill" href="#custom-tabs-5" role="tab" aria-controls="custom-tabs-5" aria-selected="false">Прочее</a>
@@ -162,6 +162,7 @@ use yii\widgets\Pjax;
                             <th>Код</th>
                             <th class="text-center">Сортировка</th>
                             <th class="text-center">По умолчанию</th>
+                            <th></th>
                         </tr>
                         </thead>
                         <tbody class="items-sortable">
@@ -187,9 +188,23 @@ use yii\widgets\Pjax;
             </div>
             <div class="tab-pane fade" id="custom-tabs-4" role="tabpanel" aria-labelledby="custom-tabs-4-tab">
 
-                <?= $form->field($model, 'relative_block_item')->dropDownList($model->getBlocksList(), ['prompt'=>'Значение не выбрано']) ?>
+                <?= $form->field($model, 'relative_block_item')->widget(Select2Input::class, [
+                    'data' => $model->getBlocksList(),
+                    'options' => ['placeholder' => 'Значение не выбрано'],
+                    'pluginOptions' => [
+                        'allowClear' => true,
+//                        'prompt' => 'Значение не выбрано'
+                    ],
+                ]) ?>
 
-                <?= $form->field($model, 'relative_block_cat')->dropDownList($model->getBlocksList(), ['prompt'=>'Значение не выбрано']) ?>
+                <?= $form->field($model, 'relative_block_cat')->widget(Select2Input::class, [
+                    'data' => $model->getBlocksList(),
+                    'options' => ['placeholder' => 'Значение не выбрано'],
+                    'pluginOptions' => [
+                        'allowClear' => true,
+//                        'prompt' => 'Значение не выбрано'
+                    ],
+                ]) ?>
 
             </div>
             <div class="tab-pane fade" id="custom-tabs-5" role="tabpanel" aria-labelledby="custom-tabs-5-tab">

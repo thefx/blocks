@@ -462,7 +462,7 @@ class BlockItem extends ActiveRecord
     public function rules()
     {
         return [
-            [['block_id', 'parent_id', 'sort'], 'required'],
+            [['title', 'block_id', 'parent_id', 'sort'], 'required'],
             [['anons', 'text'], 'string'],
             [['date', 'create_date', 'update_date'], 'safe'],
             [['block_id', 'parent_id', 'public', 'sort', 'create_user', 'update_user'], 'integer'],

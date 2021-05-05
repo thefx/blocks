@@ -173,9 +173,14 @@ class BlockCategoryController extends Controller
         $model->setAttribute('update_user', Yii::$app->user->id);
         $model->setAttribute('update_date', date('Y-m-d H:i:s'));
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash('success', $block->translate->category . " обновлен");
-            return $this->redirect(['index', 'parent_id' => $parent_id]);
+        if ($model->load(Yii::$app->request->post())) {
+            if ($parent_id !== $model->parent_id) {
+                $model->appendTo($category);
+            }
+            if ($model->save()) {
+                Yii::$app->session->setFlash('success', $block->translate->category . " обновлен");
+                return $this->redirect(['index', 'parent_id' => $parent_id]);
+            }
         }
 
         return $this->render('update', [

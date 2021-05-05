@@ -174,7 +174,7 @@ class BlockCategoryController extends Controller
         $model->setAttribute('update_date', date('Y-m-d H:i:s'));
 
         if ($model->load(Yii::$app->request->post())) {
-            if ($parent_id !== $model->parent_id) {
+            if ($model->getOldAttribute('parent_id') !== $model->getAttribute('parent_id')) {
                 $model->appendTo($category);
             }
             if ($model->save()) {

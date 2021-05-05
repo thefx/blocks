@@ -79,7 +79,10 @@ class BlockCategory extends ActiveRecord
 
     public function categoryList()
     {
-        $categories = static::find()->where(['block_id' => $this->block_id])->orderBy('lft')->all();
+        $categories = static::find()
+            ->where(['block_id' => $this->block_id])
+            ->andWhere(['!=', 'id', $this->id])
+            ->orderBy('lft')->all();
 
         return ArrayHelper::map($categories, 'id', static function($row) {
             return str_repeat('-', $row->depth) . '' . $row->title;

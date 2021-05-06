@@ -35,6 +35,30 @@ class BlockItemController extends Controller
         ];
     }
 
+    public function actions()
+    {
+        $id = (int) Yii::$app->request->get('id');
+
+        return [
+            'upload-image' => [
+                'class' => 'vova07\imperavi\actions\UploadFileAction',
+                'url' => '/upload/redactor/block-item/' . $id . '/',
+                'path' => \Yii::getAlias("@webroot") . '/upload/redactor/block-item/' . $id,
+                'unique' => true,
+                'validatorOptions' => [
+                    'maxWidth' => 2000,
+                    'maxHeight' => 2000
+                ]
+            ],
+            'get-uploaded-images' => [
+                'class' => 'vova07\imperavi\actions\GetImagesAction',
+                'url' => '/upload/redactor/block-item/' . $id . '/',
+                'path' => \Yii::getAlias("@webroot") . '/upload/redactor/block-item/' . $id,
+                'options' => ['only' => ['*.jpg', '*.jpeg', '*.png', '*.gif', '*.ico']],
+            ]
+        ];
+    }
+
     /**
      * Lists all BlockItem models.
      * @return mixed

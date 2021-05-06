@@ -81,10 +81,13 @@ class BlockCategory extends ActiveRecord
     {
         $categories = static::find()
             ->where(['block_id' => $this->block_id])
-            ->andWhere(['!=', 'id', $this->id])
-            ->orderBy('lft')->all();
+            ->orderBy('lft');
 
-        return ArrayHelper::map($categories, 'id', static function($row) {
+        if (!$this->isNewRecord) {
+            $categories->andWhere(['!=', 'id', $this->id]);
+        }
+
+        return ArrayHelper::map($categories->all(), 'id', static function($row) {
             return str_repeat('-', $row->depth) . '' . $row->title;
         });
     }

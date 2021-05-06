@@ -87,6 +87,8 @@ class BlockPropController extends Controller
             'in_filter' => 0,
             'required' => 0,
             'multi' => 0,
+            'public' => 1,
+            'redactor' => 0,
         ]);
 
         if ($model->load(Yii::$app->request->post())) {

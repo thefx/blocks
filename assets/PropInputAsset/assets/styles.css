@@ -46,3 +46,12 @@
 .card .thumbnail .btn-delete:hover {
     color: #c9302c;
 }
+
+/* switcher */
+.btn-default:not(:disabled):not(.disabled).active,
+.btn-default:not(:disabled):not(.disabled):active,
+.show>.btn-default.dropdown-toggle {
+    color: #fff;
+    background-color: #28a745;
+    border-color: #28a745;
+}

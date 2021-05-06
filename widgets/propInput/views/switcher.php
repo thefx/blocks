@@ -14,15 +14,17 @@ echo HTML::label($model->prop->title);
 //echo Html::activeRadioList($model, $attributeName, [0=> 'Нет', 1 => 'Да']);
 
 echo '<br />' . HTML::activeRadioList($model, $attributeName, [0 => 'Нет', 1 => 'Да'], [
-        'radioTemplate' => '{input}',
-        'item' => function ($index, $label, $name, $checked, $value) {
-            $checked = ($checked) ? 'checked' : '';
-            $active = ($checked) ? 'active' : '';
+//    'radioTemplate' => '{input}',
+        'item' => static function ($index, $label, $name, $checked, $value) {
+
+            $checked = $checked ? 'checked' : '';
+            $active = $checked ? 'active' : '';
+
             $return = '<label class="btn btn-default ' . $active . '">';
             $return .= '<input type="radio" name="' . $name . '" value="' . $value . '" ' . $checked . '>' . ucwords($label);
             $return .= '</label>';
             return $return;
         },
-        'class' => 'btn-group',
+        'class' => 'btn-group btn-group-toggle',
         'data-toggle' => 'buttons',
     ]);

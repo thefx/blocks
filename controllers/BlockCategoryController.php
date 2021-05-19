@@ -176,7 +176,8 @@ class BlockCategoryController extends Controller
 
         if ($model->load(Yii::$app->request->post())) {
             if ($model->getOldAttribute('parent_id') !== $model->getAttribute('parent_id')) {
-                $model->appendTo($category);
+                $newCategory = BlockCategory::findOne($model->getAttribute('parent_id'));
+                $model->appendTo($newCategory);
             }
             if ($model->save()) {
                 Yii::$app->session->setFlash('success', $block->translate->category . " обновлен");

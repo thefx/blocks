@@ -43,6 +43,20 @@ return [
 ];
 ```
 
+Add access only for auth users
+```
+    'as access blocks' => [
+        'class' => 'yii\filters\AccessControl',
+        'only' => ['pages/*', 'blocks/*'],
+        'rules' => [
+            [
+                'allow' => true,
+                'roles' => ['@'],
+            ],
+        ],
+    ],
+```
+
 Usage
 -----
 

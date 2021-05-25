@@ -469,7 +469,7 @@ class BlockItem extends ActiveRecord
             [['title', 'path', /*'photo', 'photo_preview',*/ 'photo_crop', 'photo_preview_crop', 'seo_title', 'seo_keywords', 'seo_description'], 'string', 'max' => 255],
             [['photo', 'photo_preview'], 'file', 'mimeTypes' => 'image/*'],
 
-            [['price', 'price_old'], 'number'],
+            [['price', 'price_old'], 'double'],
             [['article'], 'string', 'max' => 50],
             [['currency', 'unit'], 'string', 'max' => 10],
         ];

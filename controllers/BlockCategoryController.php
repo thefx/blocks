@@ -204,7 +204,7 @@ class BlockCategoryController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $this->findModel($id)->deleteWithChildren();
         return $this->redirect(['block-category/index', 'parent_id' => (int) $_GET['parent_id']]);
     }
 

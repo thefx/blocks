@@ -252,6 +252,21 @@ class BlockCategoryController extends Controller
         return $items;
     }
 
+    public function actionOptionsTaskMove($categoryId, array $keys = [])
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        foreach ($keys as $key) {
+            $blockItem = BlockItem::findOne(['id' => $key]);
+            $blockItem->parent_id = (int) $categoryId;
+            $blockItem->save() or die(var_dump($blockItem->getErrors()));
+        }
+
+        return [
+            'result' => 'success'
+        ];
+    }
+
     /**
      * Finds the BlockCategory model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

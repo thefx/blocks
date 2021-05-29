@@ -8,6 +8,7 @@ use thefx\blocks\models\blocks\queries\BlockQuery;
 use thefx\user\models\User;
 use yii\behaviors\AttributesBehavior;
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "{{%block}}".
@@ -190,6 +191,18 @@ class Block extends ActiveRecord
             'update_user' => 'Отредактировал',
             'update_date' => 'Дата обн.',
         ];
+    }
+
+
+    public function categoryList($divider = '-')
+    {
+        $categories = BlockCategory::find()
+            ->where(['block_id' => $this->id])
+            ->orderBy('lft');
+
+        return ArrayHelper::map($categories->all(), 'id', static function(BlockCategory $row) use($divider) {
+            return str_repeat($divider, $row->depth) . '' . $row->title;
+        });
     }
 
     public function getCategory()

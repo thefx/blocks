@@ -111,6 +111,14 @@ $this->params['title_btn'] = (Yii::$app->user->id == 1) ? $this->render('_modal'
 
     <?php
         $columns = [];
+        $columns[] = [
+            'class' => 'yii\grid\CheckboxColumn',
+            'headerOptions' => ['style' => 'width:40px; text-align:center'],
+            'contentOptions' => ['style' => 'text-align:center'],
+            'content' => static function(BlockCategory $row) {
+                return $row->type === BlockCategory::TYPE_ITEM ? Html::checkbox('selection[]', false, ['value' => $row->id]) : null;
+            }
+        ];
 //        $columns[] = [
 //            'label' => '',
 //            'headerOptions' => ['style' => 'width:40px; text-align:center'],
@@ -229,7 +237,9 @@ $this->params['title_btn'] = (Yii::$app->user->id == 1) ? $this->render('_modal'
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
 //        'filterModel' => $searchModel,
+        'options' => ['id' => 'tableTree'],
         'columns' => $columns,
+        'layout' => $this->render('_tableTreeOptions', ['block' => $block]),
         'rowOptions' => function ($model, $key, $index, $grid) {
             return ['data-type' => $model->type];
         },

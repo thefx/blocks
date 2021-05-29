@@ -18,6 +18,7 @@
             $('#formOptions select').attr('disabled', true);
             $('#formOptions button').attr('disabled', true);
         }
+
         function enableOptions() {
             $('#formOptions select').attr('disabled', false);
             $('#formOptions button').attr('disabled', false);
@@ -34,7 +35,16 @@
             }
         })
 
+        $('#treeCategoryTask').on('change', function () {
+            if ($(this).val() === 'move') {
+                $('#treeCategoryWrapper').removeClass('d-none')
+            } else {
+                $('#treeCategoryWrapper').addClass('d-none')
+            }
+        })
+
         $('#treeCategory').select2();
+        $('#treeCategory').parent().addClass('d-none');
 
         $('#formOptions').on('click', '[type="button"]', function () {
             var button = $(this);
@@ -63,18 +73,20 @@
             <form class="form-inline pl-1" id="formOptions">
                 <label class="sr-only" for="treeCategoryTask">Task</label>
                 <select name="task" id="treeCategoryTask" class="form-control mr-sm-2">
+                    <option value="activate">Активировать</option>
+                    <option value="deactivate">Деактивировать</option>
                     <option value="move">Переместить</option>
-<!--                    <option value="activate">Активировать</option>-->
-<!--                    <option value="deactivate">Деактивировать</option>-->
 <!--                    <option value="delete">Удалить</option>-->
                 </select>
-                <label class="sr-only" for="treeCategory">Category</label>
-                <select name="categoryId" id="treeCategory" class="form-control mr-sm-2">
-                    <?php foreach ($block->categoryList('.') as $catId => $catName) : ?>
-                        <option value="<?= $catId ?>"><?= $catName ?></option>
-                    <?php endforeach; ?>
-                </select>
-                <button type="button" class="btn btn-primary ml-0 ml-sm-2">Отправить</button>
+                <div id="treeCategoryWrapper" class="mr-sm-2">
+                    <label class="sr-only" for="treeCategory">Category</label>
+                    <select name="categoryId" id="treeCategory" class="form-control mr-sm-2">
+                        <?php foreach ($block->categoryList('.') as $catId => $catName) : ?>
+                            <option value="<?= $catId ?>"><?= $catName ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <button type="button" class="btn btn-primary ml-0">Отправить</button>
             </form>
         </td>
     </tr>

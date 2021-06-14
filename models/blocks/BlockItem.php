@@ -433,6 +433,19 @@ class BlockItem extends ActiveRecord
         return $this->hasOne(BlockCategory::class, ['id' => 'parent_id']);
     }
 
+    public function getModifications()
+    {
+        return [];
+    }
+
+    public function canBeCheckout($modificationId, $quantity): bool
+    {
+//        if ($modificationId) {
+//            return $quantity <= $this->getModification($modificationId)->quantity;
+//        }
+        return $quantity <= $this->quantity;
+    }
+
     #########################
 
     public function behaviors()

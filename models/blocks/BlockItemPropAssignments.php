@@ -67,9 +67,9 @@ class BlockItemPropAssignments extends ActiveRecord
                     ->indexBy('id')
                     ->all();
             case BlockProp::TYPE_RELATIVE_BLOCK_CAT:
-                return BlockItem::find()
-                    ->with(['propAssignments.prop'])
-                    ->where(['parent_id' => $this->value])->all();
+                return BlockCategory::find()
+                    ->where(['id' => $this->value])
+                    ->all();
             default:
                return null;
         }

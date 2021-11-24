@@ -9,7 +9,7 @@ use yii\web\View;
 /* @var string $attributeName */
 
 $relBlockItemList = $model->prop->getAssignBlockItemList();
-$blockItems = BlockItem::find()->where(['parent_id' => $model->value])->all();
+//$blockItems = BlockItem::find()->where(['parent_id' => $model->value])->all();
 
 $inputId = Html::getInputId($model, $attributeName);
 $js = "$('#{$inputId}').select2(/*{placeholder: '', allowClear: true}*/);";

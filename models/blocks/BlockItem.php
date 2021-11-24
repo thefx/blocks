@@ -209,8 +209,8 @@ class BlockItem extends ActiveRecord
 ////                die;
 ////                unset($assignments[$i]);
 //            }
-            $this->on(static::EVENT_AFTER_INSERT,[$this,'createRelCatHandler']);
-            $this->on(static::EVENT_AFTER_UPDATE,[$this,'createRelCatHandler']);
+//            $this->on(static::EVENT_AFTER_INSERT,[$this,'createRelCatHandler']);
+//            $this->on(static::EVENT_AFTER_UPDATE,[$this,'createRelCatHandler']);
         }
         $this->propAssignments = array_filter($assignments, static function ($data) {
             return $data->value != '';

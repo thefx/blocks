@@ -193,12 +193,13 @@ class BlockProp extends ActiveRecord
     public function getAssignBlockCatList(): array
     {
         $items = BlockCategory::find()
-            ->select(['id', 'title'])
+            ->select(['id', 'title', 'depth'])
             ->where(['block_id' => $this->relative_block_cat])
             ->andWhere(['public' => 1])
+            ->orderBy('lft')
             ->all();
 
-        return ArrayHelper::map($items, 'id', static function (BlockCategory $row) { return '[' . $row->id . '] ' . $row->title; });
+        return ArrayHelper::map($items, 'id', static function (BlockCategory $row) { return '[' . $row->id . '] ' . str_repeat('.', $row->depth) . $row->title; });
     }
 
     ####################

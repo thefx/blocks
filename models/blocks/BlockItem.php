@@ -527,7 +527,7 @@ class BlockItem extends ActiveRecord
     public static function getBySlug($blockId, $slug)
     {
         return BlockItem::find()
-            ->with(['propAssignments.prop', 'propAssignments.propElements', 'propsIndexed'])
+            ->with(['propAssignments.prop'])
             ->where(['path' => $slug])
             ->andWhere(['block_id' => $blockId])
             ->active()

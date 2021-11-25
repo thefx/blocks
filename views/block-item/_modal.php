@@ -8,9 +8,7 @@ use yii\widgets\ActiveForm;
 
 ?>
 
-<?php if (in_array(Yii::$app->user->id, $this->context->module->rootUsers, true)) : ?>
-    <button type="button" class="btn btn-default btn-sm mb-3" data-toggle="modal" data-target="#modal_animation"><i class="fa fa-cog"></i></button>
-<?php endif; ?>
+<button type="button" class="btn btn-default btn-sm mb-3" data-toggle="modal" data-target="#modal_animation"><i class="fa fa-cog"></i></button>
 
 <div id="modal_animation" class="modal" style="display: none;">
     <div class="modal-dialog modal-xl">

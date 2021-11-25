@@ -16,35 +16,6 @@ use yii\jui\DatePicker;
 /** @var BlockItemPropAssignments $form */
 /** @var string $value - field name */
 
-//$ckEditorOptions = (!$model->isNewRecord) ? [
-//    'options' => ['rows' => 6],
-//    'preset' => 'full',
-//    'enableKCFinder' => true,
-//    'kcfOptions' => [
-//        'uploadURL' => $model->getEditorPath(),
-//        'access' => [
-//            'files' => [
-//                'upload' => true,
-//                'delete' => true,
-//                'copy' => true,
-//                'move' => false,
-//                'rename' => true,
-//            ],
-//            'dirs' => [
-//                'create' => false,
-//                'delete' => false,
-//                'rename' => false,
-//            ],
-//        ],
-//        'types' => array(
-//            $model->getPrimaryKey()  =>  Yii::$app->params['editor.files'],
-//        ),
-//    ]
-//] : [
-//    'options' => ['rows' => 6],
-//    'preset' => 'full',
-//];
-
 if (!$model->hasProperty($value)) {
     return '';
 }

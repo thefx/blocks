@@ -1,10 +1,10 @@
 <?php
 
+use thefx\blocks\models\blocks\BlockSettings;
 use yii\helpers\Html;
 
-
 /* @var $this yii\web\View */
-/* @var $model app\shop\entities\Block\BlockSettings */
+/* @var $model BlockSettings */
 
 $this->title = 'Create Block Settings';
 $this->params['breadcrumbs'][] = ['label' => 'Block Settings', 'url' => ['index']];

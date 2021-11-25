@@ -8,9 +8,9 @@ use yii\widgets\ActiveForm;
 
 ?>
 
-<?php if (in_array(Yii::$app->user->id, $this->context->module->rootUsers)) : ?>
+<div class="mb-3">
     <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#modal_animation"><i class="fa fa-cog"></i></button>
-<?php endif; ?>
+</div>
 
 <div id="modal_animation" class="modal" style="display: none;">
     <div class="modal-dialog modal-xl">
@@ -25,14 +25,12 @@ use yii\widgets\ActiveForm;
 
             <div class="modal-body">
                 <h6 class="text-semibold text-left">По умолчанию</h6>
-
                 <p><textarea cols="30" rows="10" class="form-control" style="resize: vertical" disabled="disabled"><?= json_encode($modelFieldsForm->getBlock()->getDefaultFieldsCategoryTemplates(), JSON_UNESCAPED_UNICODE) ?></textarea></p>
 
                 <?= $form->errorSummary($modelFieldsForm, ['class' => 'alert alert-danger']); ?>
 
                 <h6 class="text-semibold text-left">Шаблон</h6>
                 <?= $form->field($modelFieldsForm, 'textarea')->textarea(['cols' => 30, 'rows' => 10])->label(false) ?>
-
             </div>
 
             <div class="modal-footer">

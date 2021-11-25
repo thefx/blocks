@@ -1,10 +1,11 @@
 <?php
 
+use thefx\blocks\forms\search\BlockItemSearch;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model app\modules\admin\forms\BlockItemSearch */
+/* @var $model BlockItemSearch */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 

@@ -1,10 +1,12 @@
 <?php
 
+use thefx\blocks\forms\search\BlockItemSearch;
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
+
 /* @var $this yii\web\View */
-/* @var $searchModel app\modules\admin\forms\BlockItemSearch */
+/* @var $searchModel BlockItemSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = 'Block Items';

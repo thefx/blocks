@@ -1,6 +1,5 @@
 <?php
 
-use thefx\blocks\forms\search\BlockPropElemSearch;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 

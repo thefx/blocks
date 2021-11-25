@@ -1,15 +1,16 @@
 <?php
 
 /* @var $this yii\web\View */
-/* @var $model app\shop\entities\Block\BlockCategory */
+/* @var $model BlockCategory */
 /* @var $block Block */
 /* @var $category BlockCategory */
 /* @var $parents BlockCategory[] */
 
-use app\shop\entities\Block\Block;
-use app\shop\entities\Block\BlockCategory;
+use thefx\blocks\models\blocks\Block;
+use thefx\blocks\models\blocks\BlockCategory;
 
 $this->title = $block->translate->category_create;
+
 if ($parents) {
     $this->params['breadcrumbs'][] = ['label' => $block->translate->categories, 'url' => ['index', 'parent_id' => $parents[0]->parent_id]];
     foreach ($parents as $parent) {

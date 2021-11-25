@@ -1,10 +1,11 @@
 <?php
 
+use thefx\blocks\models\blocks\BlockTranslate;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model app\shop\entities\Block\BlockTranslate */
+/* @var $model BlockTranslate */
 
 $this->title = 'Переводы';
 $this->params['breadcrumbs'][] = ['label' => 'Блоки', 'url' => ['block/index']];

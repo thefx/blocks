@@ -29,10 +29,8 @@ if ($parents) {
     $this->params['breadcrumbs'][] = ['label' => $block->translate->categories, 'url' => ['index', 'parent_id' => $category->parent_id]];
 }
 $this->params['breadcrumbs'][] = $this->title;
-$this->params['title_btn'] = (Yii::$app->user->id == 1) ? $this->render('_modal', ['modelFieldsForm' => $modelFieldsForm]) : null;
 
 \thefx\blocks\assets\SortableJs\SortableJsAsset::register($this);
-
 ?>
 
 <script>
@@ -106,6 +104,10 @@ $this->params['title_btn'] = (Yii::$app->user->id == 1) ? $this->render('_modal'
         cursor: move;
     }
 </style>
+
+<?php if (in_array(Yii::$app->user->id, $this->context->module->rootUsers, true)) {
+    echo $this->render('_modal', ['modelFieldsForm' => $modelFieldsForm]);
+} ?>
 
 <div class="block-category-index">
 

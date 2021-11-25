@@ -1,12 +1,16 @@
 <?php
 
 /* @var $this yii\web\View */
-/* @var $model app\shop\entities\Block\BlockCategory */
-/* @var $block app\shop\entities\Block\Block */
-/* @var $category app\shop\entities\Block\BlockCategory */
-/* @var $parents app\shop\entities\Block\BlockCategory[] */
+/* @var $model BlockCategory */
+/* @var $block Block */
+/* @var $category BlockCategory */
+/* @var $parents BlockCategory[] */
+
+use thefx\blocks\models\blocks\Block;
+use thefx\blocks\models\blocks\BlockCategory;
 
 $this->title = $block->translate->category_update . ' : ' . $model->title;
+
 if ($parents) {
     $this->params['breadcrumbs'][] = ['label' => $block->translate->categories, 'url' => ['index', 'parent_id' => $parents[0]->parent_id]];
     foreach ($parents as $parent) {
@@ -15,7 +19,8 @@ if ($parents) {
 } else {
     $this->params['breadcrumbs'][] = ['label' => $block->translate->categories, 'url' => ['index', 'parent_id' => $category->id]];
 }
-$this->params['breadcrumbs'][] = $this->title; ?>
+$this->params['breadcrumbs'][] = $this->title;
+?>
 
 <div class="block-category-update">
 

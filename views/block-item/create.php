@@ -1,16 +1,17 @@
 <?php
 
 /* @var $this yii\web\View */
-/* @var $model app\shop\entities\Block\BlockItem */
+/* @var $model BlockItem */
 /* @var $block Block */
 /* @var $category BlockCategory */
 /* @var $parents BlockCategory[] */
 /* @var $elem */
 /* @var $modelFieldsForm BlockFieldsItemForm */
 
-use app\shop\entities\Block\Block;
-use app\shop\entities\Block\BlockCategory;
-use app\shop\forms\Block\BlockFieldsItemForm;
+use thefx\blocks\forms\BlockFieldsItemForm;
+use thefx\blocks\models\blocks\Block;
+use thefx\blocks\models\blocks\BlockCategory;
+use thefx\blocks\models\blocks\BlockItem;
 
 $this->title = $block->translate->block_create;
 foreach ($parents as $parent) {
@@ -21,7 +22,11 @@ if (!$category->isRoot()) {
     $this->params['breadcrumbs'][] = ['label' => $category->title, 'url' => ['block-category/index', 'parent_id' => $category->id]];
 }
 $this->params['breadcrumbs'][] = $this->title;
-$this->params['title_btn'] = (Yii::$app->user->id == 1) ? $this->render('_modal', ['modelFieldsForm' => $modelFieldsForm]) : null; ?>
+?>
+
+<?php if (in_array(Yii::$app->user->id, $this->context->module->rootUsers, true)) {
+    echo $this->render('_modal', ['modelFieldsForm' => $modelFieldsForm]);
+} ?>
 
 <div class="block-item-create">
 

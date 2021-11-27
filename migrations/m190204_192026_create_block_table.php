@@ -20,7 +20,7 @@ class m190204_192026_create_block_table extends Migration
             'path' => $this->string(),
             'table' => $this->string(),
             'template' => $this->string(),
-            'pagination' => $this->string(),
+            'pagination' => $this->integer(2)->defaultValue(20),
             'create_user' => $this->integer(),
             'create_date' => $this->dateTime(),
             'update_user' => $this->integer(),

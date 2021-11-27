@@ -24,8 +24,10 @@ class m210402_151424_add_columns_to_block_item_table extends Migration
      */
     public function safeDown()
     {
-        $this->dropColumn('{{%block_item}}', 'upload_path');
-        $this->dropColumn('{{%block_item}}', 'watermark_path');
-        $this->dropColumn('{{%block_item}}', 'web_path');
+        $this->dropColumn('{{%block_item}}', 'article');
+        $this->dropColumn('{{%block_item}}', 'price');
+        $this->dropColumn('{{%block_item}}', 'price_old');
+        $this->dropColumn('{{%block_item}}', 'currency');
+        $this->dropColumn('{{%block_item}}', 'unit');
     }
 }

@@ -21,7 +21,9 @@ use yii\widgets\ActiveForm;
 
 <!--    --><?//= $form->field($model, 'template')->textInput(['maxlength' => true]) ?>
 
-<!--    --><?//= $form->field($model, 'pagination')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'pagination')->textInput(['maxlength' => true]) ?>
+
+    <?= $form->field($model, 'sort')->textInput(['maxlength' => true]) ?>
 
     <div class="form-group">
         <?= Html::submitButton('Сохранить', ['class' => 'btn btn-success']) ?>

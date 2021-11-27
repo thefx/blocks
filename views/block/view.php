@@ -45,9 +45,10 @@ $this->params['breadcrumbs'][] = $this->title;
                     'attributes' => [
                         'id',
                         'title',
-                        'path',
-                        'table',
-                        'template',
+//                        'path',
+//                        'table',
+//                        'template',
+                        'sort',
                         'pagination',
                         'create_user',
                         'create_date',

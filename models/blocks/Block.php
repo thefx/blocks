@@ -18,7 +18,7 @@ use yii\helpers\ArrayHelper;
  * @property string $path
  * @property string $table
  * @property string $template
- * @property string $pagination
+ * @property int $pagination
  * @property int $create_user
  * @property string $create_date
  * @property int $update_user
@@ -35,6 +35,7 @@ use yii\helpers\ArrayHelper;
  * @property BlockFields[] $fieldsCategory
  * @property User $createUser
  * @property User $updateUser
+ * @property int $sort [int(10)]
  */
 class Block extends ActiveRecord
 {
@@ -168,9 +169,9 @@ class Block extends ActiveRecord
     {
         return [
             [['title'], 'required'],
-            [['create_user', 'update_user'], 'integer'],
+            [['create_user', 'update_user', 'sort', 'pagination'], 'integer'],
             [['create_date', 'update_date'], 'safe'],
-            [['title', 'path', 'table', 'template', 'pagination'], 'string', 'max' => 255],
+            [['title', 'path', 'table', 'template'], 'string', 'max' => 255],
         ];
     }
 
@@ -186,6 +187,7 @@ class Block extends ActiveRecord
             'table' => 'Таблица',
             'template' => 'Шаблон',
             'pagination' => 'Элементов на страницу',
+            'sort' => 'Сортировка',
             'create_user' => 'Создал',
             'create_date' => 'Дата создания',
             'update_user' => 'Отредактировал',
@@ -193,8 +195,7 @@ class Block extends ActiveRecord
         ];
     }
 
-
-    public function categoryList($divider = '-')
+    public function categoryList($divider = '.')
     {
         $categories = BlockCategory::find()
             ->where(['block_id' => $this->id])

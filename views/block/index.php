@@ -37,6 +37,11 @@ $this->params['breadcrumbs'][] = $this->title;
                     return Html::a($model->title, ['block/view', 'id' => $model->id]);
                 },
             ],
+            [
+                'attribute' => 'sort',
+                'headerOptions' => ['style' => 'width:85px; text-align:center'],
+                'contentOptions' => ['style' => 'width:85px; text-align:center'],
+            ],
 //            'table',
 //            'template',
             //'pagination',

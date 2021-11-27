@@ -55,6 +55,7 @@ class BlockSearch extends Model
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'sort' => ['defaultOrder' => ['sort' => SORT_ASC, 'id' => SORT_ASC]]
         ]);
 
         $this->load($params);

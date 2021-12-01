@@ -19,6 +19,7 @@ class NestedTreeHelper
                     'depth' => $item['depth'],
                     'public' => $item['public'],
                     'sort' => $item['sort'],
+                    'photo_preview' => $item['photo_preview'],
 //                    'state' => (object)['opened' => false],
                     'children' => static::createCategoriesTree($items, $item['lft'], $item['rgt'])
                 ]);

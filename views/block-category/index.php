@@ -162,7 +162,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 case 'sort':
                     $columns[] = [
                         'label' => 'Сорт.',
-                        'attribute' => 'lft',
+                        'attribute' => 'sort',
                         'headerOptions' => ['style' => 'width:85px; text-align:center'],
                         'contentOptions' => ['style' => 'text-align:center'],
                     ];

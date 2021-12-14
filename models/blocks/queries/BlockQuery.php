@@ -13,11 +13,6 @@ use yii\web\NotFoundHttpException;
  */
 class BlockQuery extends ActiveQuery
 {
-    /*public function active()
-    {
-        return $this->andWhere('[[status]]=1');
-    }*/
-
     /**
      * @inheritdoc
      * @return Block[]|array
@@ -48,7 +43,7 @@ class BlockQuery extends ActiveQuery
      */
     public function oneOrFail($alias)
     {
-        if (($model = parent::where(['path' => $alias])->one()) !== null) {
+        if (($model = $this->where(['path' => $alias])->one()) !== null) {
             return $model;
         }
         throw new NotFoundHttpException('Блок не найден');

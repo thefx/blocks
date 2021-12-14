@@ -25,7 +25,7 @@ class BlockFieldsCategoryForm extends BlockFieldsForm
         $this->block->save();
         $fields = [];
 
-        if (($post = json_decode($this->textarea)) === null) {
+        if (($post = json_decode($this->textarea, false)) === null) {
             return true;
         }
         foreach ($post as $k => $field) {

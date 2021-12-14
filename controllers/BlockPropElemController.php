@@ -4,7 +4,6 @@ namespace thefx\blocks\controllers;
 
 use thefx\blocks\models\blocks\BlockPropElem;
 use Yii;
-use app\modules\admin\forms\BlockPropElemSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -21,27 +20,12 @@ class BlockPropElemController extends Controller
     {
         return [
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'delete' => ['POST'],
                 ],
             ],
         ];
-    }
-
-    /**
-     * Lists all BlockPropElem models.
-     * @return mixed
-     */
-    public function actionIndex()
-    {
-        $searchModel = new BlockPropElemSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
     }
 
     /**

@@ -8,6 +8,7 @@ use thefx\blocks\models\blocks\queries\BlockItemPropAssignmentsQuery;
 use thefx\blocks\models\files\Files;
 use thefx\blocks\models\images\Images;
 use yii\db\ActiveRecord;
+use yii\web\NotFoundHttpException;
 
 /**
  * This is the model class for table "{{%block_item_prop_assignments}}".
@@ -305,5 +306,17 @@ class BlockItemPropAssignments extends ActiveRecord
     public static function find()
     {
         return new BlockItemPropAssignmentsQuery(static::class);
+    }
+
+    /**
+     * @throws NotFoundHttpException
+     * @return self
+     */
+    public static function findOrFail($id)
+    {
+        if (($model = self::findOne($id)) !== null) {
+            return $model;
+        }
+        throw new NotFoundHttpException('The requested page does not exist.');
     }
 }

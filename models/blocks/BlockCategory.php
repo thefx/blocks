@@ -10,6 +10,7 @@ use thefx\blocks\models\blocks\queries\BlockCategoryQuery;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
+use yii\web\NotFoundHttpException;
 
 /**
  * This is the model class for table "{{%block_category}}".
@@ -242,5 +243,17 @@ class BlockCategory extends ActiveRecord
     public static function find()
     {
         return new BlockCategoryQuery(static::class);
+    }
+
+    /**
+     * @throws NotFoundHttpException
+     * @return self
+     */
+    public static function findOrFail($id)
+    {
+        if (($model = self::findOne($id)) !== null) {
+            return $model;
+        }
+        throw new NotFoundHttpException('The requested page does not exist.');
     }
 }

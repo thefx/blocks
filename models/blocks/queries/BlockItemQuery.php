@@ -7,17 +7,12 @@ use yii\db\ActiveQuery;
 use yii\web\NotFoundHttpException;
 
 /**
- * This is the ActiveQuery class for [[\app\shop\entities\Block\BlockItem]].
+ * This is the ActiveQuery class for [[\thefx\blocks\models\blocks\BlockItem]].
  *
  * @see \thefx\blocks\models\blocks\BlockItem
  */
 class BlockItemQuery extends ActiveQuery
 {
-    /*public function active()
-    {
-        return $this->andWhere('[[status]]=1');
-    }*/
-
     public function active()
     {
         return $this->andWhere('[[public]]=1');
@@ -40,19 +35,6 @@ class BlockItemQuery extends ActiveQuery
     {
         return parent::one($db);
     }
-
-//    /**
-//     * @param $alias
-//     * @return array|ActiveRecord|null
-//     * @throws NotFoundHttpException
-//     */
-//    public function findByAlias($alias)
-//    {
-//        if (($model = parent::where(['path' => $alias])->one()) !== null) {
-//            return $model;
-//        }
-//        throw new NotFoundHttpException('Страница не найдена.');
-//    }
 
     /**
      * @param $alias
@@ -98,27 +80,6 @@ class BlockItemQuery extends ActiveQuery
                 }
         ]);
     }
-
-//    public function findByPropElemCode2($blockId, $propName, $propValue)
-//    {
-//        return $this->alias('t')
-//            ->select('t.id')
-//            ->where(['t.block_id' => $blockId])
-//            ->joinWith([
-//                'propAssignments' => function(ActiveQuery $q) use ($propValue, $propName) {
-//                    $q->andWhere(['OR',
-//                        ['like', 'value', $propValue . ';%'],
-//                        ['like', 'value', '%;' . $propValue],
-//                        ['like', 'value', '%;' . $propValue . ';%'],
-//                        ['=', 'value', $propValue],
-//                    ]);
-//                    $q->andWhere(['code' => $propName]);
-//                    $q->joinWith(['prop' => function(ActiveQuery $q) use ($propName) {
-//                        $q->where(['code' => $propName]);
-//                    }]);
-//                }
-//            ]);
-//    }
 
     public function findByPropElemCode($blockId, $elemCode)
     {

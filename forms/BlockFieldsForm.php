@@ -2,9 +2,7 @@
 
 namespace thefx\blocks\forms;
 
-use thefx\blocks\services\TransactionManager;
 use thefx\blocks\models\blocks\Block;
-use Yii;
 use yii\base\Model;
 
 abstract class BlockFieldsForm extends Model
@@ -20,10 +18,6 @@ abstract class BlockFieldsForm extends Model
      * @var Block
      */
     protected $block;
-    /**
-     * @var TransactionManager
-     */
-    private $transaction;
 
     public function __construct(Block $block = null, $parent_id = null, $config = [])
     {
@@ -32,12 +26,11 @@ abstract class BlockFieldsForm extends Model
             $this->setTextarea();
         }
         $this->setBlockType();
-        $this->transaction = Yii::createObject(TransactionManager::class);
 
         parent::__construct($config);
     }
 
-    public function rules(): array
+    public function rules()
     {
         return [
             [['textarea', 'type', 'value', 'block_type'], 'string'],
@@ -54,7 +47,7 @@ abstract class BlockFieldsForm extends Model
     /**
      * @return Block
      */
-    public function getBlock(): Block
+    public function getBlock()
     {
         return $this->block;
     }

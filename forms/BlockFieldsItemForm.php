@@ -27,7 +27,7 @@ class BlockFieldsItemForm extends BlockFieldsForm
 
         $fields = $this->block->fields;
 
-        $post = json_decode($this->textarea);
+        $post = json_decode($this->textarea, false);
 
         if ($post === null) {
             return true;

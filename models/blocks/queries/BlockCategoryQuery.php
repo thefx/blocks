@@ -15,7 +15,7 @@ class BlockCategoryQuery extends \yii\db\ActiveQuery
 {
     use NestedSetsQueryTrait;
 
-    public function withOutRoot()
+    public function withoutRoot()
     {
         return $this->andWhere('[[depth]]!=0');
     }

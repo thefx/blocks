@@ -11,14 +11,9 @@ use thefx\blocks\models\blocks\BlockTranslate;
  */
 class BlockTranslateQuery extends \yii\db\ActiveQuery
 {
-    /*public function active()
-    {
-        return $this->andWhere('[[status]]=1');
-    }*/
-
     /**
      * @inheritdoc
-     * @return \app\shop\entities\Block\BlockTranslate[]|array
+     * @return BlockTranslate[]|array
      */
     public function all($db = null)
     {
@@ -27,7 +22,7 @@ class BlockTranslateQuery extends \yii\db\ActiveQuery
 
     /**
      * @inheritdoc
-     * @return \app\shop\entities\Block\BlockTranslate|array|null
+     * @return BlockTranslate|array|null
      */
     public function one($db = null)
     {

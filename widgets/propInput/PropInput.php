@@ -2,6 +2,7 @@
 
 namespace thefx\blocks\widgets\propInput;
 
+use thefx\blocks\assets\PropInputAsset\PropInputAsset;
 use thefx\blocks\models\blocks\BlockItemPropAssignments;
 use yii\widgets\InputWidget;
 
@@ -17,7 +18,7 @@ class PropInput extends InputWidget
      */
     public function run()
     {
-        \thefx\blocks\assets\PropInputAsset\PropInputAsset::register($this->view);
+        PropInputAsset::register($this->view);
 
         $view = $this->model->prop->type;
 

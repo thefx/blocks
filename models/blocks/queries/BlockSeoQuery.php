@@ -18,7 +18,7 @@ class BlockSeoQuery extends \yii\db\ActiveQuery
 
     /**
      * {@inheritdoc}
-     * @return \app\shop\entities\Block\BlockSeo[]|array
+     * @return BlockSeo[]|array
      */
     public function all($db = null)
     {
@@ -27,7 +27,7 @@ class BlockSeoQuery extends \yii\db\ActiveQuery
 
     /**
      * {@inheritdoc}
-     * @return \app\shop\entities\Block\BlockSeo|array|null
+     * @return BlockSeo|array|null
      */
     public function one($db = null)
     {

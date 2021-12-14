@@ -2,21 +2,18 @@
 
 namespace thefx\blocks\models\blocks\queries;
 
+use thefx\blocks\models\blocks\BlockPropElem;
+
 /**
  * This is the ActiveQuery class for [[\app\shop\entities\Block\BlockPropElem]].
  *
- * @see \app\shop\entities\Block\BlockPropElem
+ * @see BlockPropElem
  */
 class BlockPropElemQuery extends \yii\db\ActiveQuery
 {
-    /*public function active()
-    {
-        return $this->andWhere('[[status]]=1');
-    }*/
-
     /**
      * @inheritdoc
-     * @return \app\shop\entities\Block\BlockPropElem[]|array
+     * @return BlockPropElem[]|array
      */
     public function all($db = null)
     {
@@ -25,7 +22,7 @@ class BlockPropElemQuery extends \yii\db\ActiveQuery
 
     /**
      * @inheritdoc
-     * @return \app\shop\entities\Block\BlockPropElem|array|null
+     * @return BlockPropElem|array|null
      */
     public function one($db = null)
     {

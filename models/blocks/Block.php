@@ -8,7 +8,9 @@ use thefx\blocks\models\blocks\queries\BlockQuery;
 use thefx\user\models\User;
 use yii\behaviors\AttributesBehavior;
 use yii\db\ActiveRecord;
+use yii\db\BaseActiveRecord;
 use yii\helpers\ArrayHelper;
+use yii\web\NotFoundHttpException;
 
 /**
  * This is the model class for table "{{%block}}".
@@ -244,10 +246,10 @@ class Block extends ActiveRecord
                 'class' => AttributesBehavior::class,
                 'attributes' => [
                     'update_user' => [
-                        ActiveRecord::EVENT_BEFORE_UPDATE => \Yii::$app->user->id,
+                        BaseActiveRecord::EVENT_BEFORE_UPDATE => \Yii::$app->user->id,
                     ],
                     'update_date' => [
-                        ActiveRecord::EVENT_BEFORE_UPDATE => date('Y-m-d H:i:s'),
+                        BaseActiveRecord::EVENT_BEFORE_UPDATE => date('Y-m-d H:i:s'),
                     ],
                 ],
             ],
@@ -279,5 +281,17 @@ class Block extends ActiveRecord
     public static function find()
     {
         return new BlockQuery(static::class);
+    }
+
+    /**
+     * @throws NotFoundHttpException
+     * @return self
+     */
+    public static function findOrFail($id)
+    {
+        if (($model = self::findOne($id)) !== null) {
+            return $model;
+        }
+        throw new NotFoundHttpException('The requested page does not exist.');
     }
 }

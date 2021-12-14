@@ -11,14 +11,9 @@ use thefx\blocks\models\blocks\BlockSettings;
  */
 class BlockSettingsQuery extends \yii\db\ActiveQuery
 {
-    /*public function active()
-    {
-        return $this->andWhere('[[status]]=1');
-    }*/
-
     /**
      * @inheritdoc
-     * @return \app\shop\entities\Block\BlockSettings[]|array
+     * @return BlockSettings[]|array
      */
     public function all($db = null)
     {
@@ -27,7 +22,7 @@ class BlockSettingsQuery extends \yii\db\ActiveQuery
 
     /**
      * @inheritdoc
-     * @return \app\shop\entities\Block\BlockSettings|array|null
+     * @return BlockSettings|array|null
      */
     public function one($db = null)
     {

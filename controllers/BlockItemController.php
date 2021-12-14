@@ -9,11 +9,13 @@ use thefx\blocks\models\blocks\BlockCategory;
 use thefx\blocks\models\blocks\BlockItem;
 use thefx\blocks\models\blocks\BlockItemPropAssignments;
 use thefx\blocks\models\images\Images;
-use thefx\blocks\widgets\propInput\PropInputAsset;
 use Yii;
+use yii\caching\TagDependency;
+use yii\db\StaleObjectException;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 
 /**
  * BlockItemController implements the CRUD actions for BlockItem model.
@@ -92,14 +94,26 @@ class BlockItemController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @param $parent_id
      * @return mixed
+     * @throws NotFoundHttpException
      */
     public function actionCreate($parent_id)
     {
         $this->layout = $this->module->layoutPure;
 
-        $category = BlockCategory::findOne($parent_id);
+        $category = BlockCategory::findOrFail($parent_id);
         $block = Block::find()->with('fields')->where(['id' => $category->block_id])->one();
-        $parents = $category ? $category->getParents()->all() : null;
+        $parents = $category->getParents()->all();
+
+        ###
+
+        $modelFieldsForm = new BlockFieldsItemForm($block);
+
+        if ($modelFieldsForm->load(Yii::$app->request->post()) && $modelFieldsForm->save()) {
+            Yii::$app->session->setFlash('success', 'Поля сохранены');
+            return $this->refresh();
+        }
+
+        ###
 
         $model = new BlockItem([
             'block_id' => $block->id,
@@ -116,16 +130,10 @@ class BlockItemController extends Controller
                 $model->setAttribute('create_user', Yii::$app->user->id);
                 $model->setAttribute('create_date', date('Y-m-d H:i:s'));
                 $model->save();
+                TagDependency::invalidate(Yii::$app->cache, 'block_items_' . $category->block_id);
                 Yii::$app->session->setFlash('success', $block->translate->block_item . ' добавлен');
                 return $this->redirect(['block-category/index', 'parent_id' => $parent_id]);
             }
-        }
-
-        $modelFieldsForm = new BlockFieldsItemForm($block);
-
-        if ($modelFieldsForm->load(Yii::$app->request->post()) && $modelFieldsForm->save()) {
-            Yii::$app->session->setFlash('success', 'Поля сохранены');
-            return $this->refresh();
         }
 
         return $this->render('create', [
@@ -151,10 +159,20 @@ class BlockItemController extends Controller
         $this->layout = $this->module->layoutPure;
 
         $model = $this->findModel($id);
-        $category = BlockCategory::findOne($model->parent_id);
-        $block = Block::findOne($category->block_id);
+        $category = BlockCategory::findOrFail($model->parent_id);
+        $block = Block::findOrFail($category->block_id);
+        $parents = $category->getParents()->all();
 
-        $parents = $category ? $category->getParents()->all() : [];
+        ###
+
+        $modelFieldsForm = new BlockFieldsItemForm($block);
+
+        if ($modelFieldsForm->load(Yii::$app->request->post()) && $modelFieldsForm->validate() && $modelFieldsForm->save()) {
+            Yii::$app->session->setFlash('success', 'Поля сохранены');
+            return $this->refresh();
+        }
+
+        ###
 
         $model->populateAssignments();
 
@@ -169,12 +187,7 @@ class BlockItemController extends Controller
             }
         }
 
-        $modelFieldsForm = new BlockFieldsItemForm($block);
-
-        if ($modelFieldsForm->load(Yii::$app->request->post()) && $modelFieldsForm->validate() && $modelFieldsForm->save()) {
-            Yii::$app->session->setFlash('success', 'Поля сохранены');
-            return $this->refresh();
-        }
+        TagDependency::invalidate(Yii::$app->cache, 'block_items_' . $category->block_id);
 
         return $this->render('update', [
             'block' => $block,
@@ -191,6 +204,7 @@ class BlockItemController extends Controller
         $model = $this->findModel($id);
         (new Images())->removeImage($model->{$field});
         $model->updateAttributes([$field => null]);
+        TagDependency::invalidate(Yii::$app->cache, 'block_items_' . $model->block_id);
         return $this->redirect(['update', 'id' => $id, 'parent_id' => $model->parent_id]);
     }
 
@@ -199,32 +213,45 @@ class BlockItemController extends Controller
      *
      * @param $id
      * @param $name
-     * @return \yii\web\Response
+     * @return Response
+     * @throws NotFoundHttpException
      */
     public function actionDeletePhotoProp($id, $name)
     {
-        $model = BlockItemPropAssignments::findOne($id);
+        $model = BlockItemPropAssignments::findOrFail($id);
         $model->deletePhoto($name);
+        $modelItem = $this->findModel($model->block_item_id);
+        TagDependency::invalidate(Yii::$app->cache, 'block_items_' . $modelItem->block_id);
         return $this->redirect(['update', 'id' => $model->blockItem->id, 'parent_id' => $model->blockItem->parent_id]);
     }
 
+    /**
+     * @throws NotFoundHttpException
+     */
     public function actionDeleteFileProp($id, $name)
     {
-        $model = BlockItemPropAssignments::findOne($id);
+        $model = BlockItemPropAssignments::findOrFail($id);
         $model->deleteFile($name);
+        $modelItem = $this->findModel($model->block_item_id);
+        TagDependency::invalidate(Yii::$app->cache, 'block_items_' . $modelItem->block_id);
         return $this->redirect(['update', 'id' => $model->blockItem->id, 'parent_id' => $model->blockItem->parent_id]);
     }
 
+    /**
+     * @throws NotFoundHttpException
+     */
     public function actionSortPhotoProp($id)
     {
         $ids = array_filter(Yii::$app->request->post('ids', []));
 
-        $model = BlockItemPropAssignments::findOne($id);
+        $model = BlockItemPropAssignments::findOrFail($id);
 
         if (!empty($ids) && $model !== null) {
             $value = implode(';', $ids);
             $model->value = $value;
             $model->save(false) or die(print_r($model->getErrors()));
+            $modelItem = $this->findModel($model->block_item_id);
+            TagDependency::invalidate(Yii::$app->cache, 'block_items_' . $modelItem->block_id);
             die('done');
         }
     }
@@ -233,17 +260,18 @@ class BlockItemController extends Controller
      * Deletes an existing BlockItem model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
-     * @return mixed
+     * @return Response
      * @throws NotFoundHttpException if the model cannot be found
      * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
+     * @throws StaleObjectException
      */
     public function actionDelete($id)
     {
         $model = $this->findModel($id);
-        $block = Block::findOne($model->block_id);
+        $block = Block::findOrFail($model->block_id);
         $parentId = $model->parent_id;
         $elementName = $block->translate->block_item;
+        TagDependency::invalidate(Yii::$app->cache, 'block_items_' . $model->block_id);
         $model->delete();
         Yii::$app->session->setFlash('success', $elementName . ' удален');
         return $this->redirect(['block-category/index', 'parent_id' => $parentId]);
@@ -258,7 +286,11 @@ class BlockItemController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = BlockItem::find()->with(['propAssignments.prop', 'propAssignments.prop.block.settings', 'propAssignments.prop.elements'])->where(['id' => $id])->one()) !== null) {
+        if (($model = BlockItem::find()->with([
+                'propAssignments.prop',
+                'propAssignments.prop.block.settings',
+                'propAssignments.prop.elements'
+            ])->where(['id' => $id])->one()) !== null) {
             return $model;
         }
 

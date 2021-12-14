@@ -9,10 +9,12 @@ use thefx\blocks\models\blocks\BlockCategory;
 use thefx\blocks\models\blocks\BlockItem;
 use thefx\blocks\models\images\Images;
 use Yii;
+use yii\caching\TagDependency;
 use yii\db\Expression;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 
 /**
  * BlockCategoryController implements the CRUD actions for BlockCategory model.
@@ -69,7 +71,8 @@ class BlockCategoryController extends Controller
     /**
      * Lists all BlockCategory models.
      * @param $parent_id
-     * @return mixed
+     * @return string|Response
+     * @throws NotFoundHttpException
      */
     public function actionIndex($parent_id)
     {
@@ -77,13 +80,13 @@ class BlockCategoryController extends Controller
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         $category = BlockCategory::find()->where(['id' => $parent_id])->one();
-        $block = Block::findOne($category->block_id);
+        $block = Block::findOrFail($category->block_id);
 
         $root = BlockCategory::find()->where(['block_id' => $block->id, 'parent_id' => 0])->one();
         $searchModel->parent_id = $root->id;
         $searchModel->block_id = $root->block_id;
 
-        $parents = $category ? $category->getParents()->withOutRoot()->all() : null;
+        $parents = $category ? $category->getParents()->withoutRoot()->all() : null;
 
         $modelFieldsForm = new BlockFieldsCategoryForm($block);
 
@@ -121,14 +124,15 @@ class BlockCategoryController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @param $parent_id
      * @return mixed
+     * @throws NotFoundHttpException
      */
     public function actionCreate($parent_id)
     {
         $this->layout = $this->module->layoutPure;
 
-        $category = BlockCategory::findOne($parent_id);
-        $block = Block::findOne($category->block_id);
-        $parents = $category ? $category->getParents()->withOutRoot()->all() : null;
+        $category = BlockCategory::findOrFail($parent_id);
+        $block = Block::findOrFail($category->block_id);
+        $parents = $category->getParents()->withoutRoot()->all();
 
         $model = new BlockCategory([
             'block_id' => $block->id,
@@ -141,6 +145,7 @@ class BlockCategoryController extends Controller
             $model->setAttribute('create_user', Yii::$app->user->id);
             $model->setAttribute('create_date', date('Y-m-d H:i:s'));
             $model->appendTo($category)->save();
+            TagDependency::invalidate(Yii::$app->cache, 'block_categories_' . $category->block_id);
             Yii::$app->session->setFlash('success', $block->translate->category . " добавлен");
             return $this->redirect(['index', 'parent_id' => $parent_id]);
         }
@@ -167,9 +172,9 @@ class BlockCategoryController extends Controller
 
         $model = $this->findModel($id);
 
-        $category = BlockCategory::findOne($model->parent_id);
-        $block = Block::findOne($category->block_id);
-        $parents = $category ? $category->getParents()->withOutRoot()->all() : null;
+        $category = BlockCategory::findOrFail($model->parent_id);
+        $block = Block::findOrFail($category->block_id);
+        $parents = $category->getParents()->withoutRoot()->all();
 
         $model->setAttribute('update_user', Yii::$app->user->id);
         $model->setAttribute('update_date', date('Y-m-d H:i:s'));
@@ -180,6 +185,7 @@ class BlockCategoryController extends Controller
                 $model->appendTo($newCategory);
             }
             if ($model->save()) {
+                TagDependency::invalidate(Yii::$app->cache, 'block_categories_' . $category->block_id);
                 Yii::$app->session->setFlash('success', $block->translate->category . " обновлен");
                 return $this->redirect(['index', 'parent_id' => $parent_id]);
             }
@@ -204,7 +210,9 @@ class BlockCategoryController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->deleteWithChildren();
+        $model = $this->findModel($id);
+        TagDependency::invalidate(Yii::$app->cache, 'block_categories_' . $model->block_id);
+        $model->deleteWithChildren();
         return $this->redirect(['block-category/index', 'parent_id' => (int) $_GET['parent_id']]);
     }
 
@@ -213,12 +221,13 @@ class BlockCategoryController extends Controller
         $model = $this->findModel($id);
         (new Images())->removeImage($model->{$field});
         $model->updateAttributes([$field => null]);
+        TagDependency::invalidate(Yii::$app->cache, 'block_categories_' . $model->block_id);
         return $this->redirect(['update', 'id' => $id, 'parent_id' => $model->parent_id]);
     }
 
     public function actionSortCategory($type, $item, $node)
     {
-        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        Yii::$app->response->format = Response::FORMAT_JSON;
 
         $node = BlockCategory::findOne($node);
         $item = BlockCategory::findOne($item);
@@ -228,13 +237,14 @@ class BlockCategoryController extends Controller
         } elseif ($type === 'before') {
             $item->insertBefore($node)->save() or die(var_dump($item->getErrors()));
         }
+        TagDependency::invalidate(Yii::$app->cache, 'block_categories_' . $item->block_id);
 
         return [$type, $item, $node];
     }
 
     public function actionSortItems()
     {
-        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        Yii::$app->response->format = Response::FORMAT_JSON;
 
         $ids = filter_var_array($_GET['ids'], FILTER_VALIDATE_INT);
 
@@ -252,45 +262,60 @@ class BlockCategoryController extends Controller
         return $items;
     }
 
+    /**
+     * @throws NotFoundHttpException
+     */
     public function actionOptionsTaskMove($categoryId, array $keys = [])
     {
-        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        Yii::$app->response->format = Response::FORMAT_JSON;
 
         foreach ($keys as $key) {
-            $blockItem = BlockItem::findOne(['id' => $key]);
+            $blockItem = BlockItem::findOrFail(['id' => $key]);
             $blockItem->parent_id = (int) $categoryId;
             $blockItem->save() or die(var_dump($blockItem->getErrors()));
         }
 
+        TagDependency::invalidate(Yii::$app->cache, 'block_items_' . $blockItem->block_id);
+
         return [
             'result' => 'success'
         ];
     }
 
+    /**
+     * @throws NotFoundHttpException
+     */
     public function actionOptionsTaskActivate($categoryId, array $keys = [])
     {
-        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        Yii::$app->response->format = Response::FORMAT_JSON;
 
         foreach ($keys as $key) {
-            $blockItem = BlockItem::findOne(['id' => $key]);
+            $blockItem = BlockItem::findOrFail(['id' => $key]);
             $blockItem->public = 1;
             $blockItem->save() or die(var_dump($blockItem->getErrors()));
         }
 
+        TagDependency::invalidate(Yii::$app->cache, 'block_items_' . $blockItem->block_id);
+
         return [
             'result' => 'success'
         ];
     }
 
+    /**
+     * @throws NotFoundHttpException
+     */
     public function actionOptionsTaskDeactivate($categoryId, array $keys = [])
     {
-        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        Yii::$app->response->format = Response::FORMAT_JSON;
 
         foreach ($keys as $key) {
-            $blockItem = BlockItem::findOne(['id' => $key]);
+            $blockItem = BlockItem::findOrFail(['id' => $key]);
             $blockItem->public = 0;
             $blockItem->save() or die(var_dump($blockItem->getErrors()));
         }
+
+        TagDependency::invalidate(Yii::$app->cache, 'block_items_' . $blockItem->block_id);
 
         return [
             'result' => 'success'

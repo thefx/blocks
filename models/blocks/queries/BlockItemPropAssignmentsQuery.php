@@ -2,21 +2,18 @@
 
 namespace thefx\blocks\models\blocks\queries;
 
+use thefx\blocks\models\blocks\BlockItemPropAssignments;
+
 /**
  * This is the ActiveQuery class for [[\app\shop\entities\Block\BlockItemPropAssignments]].
  *
- * @see \app\shop\entities\Block\BlockItemPropAssignments
+ * @see BlockItemPropAssignments
  */
 class BlockItemPropAssignmentsQuery extends \yii\db\ActiveQuery
 {
-    /*public function active()
-    {
-        return $this->andWhere('[[status]]=1');
-    }*/
-
     /**
      * {@inheritdoc}
-     * @return \app\shop\entities\Block\BlockItemPropAssignments[]|array
+     * @return BlockItemPropAssignments[]|array
      */
     public function all($db = null)
     {
@@ -25,7 +22,7 @@ class BlockItemPropAssignmentsQuery extends \yii\db\ActiveQuery
 
     /**
      * {@inheritdoc}
-     * @return \app\shop\entities\Block\BlockItemPropAssignments|array|null
+     * @return BlockItemPropAssignments|array|null
      */
     public function one($db = null)
     {

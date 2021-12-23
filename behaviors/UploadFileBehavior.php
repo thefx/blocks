@@ -4,6 +4,7 @@ namespace thefx\blocks\behaviors;
 use thefx\blocks\models\files\Files;
 use Yii;
 use yii\base\Behavior;
+use yii\db\BaseActiveRecord;
 use yii\web\UploadedFile;
 use yii\db\ActiveRecord;
 
@@ -41,6 +42,8 @@ class UploadFileBehavior extends Behavior
 
     protected $filesManager;
 
+    protected $needUpdate = true;
+
     public function __construct(Files $filesManager, array $config = [])
     {
         $this->filesManager = $filesManager;
@@ -50,10 +53,10 @@ class UploadFileBehavior extends Behavior
     public function events()
     {
         return [
-            ActiveRecord::EVENT_BEFORE_INSERT => 'beforeInsert',
-            ActiveRecord::EVENT_BEFORE_UPDATE => 'beforeUpdate',
-            ActiveRecord::EVENT_BEFORE_DELETE => 'beforeDelete',
-            ActiveRecord::EVENT_BEFORE_VALIDATE => 'beforeValidate',
+            BaseActiveRecord::EVENT_BEFORE_INSERT => 'beforeInsert',
+            BaseActiveRecord::EVENT_BEFORE_UPDATE => 'beforeUpdate',
+            BaseActiveRecord::EVENT_BEFORE_DELETE => 'beforeDelete',
+            BaseActiveRecord::EVENT_BEFORE_VALIDATE => 'beforeValidate',
         ];
     }
 
@@ -68,28 +71,19 @@ class UploadFileBehavior extends Behavior
     public function beforeValidate()
     {
         $model = $this->owner;
+        $data = $model->getAttribute($this->attributeName);
 
-        if (is_array($model->getAttribute($this->attributeName))) {
-            if (current($model->getAttribute($this->attributeName)) instanceof yii\web\UploadedFile) {
-                $this->files = $model->getAttribute($this->attributeName);
-                return true;
-            }
-            $this->files = UploadedFile::getInstances($model, $this->attributeName);
-            if (!empty($this->files)) {
-                $model->setAttribute($this->attributeName, $this->files);
-                return true;
-            }
+        if (is_array($data) && !empty($data) && current($data) instanceof yii\web\UploadedFile) {
+            $this->files = $model->getAttribute($this->attributeName);
+            return true;
+        }
+        if ($this->protectOldValue) {
+            $model->setAttribute($this->attributeName, $model->getOldAttribute($this->attributeName));
+            $this->needUpdate = false;
+        } else {
             $model->setAttribute($this->attributeName, null);
-            return true;
         }
 
-        if (!$model->getAttribute($this->attributeName) instanceof yii\web\UploadedFile && $file = UploadedFile::getInstance($model, $this->attributeName)) {
-            $this->files = [$file];
-            $model->setAttribute($this->attributeName, $file);
-            return true;
-        }
-
-        $this->files = [$model->getAttribute($this->attributeName)];
         return true;
     }
 
@@ -100,13 +94,10 @@ class UploadFileBehavior extends Behavior
 
     public function beforeUpdate()
     {
-        $model = $this->owner;
-        $this->loadFiles();
-
-        if ($this->protectOldValue) {
-            $model->setAttribute($this->attributeName, $model->getOldAttribute($this->attributeName));
+        if (!$this->needUpdate) {
             return;
         }
+        $this->loadFiles();
     }
 
     public function beforeDelete()
@@ -137,11 +128,8 @@ class UploadFileBehavior extends Behavior
         }
     }
 
-    public function uploadFile($file)
+    protected function uploadFile($file)
     {
-        if (!$file instanceof UploadedFile) {
-            return;
-        }
         $fileName = $file->name;
         if (!is_dir($this->savePath) && !mkdir($concurrentDirectory = $this->savePath, 0755, true) && !is_dir($concurrentDirectory)) {
             throw new \RuntimeException(sprintf('Directory "%s" was not created', $concurrentDirectory));
@@ -165,6 +153,7 @@ class UploadFileBehavior extends Behavior
             return;
         }
         $model = $this->owner;
+        // if nothing to delete
         if (!$oldFileNames = $model->getOldAttribute($this->attributeName)) {
             return;
         }

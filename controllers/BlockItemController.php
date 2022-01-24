@@ -8,6 +8,7 @@ use thefx\blocks\models\blocks\Block;
 use thefx\blocks\models\blocks\BlockCategory;
 use thefx\blocks\models\blocks\BlockItem;
 use thefx\blocks\models\blocks\BlockItemPropAssignments;
+use thefx\blocks\models\files\Files;
 use thefx\blocks\models\images\Images;
 use Yii;
 use yii\caching\TagDependency;
@@ -182,12 +183,11 @@ class BlockItemController extends Controller
                 $model->setAttribute('update_user', Yii::$app->user->id);
                 $model->setAttribute('update_date', date('Y-m-d H:i:s'));
                 $model->save();
+                TagDependency::invalidate(Yii::$app->cache, 'block_items_' . $category->block_id);
                 Yii::$app->session->setFlash('success', $block->translate->block_item . ' обновлен');
                 return $this->redirect(['block-category/index', 'parent_id' => $parent_id]);
             }
         }
-
-        TagDependency::invalidate(Yii::$app->cache, 'block_items_' . $category->block_id);
 
         return $this->render('update', [
             'block' => $block,
@@ -277,6 +277,35 @@ class BlockItemController extends Controller
         return $this->redirect(['block-category/index', 'parent_id' => $parentId]);
     }
 
+    public function actionGetFileInfo($filename)
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        $model = Files::findOne(['file' => $filename]);
+
+        return [
+            'result' => 'success',
+            'model' => $model
+        ];
+    }
+
+    public function actionEditFileInfo()
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        $model = Files::findOne(['file' => $_POST['Files']['file']]);
+
+        if ($model) {
+            $model->load(Yii::$app->request->post());
+            $model->save();
+        }
+
+        return [
+            'result' => 'success',
+            'model' => $model,
+        ];
+    }
+
     /**
      * Finds the BlockItem model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
@@ -287,6 +316,7 @@ class BlockItemController extends Controller
     protected function findModel($id)
     {
         if (($model = BlockItem::find()->with([
+                'propAll.elements', // when populates
                 'propAssignments.prop',
                 'propAssignments.prop.block.settings',
                 'propAssignments.prop.elements'

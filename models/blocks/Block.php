@@ -289,7 +289,7 @@ class Block extends ActiveRecord
      */
     public static function findOrFail($id)
     {
-        if (($model = self::findOne($id)) !== null) {
+        if (($model = self::find()->with('fields.children')->where(['id' => $id])->one()) !== null) {
             return $model;
         }
         throw new NotFoundHttpException('The requested page does not exist.');

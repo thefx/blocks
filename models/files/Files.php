@@ -13,16 +13,19 @@ use yii\db\StaleObjectException;
  * @property string $title
  * @property int $size
  * @property int $sort
+ * @property string $description
  */
 class Files extends \yii\db\ActiveRecord
 {
     public $savePath;
+    public $webPath;
 
     public $deleteFromDisc;
 
     public function __construct(array $config = [])
     {
         $this->savePath = '@app/web/upload/blocks/';
+        $this->webPath = '/upload/blocks/';
         $this->deleteFromDisc = true;
         parent::__construct($config);
     }
@@ -62,6 +65,16 @@ class Files extends \yii\db\ActiveRecord
         return self::findOne(['file' => $filename]);
     }
 
+    public function getPath()
+    {
+        return  \Yii::getAlias($this->webPath) . '/' . $this->file;
+    }
+
+    public function __toString()
+    {
+        return $this->getPath();
+    }
+
     public static function tableName()
     {
         return '{{%files}}';
@@ -73,6 +86,7 @@ class Files extends \yii\db\ActiveRecord
             [['file', 'title'], 'required'],
             [['size', 'sort'], 'integer'],
             [['file', 'title'], 'string', 'max' => 255],
+            [['description'], 'string'],
             [['file'], 'unique'],
         ];
     }
@@ -81,10 +95,11 @@ class Files extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'file' => 'File',
-            'title' => 'Title',
-            'size' => 'Size',
-            'sort' => 'Sort',
+            'file' => 'Имя',
+            'title' => 'Название',
+            'description' => 'Описание',
+            'size' => 'Размер',
+            'sort' => 'Сортировка',
         ];
     }
 }

@@ -2,6 +2,7 @@
 
 namespace thefx\blocks\models\blocks;
 
+use Faker\Core\File;
 use thefx\blocks\behaviors\UploadFileBehavior;
 use thefx\blocks\behaviors\UploadImageBehavior5;
 use thefx\blocks\models\blocks\queries\BlockItemPropAssignmentsQuery;
@@ -49,7 +50,16 @@ class BlockItemPropAssignments extends ActiveRecord
 //                    }
 //                    return $titles;
 //                }
-                return $this->prop->multi ? explode(';', $this->value) : $this->value;
+
+                $value = explode(';', $this->value);
+
+                if (!$value) {
+                    return $this->prop->multi ? [] : '';
+                }
+
+                $model = Files::find()->where(['file' => explode(';', $this->value)]);
+
+                return $this->prop->multi ? $model->all() : $model->one();
             case BlockProp::TYPE_LIST:
                 $titles = [];
                 if ($this->prop->multi) {

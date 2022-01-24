@@ -28,6 +28,8 @@ $this->params['breadcrumbs'][] = $this->title;
     echo $this->render('_modal', ['modelFieldsForm' => $modelFieldsForm]);
 } ?>
 
+<?= $this->render('_modal_edit_file_info') ?>
+
 <div class="block-item-update">
 
     <?= $this->render('_form', [

@@ -7,6 +7,7 @@
 use thefx\blocks\widgets\propInput\PropInput;
 use thefx\blocks\models\blocks\BlockItem;
 
+/** @var thefx\blocks\models\blocks\BlockItemPropAssignments $assignment */
 $assignment = $model->getAssignmentByPropId($value);
 
 echo $form->field($assignment, "[{$value}]value")->widget(PropInput::class)->label(false);

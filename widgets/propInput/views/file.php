@@ -29,7 +29,7 @@ $files = $filenames ? Files::findAll(['file' => $filenames]) : [];
         <table class="mb-3" style="width: 10%">
             <?php foreach ($files as $file) : ?>
                 <tr data-key="<?= $file->file ?>">
-                    <td class="p-1">
+                    <td class="p-1" style="min-width: 220px">
                         <a class="filename" href="<?= $file->getPath() ?>" target="_blank"><?= $file->title ?></a>
                     </td>
                     <td class="p-1">

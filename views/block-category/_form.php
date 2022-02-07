@@ -90,6 +90,8 @@ use yii\helpers\Url;
 
 <!--                --><?//= $form->field($model, 'date')->textInput() ?>
 
+                <?= $form->field($model, 'icon')->textarea(['rows' => 3]) ?>
+
                 <?= $form->field($model, 'parent_id')->widget(Select2Input::class, [
                     'data' => $model->categoryList(),
                     'options' => ['placeholder' => 'Категория'],

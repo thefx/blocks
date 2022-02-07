@@ -197,7 +197,7 @@ class BlockCategory extends ActiveRecord
         return [
             [['title'], 'required'],
             [['block_id', 'parent_id', 'lft', 'rgt', 'depth', 'create_user', 'update_user', 'public', 'sort'], 'integer'],
-            [['anons', 'text'], 'string'],
+            [['anons', 'text', 'icon'], 'string'],
             [['date', 'create_date', 'update_date'], 'safe'],
 //            [['lft', 'rgt', 'depth'], 'required'],
             [['title', 'path', 'photo_crop', 'photo_preview_crop', 'seo_title', 'seo_keywords', 'seo_description'], 'string', 'max' => 255],
@@ -219,6 +219,7 @@ class BlockCategory extends ActiveRecord
             'text' => 'Подробное описание',
             'photo' => 'Фото',
             'photo_preview' => 'Фото для анонса',
+            'icon' => 'Иконка',
             'date' => 'Дата создания',
             'parent_id' => 'Категория',
             'lft' => 'Lft',

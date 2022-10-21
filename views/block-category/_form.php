@@ -67,7 +67,7 @@ use yii\helpers\Url;
                     'cropAttribute'=>'photo_preview_crop',
                     'cropConfig'=> [
                         'savePath' => $block->settings->upload_path,
-                        'dir' => "@app/web/upload/{$block->settings->upload_path}/",
+                        'dir' => "@webroot/upload/{$block->settings->upload_path}/",
                         'urlDir' => "/{$block->settings->upload_path}",
                         'defaultCrop' => [
                             $block->settings->photo_preview_crop_width,

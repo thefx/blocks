@@ -24,7 +24,7 @@ class Files extends \yii\db\ActiveRecord
 
     public function __construct(array $config = [])
     {
-        $this->savePath = '@app/web/upload/blocks/';
+        $this->savePath = '@webroot/upload/blocks/';
         $this->webPath = '/upload/blocks/';
         $this->deleteFromDisc = true;
         parent::__construct($config);

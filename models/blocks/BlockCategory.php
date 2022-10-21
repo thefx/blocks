@@ -117,7 +117,7 @@ class BlockCategory extends ActiveRecord
                     'class' => UploadImageBehavior::class,
                     'attributeName' => 'photo_preview',
                     'cropCoordinatesAttrName' => 'photo_preview_crop',
-                    'savePath' => "@app/web/upload/{$block->settings->upload_path}/",
+                    'savePath' => "@webroot/upload/{$block->settings->upload_path}/",
                     'generateNewName' => static function () {
                         return date('Y_m_d_His_') . uniqid('', false);
                     },
@@ -134,7 +134,7 @@ class BlockCategory extends ActiveRecord
                     'class' => UploadImageBehavior::class,
                     'attributeName' => 'photo',
                     'cropCoordinatesAttrName' => 'photo_crop',
-                    'savePath' => "@app/web/upload/{$block->settings->upload_path}/",
+                    'savePath' => "@webroot/upload/{$block->settings->upload_path}/",
                     'generateNewName' => static function () {
                         return date('Y_m_d_His_') . uniqid('', false);
                     },

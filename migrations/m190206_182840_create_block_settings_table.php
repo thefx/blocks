@@ -43,7 +43,7 @@ class m190206_182840_create_block_settings_table extends Migration
     }
 
 //        'savePath' => 'blocks',
-//        'dir' => '@app/web/upload/blocks/',
+//        'dir' => '@webroot/upload/blocks/',
 //        'urlDir' => '/blocks',
 //        //        'defaultCrop' => [900, 700],
 //        'defaultCrop' => [900, 0, 'widen'],

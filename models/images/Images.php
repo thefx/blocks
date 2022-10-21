@@ -26,7 +26,7 @@ class Images extends \yii\db\ActiveRecord
 
     public function __construct(array $config = [])
     {
-        $this->savePath = '@app/web/upload/blocks/';
+        $this->savePath = '@webroot/upload/blocks/';
         $this->deleteFromDisc = true;
         $this->crop = ['prev'];
         parent::__construct($config);

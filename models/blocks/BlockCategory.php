@@ -68,6 +68,17 @@ class BlockCategory extends ActiveRecord
         return $model;
     }
 
+    public static function create($block_id, $parent_id, $title)
+    {
+        $model = new self();
+        $model->block_id = $block_id;
+        $model->$parent_id = $parent_id;
+        $model->$title = $title;
+        $model->public = 1;
+
+        return $model;
+    }
+
     public function isNotRoot()
     {
         return $this->parent_id != 0;

@@ -2,8 +2,10 @@
 
 use thefx\blocks\forms\search\BlockSearch;
 use thefx\blocks\models\blocks\Block;
+use yii\grid\ActionColumn;
 use yii\helpers\Html;
 use yii\grid\GridView;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $searchModel BlockSearch */
@@ -41,6 +43,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'sort',
                 'headerOptions' => ['style' => 'width:85px; text-align:center'],
                 'contentOptions' => ['style' => 'width:85px; text-align:center'],
+            ],
+            [
+                'class' => ActionColumn::class,
+                'template' => '{view} {delete}',
+                'contentOptions' => ['style' => 'width:85px; text-align:center'],
+                'urlCreator' => static function ($action, Block $model, $key, $index, $column) {
+                    return Url::toRoute([$action, 'id' => $model->id]);
+                }
             ],
 //            'table',
 //            'template',

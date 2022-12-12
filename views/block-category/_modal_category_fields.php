@@ -6,13 +6,12 @@ use thefx\blocks\forms\BlockFieldsItemForm;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
+$defaultFields = json_encode($modelFieldsForm->getBlock()->getDefaultFieldsCategoryTemplates(), JSON_UNESCAPED_UNICODE);
 ?>
 
-<div class="mb-3">
-    <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#modal_animation"><i class="fa fa-cog"></i></button>
-</div>
+<button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#modal_category_fields"><i class="fa fa-cog mr-1"></i>Категории</button>
 
-<div id="modal_animation" class="modal" style="display: none;">
+<div id="modal_category_fields" class="modal" style="display: none;">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
 
@@ -25,7 +24,8 @@ use yii\widgets\ActiveForm;
 
             <div class="modal-body">
                 <h6 class="text-semibold text-left">По умолчанию</h6>
-                <p><textarea cols="30" rows="10" class="form-control" style="resize: vertical" disabled="disabled"><?= json_encode($modelFieldsForm->getBlock()->getDefaultFieldsCategoryTemplates(), JSON_UNESCAPED_UNICODE) ?></textarea></p>
+
+                <textarea cols="30" rows="10" class="form-control mb-3" style="resize: vertical" disabled="disabled"><?= $defaultFields ?></textarea>
 
                 <?= $form->errorSummary($modelFieldsForm, ['class' => 'alert alert-danger']); ?>
 

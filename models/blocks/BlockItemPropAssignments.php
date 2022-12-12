@@ -2,7 +2,6 @@
 
 namespace thefx\blocks\models\blocks;
 
-use Faker\Core\File;
 use thefx\blocks\behaviors\UploadFileBehavior;
 use thefx\blocks\behaviors\UploadImageBehavior5;
 use thefx\blocks\models\blocks\queries\BlockItemPropAssignmentsQuery;

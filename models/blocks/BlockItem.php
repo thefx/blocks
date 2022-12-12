@@ -93,7 +93,7 @@ class BlockItem extends ActiveRecord
         $categories = BlockCategory::find()->where(['block_id' => $category->block_id])->orderBy('lft')->all();
 
         return ArrayHelper::map($categories, 'id', static function($row) {
-            return str_repeat('—', $row->depth) . ' ' . $row->title;
+            return str_repeat('-', $row->depth) . ' ' . $row->title;
         });
     }
 
@@ -108,23 +108,6 @@ class BlockItem extends ActiveRecord
                     if ($prop->isMulti() && !$prop->isImage() && !$prop->isFile()) {
                         $assignment->value = explode(';', $assignment->value);
                     }
-// array
-//                    var_dump($prop->isMulti());
-//                    if ($prop->isMulti() && !$prop->isFile()) {
-//
-//                        if (is_array($assignments['_' . $prop->id]->value)) {
-//                            $values = $assignments['_' . $prop->id]->value;
-//                            $values[] = $assignment->value;
-//                        } else {
-//
-//                            $assignments['_' . $prop->id] = $assignment;
-//                            $values[] = $assignment->value;
-//                            var_dump($values);
-//                        }
-//                        $assignments['_' . $prop->id]->value = $values;
-//                    } else {
-//                        $assignments[] = $assignment;
-//                    }
                     $assignments[$prop->id] = $assignment;
                     $isset = true;
                 }
@@ -138,7 +121,7 @@ class BlockItem extends ActiveRecord
             }
         }
         $this->propAssignments = $assignments;
-//        $this->propAssignmentsTemp = $assignments;
+
         return $this;
     }
 
@@ -152,40 +135,11 @@ class BlockItem extends ActiveRecord
         return null;
     }
 
-//    public function getPropAssignments2($data)
-//    {
-//        $ass = [];
-//        $assignments = $this->propAssignments;
-//
-//        foreach ($assignments as $i => $model) {
-//            $model->setAttributes($data[$model->formName()][$i]);
-//            if ($model->prop->isFile()) {
-//                $model->value = UploadedFile::getInstances($model, "[$i]value");
-//            }
-//            $model->validate();
-////            if (!$model->prop->isFile() && $model->prop->isMulti()) {
-////                foreach ($model->value as $val) {
-//////                    $model->value = $val;
-////                    $new = clone $model;
-////                    $new->value = $val;
-////                    array_push($assignments, $new);
-////                }
-//////                var_dump($model->value);
-//////                die;
-//////                unset($assignments[$i]);
-////            }
-//        }
-//        $this->propAssignments = array_filter($assignments, function ($data) {
-//            return $data->value != '';
-//        });
-//        return $this;
-//    }
-
     public function loadAssignments($data)
     {
         $assignments = $this->propAssignments;
 
-        foreach ($assignments as $i => $model) {
+        foreach ($assignments as $model) {
             $i = $model->prop_id;
 
             $model->setAttributes($data[$model->formName()][$i]);
@@ -199,19 +153,6 @@ class BlockItem extends ActiveRecord
                 $model->value = implode(';', $model->value);
             }
             $model->validate();
-//            if (!$model->prop->isFile() && $model->prop->isMulti()) {
-//                foreach ($model->value as $val) {
-////                    $model->value = $val;
-//                    $new = clone $model;
-//                    $new->value = $val;
-//                    array_push($assignments, $new);
-//                }
-////                var_dump($model->value);
-////                die;
-////                unset($assignments[$i]);
-//            }
-//            $this->on(static::EVENT_AFTER_INSERT,[$this,'createRelCatHandler']);
-//            $this->on(static::EVENT_AFTER_UPDATE,[$this,'createRelCatHandler']);
         }
         $this->propAssignments = array_filter($assignments, static function ($data) {
             return $data->value != '';
@@ -236,7 +177,9 @@ class BlockItem extends ActiveRecord
                 }
             }
         }
-        if ($isSave) $this->save();
+        if ($isSave) {
+            $this->save();
+        }
     }
 
     private function addPropAssignment($block_item_id, $prop_id, $value)
@@ -263,12 +206,11 @@ class BlockItem extends ActiveRecord
             ->getRoot()
             ->one();
 
-        $model = new BlockCategory([
-            'block_id' => $block->id,
-            'parent_id' => $category->id,
-            'title' => $this->id . '#' . $this->title,
-            'public' => 1,
-        ]);
+        $model = BlockCategory::create(
+            $block->id,
+            $category->id,
+            $this->id . '#' . $this->title
+        );
 
         if ($model->validate()) {
             $model->appendTo($category)->save();
@@ -293,7 +235,7 @@ class BlockItem extends ActiveRecord
                     'cropCoordinatesAttrName' => 'photo_preview_crop',
                     'savePath' => "@webroot/upload/{$block->settings->upload_path}/",
                     'generateNewName' => static function () {
-                        return date('Y_m_d_His_') . uniqid('', false);
+                        return uniqid('', false);
                     },
                     'defaultCrop' => [
                         $block->settings->photo_preview_crop_width,
@@ -310,7 +252,7 @@ class BlockItem extends ActiveRecord
                     'cropCoordinatesAttrName' => 'photo_crop',
                     'savePath' => "@webroot/upload/{$block->settings->upload_path}/",
                     'generateNewName' => static function () {
-                        return date('Y_m_d_His_') . uniqid('', false);
+                        return uniqid('', false);
                     },
                     'defaultCrop' => [
                         $block->settings->photo_crop_width,
@@ -318,9 +260,9 @@ class BlockItem extends ActiveRecord
                         $block->settings->photo_crop_type
                     ],
                     // только для поселков
-                    'crop' => array_filter($block->id == 12 ? [
-                        [640, 1030, 'mobile', 'widen'],
-                    ] : [])
+//                    'crop' => array_filter($block->id == 12 ? [
+//                        [640, 1030, 'mobile', 'widen'],
+//                    ] : [])
                 ]
             ]
         );
@@ -527,7 +469,7 @@ class BlockItem extends ActiveRecord
      */
     public static function getBySlug($blockId, $slug)
     {
-        return BlockItem::find()
+        return self::find()
             ->with(['propAssignments.prop'])
             ->where(['path' => $slug])
             ->andWhere(['block_id' => $blockId])

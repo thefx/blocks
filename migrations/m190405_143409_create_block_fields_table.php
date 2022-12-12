@@ -19,6 +19,7 @@ class m190405_143409_create_block_fields_table extends Migration
             'block_id' => $this->integer(),
             'type' => $this->string(10),
             'value' => $this->string(255),
+            'name' => $this->string(255),
             'parent_id' => $this->integer(),
             'sort' => $this->integer(),
             'block_type' => $this->string(10),

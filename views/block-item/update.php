@@ -24,10 +24,6 @@ if (!$category->isRoot()) {
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
-<?php if (in_array(Yii::$app->user->id, $this->context->module->rootUsers, true)) {
-    echo $this->render('_modal', ['modelFieldsForm' => $modelFieldsForm]);
-} ?>
-
 <?= $this->render('_modal_edit_file_info') ?>
 
 <div class="block-item-update">

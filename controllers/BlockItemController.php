@@ -105,17 +105,6 @@ class BlockItemController extends Controller
         $block = Block::find()->with('fields')->where(['id' => $category->block_id])->one();
         $parents = $category->getParents()->all();
 
-        ###
-
-        $modelFieldsForm = new BlockFieldsItemForm($block);
-
-        if ($modelFieldsForm->load(Yii::$app->request->post()) && $modelFieldsForm->save()) {
-            Yii::$app->session->setFlash('success', 'Поля сохранены');
-            return $this->refresh();
-        }
-
-        ###
-
         $model = new BlockItem([
             'block_id' => $block->id,
             'parent_id' => $parent_id,
@@ -143,7 +132,6 @@ class BlockItemController extends Controller
             'parents' => $parents,
             'model' => $model,
             'elem' => $model->propAssignments,
-            'modelFieldsForm' => $modelFieldsForm,
         ]);
     }
 
@@ -163,17 +151,6 @@ class BlockItemController extends Controller
         $category = BlockCategory::findOrFail($model->parent_id);
         $block = Block::findOrFail($category->block_id);
         $parents = $category->getParents()->all();
-
-        ###
-
-        $modelFieldsForm = new BlockFieldsItemForm($block);
-
-        if ($modelFieldsForm->load(Yii::$app->request->post()) && $modelFieldsForm->validate() && $modelFieldsForm->save()) {
-            Yii::$app->session->setFlash('success', 'Поля сохранены');
-            return $this->refresh();
-        }
-
-        ###
 
         $model->populateAssignments();
 
@@ -195,7 +172,6 @@ class BlockItemController extends Controller
             'parents' => $parents,
             'model' => $model,
             'elem' => $model->propAssignments,
-            'modelFieldsForm' => $modelFieldsForm,
         ]);
     }
 

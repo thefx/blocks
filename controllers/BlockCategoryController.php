@@ -3,6 +3,7 @@
 namespace thefx\blocks\controllers;
 
 use thefx\blocks\forms\BlockFieldsCategoryForm;
+use thefx\blocks\forms\BlockFieldsItemForm;
 use thefx\blocks\forms\search\BlockCategorySearch;
 use thefx\blocks\models\blocks\Block;
 use thefx\blocks\models\blocks\BlockCategory;
@@ -88,12 +89,23 @@ class BlockCategoryController extends Controller
 
         $parents = $category ? $category->getParents()->withoutRoot()->all() : null;
 
+        ##
+
         $modelFieldsForm = new BlockFieldsCategoryForm($block);
 
-        if ($modelFieldsForm->load(Yii::$app->request->post()) && $modelFieldsForm->validate() && $modelFieldsForm->save()) {
+        if ($this->request->isPost && $modelFieldsForm->load(Yii::$app->request->post()) && $modelFieldsForm->save()) {
             Yii::$app->session->setFlash('success', 'Поля сохранены');
             return $this->refresh();
         }
+
+        $modelFieldsItemsForm = new BlockFieldsItemForm($block);
+
+        if ($this->request->isPost && $modelFieldsItemsForm->load(Yii::$app->request->post()) && $modelFieldsItemsForm->save()) {
+            Yii::$app->session->setFlash('success', 'Поля сохранены');
+            return $this->refresh();
+        }
+
+        ##
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -103,6 +115,7 @@ class BlockCategoryController extends Controller
             'parents' => $parents,
             'root' => $root,
             'modelFieldsForm' => $modelFieldsForm,
+            'modelFieldsItemsForm' => $modelFieldsItemsForm,
         ]);
     }
 

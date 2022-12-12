@@ -29,7 +29,6 @@ switch ($value) {
     case 'price_old':
     case 'currency':
     case 'unit':
-
         echo $form->field($model, $value)->textInput(['maxlength' => true]);
         break;
 
@@ -37,8 +36,8 @@ switch ($value) {
         echo $form->field($model, $value)->widget(DatePicker::class);
         break;
 
+    case 'text':
     case 'anons':
-//        echo $form->field($model, 'anons')->widget(CKEditor::class, $ckEditorOptions);
         echo $form->field($model, $value)->widget(Widget::class, [
             'settings' => [
                 'image' => [
@@ -61,9 +60,6 @@ switch ($value) {
                     $block->settings->photo_preview_crop_height,
                     $block->settings->photo_preview_crop_type
                 ],
-//                'crop' => [
-//                    [300, 300, 'min', 'fit'],
-//                ]
             ],
             'pluginOptions' => [
                 'showUpload' => true,
@@ -89,9 +85,9 @@ switch ($value) {
                     $block->settings->photo_crop_type
                 ],
                 // только для поселков
-                'crop' => array_filter($block->id == 12 ? [
-                    [640, 1030, 'mobile', 'widen'],
-                ] : [])
+//                'crop' => array_filter($block->id == 12 ? [
+//                    [640, 1030, 'mobile', 'widen'],
+//                ] : [])
             ],
             'pluginOptions' => [
                 'showUpload' => true,
@@ -120,18 +116,6 @@ switch ($value) {
 
     case 'sort':
         echo $form->field($model, $value)->textInput();
-        break;
-
-    case 'text':
-//        echo $form->field($model, 'text')->widget(CKEditor::class, $ckEditorOptions);
-        echo $form->field($model, $value)->widget(Widget::class, [
-            'settings' => [
-                'image' => [
-                    'upload' => Url::to(['upload-image', 'id' => $model->id]),
-                    'select' => Url::to(['get-uploaded-images', 'id' => $model->id])
-                ],
-            ]
-        ]);
         break;
 
     case 'seo_description':

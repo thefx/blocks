@@ -5,6 +5,15 @@ namespace thefx\blocks\controllers;
 use thefx\blocks\forms\search\BlockPropSearch;
 use thefx\blocks\forms\search\BlockSearch;
 use thefx\blocks\models\blocks\Block;
+use thefx\blocks\models\blocks\BlockCategory;
+use thefx\blocks\models\blocks\BlockFields;
+use thefx\blocks\models\blocks\BlockItem;
+use thefx\blocks\models\blocks\BlockItemPropAssignments;
+use thefx\blocks\models\blocks\BlockProp;
+use thefx\blocks\models\blocks\BlockPropElem;
+use thefx\blocks\models\blocks\BlockSeo;
+use thefx\blocks\models\blocks\BlockSettings;
+use thefx\blocks\models\blocks\BlockTranslate;
 use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -118,7 +127,20 @@ class BlockController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $blockPropsIds = BlockProp::find()->select('id')->where(['block_id' => $id])->column();
+
+        BlockItemPropAssignments::deleteAll(['prop_id' => $blockPropsIds]);
+        BlockPropElem::deleteAll(['block_prop_id' => $blockPropsIds]);
+
+        BlockProp::deleteAll(['block_id' => $id]);
+        BlockItem::deleteAll(['block_id' => $id]);
+        BlockCategory::deleteAll(['block_id' => $id]);
+        BlockFields::deleteAll(['block_id' => $id]);
+        BlockPropSearch::deleteAll(['block_id' => $id]);
+        BlockSettings::deleteAll(['block_id' => $id]);
+        BlockTranslate::deleteAll(['block_id' => $id]);
+        BlockSeo::deleteAll(['block_id' => $id]);
+        Block::deleteAll(['id' => $id]);
 
         return $this->redirect(['index']);
     }

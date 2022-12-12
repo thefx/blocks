@@ -1,5 +1,7 @@
 <?php
 
+use yii\grid\CheckboxColumn;
+use yii\grid\ActionColumn;
 use thefx\blocks\forms\BlockFieldsCategoryForm;
 use thefx\blocks\forms\search\BlockCategorySearch;
 use thefx\blocks\models\blocks\Block;
@@ -14,6 +16,7 @@ use yii\helpers\Url;
 /* @var $block Block */
 /* @var $category BlockCategory */
 /* @var $parents BlockCategory[] */
+/* @var $modelFieldsForm BlockFieldsCategoryForm */
 /* @var $modelFieldsForm BlockFieldsCategoryForm */
 
 $this->title = $block->translate->categories;
@@ -39,10 +42,10 @@ $this->params['breadcrumbs'][] = $this->title;
 
         function sortFolders(data) {
             if (data.prev.length !== 0) {
-                var dataJson = {'type': 'after', 'item' : data.id, 'node' : data.prev.data('key')};
+                var dataJson = {'type': 'after', 'item': data.id, 'node': data.prev.data('key')};
                 $.get("<?=Url::to(['sort-category'])?>", dataJson);
             } else if (data.next.length !== 0) {
-                var dataJson = {'type': 'before', 'item' : data.id, 'node' : data.next.data('key')};
+                var dataJson = {'type': 'before', 'item': data.id, 'node': data.next.data('key')};
                 $.get("<?=Url::to(['sort-category'])?>", dataJson);
             }
         }
@@ -105,16 +108,20 @@ $this->params['breadcrumbs'][] = $this->title;
     }
 </style>
 
-<?php if (in_array(Yii::$app->user->id, $this->context->module->rootUsers, true)) {
-    echo $this->render('_modal', ['modelFieldsForm' => $modelFieldsForm]);
-} ?>
+<?php if (in_array(Yii::$app->user->id, $this->context->module->rootUsers, true)) :?>
+    <div class="mb-3">
+        <?= $this->render('_modal_category_fields', ['modelFieldsForm' => $modelFieldsForm]) ?>
+        <?= $this->render('_modal_item_fields', ['modelFieldsForm' => $modelFieldsForm]) ?>
+        <hr>
+    </div>
+<?php endif; ?>
 
 <div class="block-category-index">
 
     <?php
         $columns = [];
         $columns[] = [
-            'class' => 'yii\grid\CheckboxColumn',
+            'class' => CheckboxColumn::class,
             'headerOptions' => ['style' => 'width:40px; text-align:center'],
             'contentOptions' => ['style' => 'text-align:center'],
             'content' => static function(BlockCategory $row) {
@@ -216,7 +223,7 @@ $this->params['breadcrumbs'][] = $this->title;
             }
         }
         $columns[] = [
-            'class' => 'yii\grid\ActionColumn',
+            'class' => ActionColumn::class,
             'template' => '{update}{delete}',
             'headerOptions' => ['style' => 'width:40px; text-align:center'],
             'contentOptions' => ['style' => 'text-align:center'],

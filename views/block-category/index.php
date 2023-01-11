@@ -17,7 +17,7 @@ use yii\helpers\Url;
 /* @var $category BlockCategory */
 /* @var $parents BlockCategory[] */
 /* @var $modelFieldsForm BlockFieldsCategoryForm */
-/* @var $modelFieldsForm BlockFieldsCategoryForm */
+/* @var $modelFieldsItemsForm BlockFieldsCategoryForm */
 
 $this->title = $block->translate->categories;
 if ($category && !$category->isRoot()) {
@@ -111,7 +111,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php if (in_array(Yii::$app->user->id, $this->context->module->rootUsers, true)) :?>
     <div class="mb-3">
         <?= $this->render('_modal_category_fields', ['modelFieldsForm' => $modelFieldsForm]) ?>
-        <?= $this->render('_modal_item_fields', ['modelFieldsForm' => $modelFieldsForm]) ?>
+        <?= $this->render('_modal_item_fields', ['modelFieldsForm' => $modelFieldsItemsForm]) ?>
         <hr>
     </div>
 <?php endif; ?>

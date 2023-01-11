@@ -2,6 +2,7 @@
 
 namespace thefx\blocks\controllers;
 
+use thefx\blocks\models\blocks\BlockFields;
 use thefx\blocks\services\TransactionManager;
 use thefx\blocks\forms\search\BlockPropSearch;
 use thefx\blocks\models\blocks\BlockProp;
@@ -183,6 +184,7 @@ class BlockPropController extends Controller
     {
         $model = $this->findModel($id);
         $block_id = $model->block_id;
+        BlockFields::deleteAll(['block_id' => $block_id, 'type' => 'prop', 'value' => $model->id]);
         $model->delete();
         return $this->redirect(['block/view', 'id' => $block_id]);
     }

@@ -16,6 +16,7 @@ use yii\db\ActiveRecord;
  * @property int $parent_id
  * @property int $sort
  * @property BlockFields[] $children
+ * @property string $name [varchar(255)]
  */
 class BlockFields extends ActiveRecord
 {

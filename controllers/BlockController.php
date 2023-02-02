@@ -116,6 +116,22 @@ class BlockController extends Controller
         ]);
     }
 
+    public function actionSortElements(array $ids, $blockId)
+    {
+        $elements = BlockProp::find()
+            ->where(['id' => $ids, 'block_id' => $blockId])
+            ->indexBy('id')
+            ->all();
+
+        $sort = 1;
+
+        foreach ($ids as $id) {
+            $elements[$id]->sort = $sort++;
+            $elements[$id]->save();
+        }
+        echo 'done';
+    }
+
     /**
      * Deletes an existing Block model.
      * If deletion is successful, the browser will be redirected to the 'index' page.

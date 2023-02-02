@@ -1,10 +1,12 @@
 <?php
 
+use thefx\blocks\assets\SortableJs\SortableJsAsset;
 use thefx\blocks\models\blocks\Block;
 use thefx\blocks\models\blocks\BlockProp;
 use yii\data\ActiveDataProvider;
 use yii\grid\GridView;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\DetailView;
 use yii\widgets\Pjax;
 
@@ -16,8 +18,41 @@ use yii\widgets\Pjax;
 $this->title = $model->title;
 $this->params['breadcrumbs'][] = ['label' => 'Блоки', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+
+SortableJsAsset::register($this);
 ?>
 
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Sortable
+        document.querySelectorAll('.table-props tbody').forEach(function (el) {
+            Sortable.create(el, {
+                draggable: "tr",
+                handle: ".handle",
+                // Changed sorting within list
+                onUpdate: function (/**Event*/evt) {
+                    var ids = [];
+                    el.querySelectorAll("tr").forEach(function(item, i, arr) {
+                        // console.log($(item).data("key"));
+                        ids.push($(item).data("key"));
+                    });
+                    $.ajax({
+                        type: 'GET',
+                        url: '<?= Url::to(['sort-elements']) ?>',
+                        data: {ids:ids, blockId:<?= $model->id ?>},
+                        dataType: "json"
+                    });
+                },
+            });
+        });
+    });
+</script>
+
+<style>
+    .handle {
+        cursor: move;
+    }
+</style>
 
 <div class="card card-primary card-outline card-outline-tabs">
     <div class="card-header p-0 border-bottom-0">
@@ -93,11 +128,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?= GridView::widget([
                     'dataProvider' => $propsDataProvider,
                     'filterModel' => $propsSearchModel,
+                    'tableOptions' => ['class' => 'table table-striped table-props'],
                     'columns' => [
                         [
                             'attribute' => 'id',
                             'headerOptions' => ['style' => 'width:85px; text-align:center'],
-                            'contentOptions' => ['style' => 'text-align:center'],
+                            'contentOptions' => ['style' => 'text-align:center', 'class' => 'handle'],
                         ],
                         [
                             'attribute' => 'title',

@@ -1,10 +1,10 @@
 <?php
 
-use yii\helpers\Html;
+use thefx\blocks\models\blocks\BlockProp;
 
 
 /* @var $this yii\web\View */
-/* @var $model app\shop\entities\Block\BlockProp */
+/* @var $model BlockProp */
 
 $this->title = 'Добавить свойство';
 $this->params['breadcrumbs'][] = ['label' => 'Блоки', 'url' => ['block/index']];

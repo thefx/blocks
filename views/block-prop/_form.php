@@ -21,7 +21,7 @@ SortableJsAsset::register($this);
 
 <?php $form = ActiveForm::begin([
 //        'enableAjaxValidation' => true,
-    'enableClientValidation'=>false,
+    'enableClientValidation' => false,
 //        'validateOnSubmit'=>true,
 //        'options' => ['data-pjax'=>true]
 ]); ?>
@@ -86,7 +86,7 @@ SortableJsAsset::register($this);
                     element.checked = false;
                 }
             });
-            e.target.checked = true;
+            // e.target.checked = true;
 
         });
 
@@ -153,7 +153,6 @@ SortableJsAsset::register($this);
             <div class="tab-pane fade" id="custom-tabs-2" role="tabpanel" aria-labelledby="custom-tabs-2-tab">
 
                 <div class="prop-elem">
-
                     <table class="table table-prop-items">
                         <thead>
                         <tr>
@@ -166,12 +165,12 @@ SortableJsAsset::register($this);
                         </tr>
                         </thead>
                         <tbody class="items-sortable">
-                        <?php foreach ($model->elements as $index => $el) : ?>
+                        <?php foreach ($model->elements as $index => $element) : ?>
                             <tr data-index="<?= $index ?>">
                                 <?= $this->render('_form_elem', [
                                     'index' => $index,
                                     'form' => $form,
-                                    'model' => $el,
+                                    'model' => $element,
                                 ]) ?>
                             </tr>
                         <?php endforeach; ?>
@@ -211,7 +210,7 @@ SortableJsAsset::register($this);
 
                 <?= $form->field($model, 'hint')->textInput(['maxlength' => true]) ?>
 
-                <?= $form->field($model, 'default_value')->textInput() ?>
+                <?= $form->field($model, 'default_value')->dropDownList(['1' => 'Да', '0' => 'Нет'], ['prompt' => '']) ?>
 
                 <?= $form->field($model, 'in_filter')->widget(SwitchInput::class) ?>
 

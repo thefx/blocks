@@ -54,7 +54,7 @@ class BlockPropElem extends ActiveRecord
             'title' => 'Название',
             'code' => 'Код',
             'sort' => 'Сортировка',
-            'default' => 'По умолчанию',
+            'default' => '',
         ];
     }
 

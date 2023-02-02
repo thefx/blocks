@@ -4,7 +4,6 @@ namespace thefx\blocks\controllers;
 
 use thefx\blocks\models\blocks\BlockFields;
 use thefx\blocks\services\TransactionManager;
-use thefx\blocks\forms\search\BlockPropSearch;
 use thefx\blocks\models\blocks\BlockProp;
 use thefx\blocks\models\blocks\BlockPropElem;
 use Yii;
@@ -41,21 +40,6 @@ class BlockPropController extends Controller
                 ],
             ],
         ];
-    }
-
-    /**
-     * Lists all BlockProp models.
-     * @return mixed
-     */
-    public function actionIndex()
-    {
-        $searchModel = new BlockPropSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
     }
 
     /**
@@ -164,7 +148,7 @@ class BlockPropController extends Controller
             'sort' => 100,
         ]);
 
-        return $this->renderAjax('_form_elem', [
+        return $this->renderPartial('_form_elem', [
             'index' => $index,
             'form' => $form,
             'model' => $elem,

@@ -182,7 +182,7 @@ class BlockItemPropAssignments extends ActiveRecord
             'attributeName' => 'value',
 //            'extensions' => 'pdf',
             'generateNewName' => static function () {
-                return date('Y_m_d_His') . uniqid('', true);
+                return uniqid('', true);
             },
             'deleteOldFiles' => $config['deleteOldFiles'],
             'savePath' => $savePath,
@@ -202,7 +202,7 @@ class BlockItemPropAssignments extends ActiveRecord
 //            'cropCoordinatesAttrName' => 'value_crop',
             'savePath' => $savePath,
             'generateNewName' => static function () {
-                return date('Y_m_d_His') . uniqid('', true);
+                return uniqid('', true);
             },
             'watermark' => $watermark,
             'deleteOldImages' => $config['deleteOldImages'],

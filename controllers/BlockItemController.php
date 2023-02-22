@@ -2,7 +2,6 @@
 
 namespace thefx\blocks\controllers;
 
-use thefx\blocks\forms\BlockFieldsItemForm;
 use thefx\blocks\forms\search\BlockItemSearch;
 use thefx\blocks\models\blocks\Block;
 use thefx\blocks\models\blocks\BlockCategory;

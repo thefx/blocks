@@ -3,11 +3,11 @@
 namespace thefx\blocks\models\blocks;
 
 use thefx\blocks\behaviors\UploadFileBehavior;
-use thefx\blocks\behaviors\UploadImageBehavior5;
 use thefx\blocks\models\blocks\queries\BlockItemPropAssignmentsQuery;
 use thefx\blocks\models\files\Files;
 use thefx\blocks\models\images\Images;
 use yii\db\ActiveRecord;
+use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
 
 /**
@@ -40,7 +40,18 @@ class BlockItemPropAssignments extends ActiveRecord
             case BlockProp::TYPE_INT:
                 return $this->value;
             case BlockProp::TYPE_IMAGE:
-                return $this->prop->multi ? explode(';', $this->value) : $this->value;
+                if ($this->prop->multi) {
+                    $valuesArray = explode(';', $this->value);
+                    $values = [];
+                    foreach ($valuesArray as $item) {
+                        $values[$item] = \Yii::getAlias("@web/upload/images/") . $item;
+                    }
+                    return $values;
+                }
+                if ($this->value) {
+                    return \Yii::getAlias("@web/upload/images/") . $this->value;
+                }
+                return null;
             case BlockProp::TYPE_FILE:
 //                $titles = [];
 //                if ($this->prop->multi) {
@@ -137,26 +148,26 @@ class BlockItemPropAssignments extends ActiveRecord
 
     public function beforeValidate()
     {
-        if ($this->prop->isImage()) {
-
-            $config = [
-                'defaultCrop' => [1920, 0, 'widen'],
-                'crop' => [
-                    [250,250,'square','widen'],
-                    [250,0,'prev','widen']
-                ],
-                'deleteOldImages' => !$this->prop->isMulti(),
-            ];
-
-            /* fix */
-            if ($this->prop->code === 'FILE_GEN_PLAN') {
-                $config = array_merge($config, [
-                    'defaultCrop' => [3000, 0, 'widen'],
-                    'crop' => [[550,550,'prev','widen']],
-                ]);
-            }
-            $this->attachBehaviorImageUpload($config);
-        }
+//        if ($this->prop->isImage()) {
+//
+//            $config = [
+//                'defaultCrop' => [1920, 0, 'widen'],
+//                'crop' => [
+//                    [250,250,'square','widen'],
+//                    [250,0,'prev','widen']
+//                ],
+//                'deleteOldImages' => !$this->prop->isMulti(),
+//            ];
+//
+//            /* fix */
+//            if ($this->prop->code === 'FILE_GEN_PLAN') {
+//                $config = array_merge($config, [
+//                    'defaultCrop' => [3000, 0, 'widen'],
+//                    'crop' => [[550,550,'prev','widen']],
+//                ]);
+//            }
+//            $this->attachBehaviorImageUpload($config);
+//        }
 
         if ($this->prop->isFile()) {
 
@@ -189,27 +200,27 @@ class BlockItemPropAssignments extends ActiveRecord
         ]);
     }
 
-    private function attachBehaviorImageUpload($config)
-    {
-        /** @var Block $block */
-        $block = Block::findOne($this->prop->block_id);
-        $savePath = $this->prop->upload_path ?: "@webroot/upload/{$block->settings->upload_path}/";
-        $watermark = $this->prop->watermark_path ?: null;
-
-        $this->attachBehavior('value_photo', [
-            'class' => UploadImageBehavior5::class,
-            'attributeName' => 'value',
-//            'cropCoordinatesAttrName' => 'value_crop',
-            'savePath' => $savePath,
-            'generateNewName' => static function () {
-                return uniqid('', true);
-            },
-            'watermark' => $watermark,
-            'deleteOldImages' => $config['deleteOldImages'],
-            'defaultCrop' => $config['defaultCrop'],
-            'crop' => $config['crop']
-        ]);
-    }
+//    private function attachBehaviorImageUpload($config)
+//    {
+//        /** @var Block $block */
+//        $block = Block::findOne($this->prop->block_id);
+//        $savePath = $this->prop->upload_path ?: "@webroot/upload/{$block->settings->upload_path}/";
+//        $watermark = $this->prop->watermark_path ?: null;
+//
+//        $this->attachBehavior('value_photo', [
+//            'class' => UploadImageBehavior5::class,
+//            'attributeName' => 'value',
+////            'cropCoordinatesAttrName' => 'value_crop',
+//            'savePath' => $savePath,
+//            'generateNewName' => static function () {
+//                return uniqid('', true);
+//            },
+//            'watermark' => $watermark,
+//            'deleteOldImages' => $config['deleteOldImages'],
+//            'defaultCrop' => $config['defaultCrop'],
+//            'crop' => $config['crop']
+//        ]);
+//    }
 
     public function deletePhoto($fileName)
     {
@@ -245,17 +256,17 @@ class BlockItemPropAssignments extends ActiveRecord
 
     public function getImagesPath()
     {
-        $url = $this->prop->web_path ?: "@web/upload/{$this->getUploadPath()}";
         $images = [];
         foreach ($this->getFilesArray() as $image) {
-            $images[$image] = \Yii::getAlias($url) . '/' . $image;
+            $images[$image] = \Yii::getAlias("@web/upload/images/") . $image;
         }
         return $images;
     }
 
     public function getFilesArray()
     {
-        return !is_array($this->getAttribute('value')) ? array_filter(explode(';', $this->getAttribute('value'))) : [];
+        $values = is_array($this->value) ? $this->value : explode(';', $this->value);
+        return array_filter($values);
     }
 
     public function getUploadPath()
@@ -289,7 +300,8 @@ class BlockItemPropAssignments extends ActiveRecord
 //            $this->prop->isList() ? ['value', 'integer'] : false,
 //            $this->prop->isList() && !$this->prop->isMulti() ? ['value', 'integer'] : false,
 //            $this->prop->isList() && $this->prop->isMulti()? ['value', 'each', 'rule' => ['integer']] : false,
-            $this->prop->isImage() ? ['value', 'file' /*, 'mimeTypes' => 'image/*'*/, 'maxFiles' => 10, 'skipOnEmpty' => true] : false,
+//            $this->prop->isImage() ? ['value', 'file' /*, 'mimeTypes' => 'image/*'*/, 'maxFiles' => 10, 'skipOnEmpty' => true] : false,
+            $this->prop->isImage() ? ['value', 'string'] : false,
             $this->prop->isFile() ? ['value', 'file' /*, 'mimeTypes' => 'image/*'*/, 'maxFiles' => 10, 'skipOnEmpty' => true] : false,
             ['value', 'safe'],
         ]);

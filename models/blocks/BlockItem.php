@@ -108,6 +108,9 @@ class BlockItem extends ActiveRecord
                     if ($prop->isMulti() && !$prop->isImage() && !$prop->isFile()) {
                         $assignment->value = explode(';', $assignment->value);
                     }
+                    if ($prop->isImage()) {
+                        $assignment->value = explode(';', $assignment->value);
+                    }
                     $assignments[$prop->id] = $assignment;
                     $isset = true;
                 }
@@ -143,10 +146,10 @@ class BlockItem extends ActiveRecord
             $i = $model->prop_id;
 
             $model->setAttributes($data[$model->formName()][$i]);
-            if ($model->prop->isImage() || $model->prop->isFile()) {
+            if (/*$model->prop->isImage() ||*/ $model->prop->isFile()) {
                 $model->value = UploadedFile::getInstances($model, "[$i]value");
             }
-            if (is_array($model->value) && $model->prop->isMulti() && !$model->prop->isImage() && !$model->prop->isFile()) {
+            if (is_array($model->value) && $model->prop->isMulti() /*&& !$model->prop->isImage()*/ && !$model->prop->isFile()) {
                 $model->value = array_filter(array_map(static function ($data) {
                     return (int) $data;
                 }, $model->value));

@@ -1,6 +1,6 @@
 <?php
 
-namespace thefx\blocks\assets\PropInputAsset;
+namespace thefx\blocks\widgets\propInput;
 
 use yii\web\AssetBundle;
 use yii\web\View;

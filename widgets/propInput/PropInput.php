@@ -2,7 +2,6 @@
 
 namespace thefx\blocks\widgets\propInput;
 
-use thefx\blocks\assets\PropInputAsset\PropInputAsset;
 use thefx\blocks\models\blocks\BlockItemPropAssignments;
 use yii\widgets\InputWidget;
 

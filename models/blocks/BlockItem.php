@@ -7,6 +7,7 @@ use thefx\blocks\behaviors\Slug;
 use thefx\blocks\behaviors\UploadImageBehavior;
 use thefx\blocks\behaviors\UploadImageBehavior5;
 use thefx\blocks\models\blocks\queries\BlockItemQuery;
+use thefx\user\models\User;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
@@ -48,6 +49,7 @@ use yii\web\UploadedFile;
  * @property BlockItemPropAssignments[] $propAssignmentsFilter
  * @property Block $block
  * @property BlockProp[] $propsIndexed
+ * @property User[] $createUser
  *
  * @mixin SaveRelationsBehavior
  */
@@ -377,6 +379,11 @@ class BlockItem extends ActiveRecord
     public function getCategory()
     {
         return $this->hasOne(BlockCategory::class, ['id' => 'parent_id']);
+    }
+
+    public function getCreateUser()
+    {
+        return $this->hasOne(User::class, ['id' => 'create_user']);
     }
 
     #########################

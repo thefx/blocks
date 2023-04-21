@@ -316,7 +316,7 @@ class BlockItemPropAssignments extends ActiveRecord
             'id' => 'ID',
             'block_item_id' => 'Block Item ID',
             'prop_id' => 'Prop ID',
-            'value' => 'Value',
+            'value' => $this->prop->title,
         ];
     }
 

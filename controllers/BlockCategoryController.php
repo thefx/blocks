@@ -336,6 +336,25 @@ class BlockCategoryController extends Controller
     }
 
     /**
+     * @throws NotFoundHttpException
+     */
+    public function actionOptionsTaskDelete($categoryId, array $keys = [])
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        foreach ($keys as $key) {
+            $blockItem = BlockItem::findOrFail(['id' => $key]);
+            $blockItem->delete();
+        }
+
+        TagDependency::invalidate(Yii::$app->cache, 'block_items_' . $blockItem->block_id);
+
+        return [
+            'result' => 'success'
+        ];
+    }
+
+    /**
      * Finds the BlockCategory model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id

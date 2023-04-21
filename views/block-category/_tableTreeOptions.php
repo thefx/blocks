@@ -76,7 +76,7 @@
                     <option value="activate">Активировать</option>
                     <option value="deactivate">Деактивировать</option>
                     <option value="move">Переместить</option>
-<!--                    <option value="delete">Удалить</option>-->
+                    <option value="delete">Удалить</option>
                 </select>
                 <div id="treeCategoryWrapper" class="mr-sm-2">
                     <label class="sr-only" for="treeCategory">Category</label>

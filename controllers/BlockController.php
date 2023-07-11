@@ -2,22 +2,20 @@
 
 namespace thefx\blocks\controllers;
 
-use thefx\blocks\forms\search\BlockPropSearch;
-use thefx\blocks\forms\search\BlockSearch;
-use thefx\blocks\models\blocks\Block;
-use thefx\blocks\models\blocks\BlockCategory;
-use thefx\blocks\models\blocks\BlockFields;
-use thefx\blocks\models\blocks\BlockItem;
-use thefx\blocks\models\blocks\BlockItemPropAssignments;
-use thefx\blocks\models\blocks\BlockProp;
-use thefx\blocks\models\blocks\BlockPropElem;
-use thefx\blocks\models\blocks\BlockSeo;
-use thefx\blocks\models\blocks\BlockSettings;
-use thefx\blocks\models\blocks\BlockTranslate;
+use thefx\blocks\models\Block;
+use thefx\blocks\models\BlockFields;
+use thefx\blocks\models\BlockItem;
+use thefx\blocks\models\BlockItemPropertyAssignments;
+use thefx\blocks\models\BlockProperty;
+use thefx\blocks\models\BlockPropertyElement;
+use thefx\blocks\models\BlockSections;
+use thefx\blocks\models\BlockTranslate;
+use thefx\blocks\models\forms\search\BlockPropertySearch;
+use thefx\blocks\models\forms\search\BlockSearch;
 use Yii;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
 /**
  * BlockController implements the CRUD actions for Block model.
@@ -55,40 +53,19 @@ class BlockController extends Controller
     }
 
     /**
-     * Displays a single Block model.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionView($id)
-    {
-        $this->layout = $this->module->layoutPure;
-        $block = $this->findModel($id);
-
-        $propsSearchModel = new BlockPropSearch();
-        $propsDataProvider = $propsSearchModel->search(Yii::$app->request->queryParams);
-        $propsDataProvider->query->andWhere(['block_id' => $block->id]);
-
-        return $this->render('view', [
-            'model' => $block,
-            'propsSearchModel' => $propsSearchModel,
-            'propsDataProvider' => $propsDataProvider,
-        ]);
-    }
-
-    /**
      * Creates a new Block model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Block();
+        $model = Block::create();
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            $newModel = Block::create($model->title, $model->path);
-            $newModel->save() or die(var_dump($newModel->getErrors()));
-            return $this->redirect(['view', 'id' => $newModel->id]);
+            $model->save();
+            $translate = BlockTranslate::create($model->id);
+            $translate->save();
+            return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('create', [
@@ -116,20 +93,26 @@ class BlockController extends Controller
         ]);
     }
 
-    public function actionSortElements(array $ids, $blockId)
+    /**
+     * Displays a single Block model.
+     * @param integer $id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionView($id)
     {
-        $elements = BlockProp::find()
-            ->where(['id' => $ids, 'block_id' => $blockId])
-            ->indexBy('id')
-            ->all();
+        $this->layout = $this->module->layoutPure;
+        $block = $this->findModel($id);
 
-        $sort = 1;
+        $propsSearchModel = new BlockPropertySearch();
+        $propsDataProvider = $propsSearchModel->search(Yii::$app->request->queryParams);
+        $propsDataProvider->query->andWhere(['block_id' => $block->id]);
 
-        foreach ($ids as $id) {
-            $elements[$id]->sort = $sort++;
-            $elements[$id]->save();
-        }
-        echo 'done';
+        return $this->render('view', [
+            'model' => $block,
+            'propsSearchModel' => $propsSearchModel,
+            'propsDataProvider' => $propsDataProvider,
+        ]);
     }
 
     /**
@@ -143,19 +126,16 @@ class BlockController extends Controller
      */
     public function actionDelete($id)
     {
-        $blockPropsIds = BlockProp::find()->select('id')->where(['block_id' => $id])->column();
+        $blockPropsIds = BlockProperty::find()->select('id')->where(['block_id' => $id])->column();
 
-        BlockItemPropAssignments::deleteAll(['prop_id' => $blockPropsIds]);
-        BlockPropElem::deleteAll(['block_prop_id' => $blockPropsIds]);
+        BlockItemPropertyAssignments::deleteAll(['property_id' => $blockPropsIds]);
+        BlockPropertyElement::deleteAll(['block_prop_id' => $blockPropsIds]);
 
-        BlockProp::deleteAll(['block_id' => $id]);
+        BlockProperty::deleteAll(['block_id' => $id]);
         BlockItem::deleteAll(['block_id' => $id]);
-        BlockCategory::deleteAll(['block_id' => $id]);
+        BlockSections::deleteAll(['block_id' => $id]);
         BlockFields::deleteAll(['block_id' => $id]);
-        BlockPropSearch::deleteAll(['block_id' => $id]);
-        BlockSettings::deleteAll(['block_id' => $id]);
         BlockTranslate::deleteAll(['block_id' => $id]);
-        BlockSeo::deleteAll(['block_id' => $id]);
         Block::deleteAll(['id' => $id]);
 
         return $this->redirect(['index']);

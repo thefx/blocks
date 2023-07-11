@@ -1,6 +1,5 @@
 <?php
 
-use thefx\blocks\models\files\Files;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 

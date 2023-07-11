@@ -26,8 +26,7 @@ class m190206_175917_create_block_prop_table extends Migration
             'code' => $this->string(),
             'in_filter' => $this->integer(1)->notNull()->defaultValue(0),
             'hint' => $this->string(),
-            'relative_block_item' => $this->integer(),
-            'relative_block_cat' => $this->integer(),
+            'relative_item' => $this->integer(),
             'redactor' => $this->integer(1)->notNull()->defaultValue(0),
         ], $tableOptions);
 

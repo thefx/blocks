@@ -1,6 +1,6 @@
 <?php
 
-use thefx\blocks\models\blocks\BlockTranslate;
+use thefx\blocks\models\BlockTranslate;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 

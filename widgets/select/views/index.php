@@ -12,6 +12,7 @@ echo '<div class="form-group">';
 echo Html::activeDropDownList($model, $attributeName, $data, [
     'class' => 'form-control',
     'style'=> 'width: 100%;',
+    'prompt'=> '',
 ]);
 echo '</div>';
 

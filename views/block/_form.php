@@ -1,6 +1,6 @@
 <?php
 
-use thefx\blocks\models\blocks\Block;
+use thefx\blocks\models\Block;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -15,13 +15,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
 
-<!--    --><?//= $form->field($model, 'path')->textInput(['maxlength' => true]) ?>
-
-<!--    --><?//= $form->field($model, 'table')->textInput(['maxlength' => true]) ?>
-
-<!--    --><?//= $form->field($model, 'template')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'pagination')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'alias')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'sort')->textInput(['maxlength' => true]) ?>
 

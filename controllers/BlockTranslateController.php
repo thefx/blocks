@@ -2,7 +2,7 @@
 
 namespace thefx\blocks\controllers;
 
-use thefx\blocks\models\blocks\BlockTranslate;
+use thefx\blocks\models\BlockTranslate;
 use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;

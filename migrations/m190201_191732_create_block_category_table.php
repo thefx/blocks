@@ -25,8 +25,8 @@ class m190201_191732_create_block_category_table extends Migration
             'photo_preview' => $this->string(),
             'date' => $this->date(),
             'parent_id' => $this->integer()->notNull()->defaultValue(1),
-            'lft'   => $this->integer()->notNull(),
-            'rgt'   => $this->integer()->notNull(),
+            'left'   => $this->integer()->notNull(),
+            'right'   => $this->integer()->notNull(),
             'depth' => $this->integer()->notNull(), // not unsigned!
             'seo_title' => $this->string(),
             'seo_keywords' => $this->string(),
@@ -38,8 +38,8 @@ class m190201_191732_create_block_category_table extends Migration
             'public' => $this->integer(1)->notNull()->defaultValue(0),
         ], $tableOptions);
 
-        $this->createIndex('block_category_lft_rgt', '{{%block_category}}', ['block_id', 'lft', 'rgt']);
-        $this->createIndex('block_category_rgt', '{{%block_category}}', ['block_id', 'rgt']);
+        $this->createIndex('block_category_left_right', '{{%block_category}}', ['block_id', 'left', 'right']);
+        $this->createIndex('block_category_right', '{{%block_category}}', ['block_id', 'right']);
         $this->createIndex('block_category_url_parent_id_path', '{{%block_category}}', ['parent_id', 'path']);
 
 //        // demo
@@ -124,7 +124,7 @@ class m190201_191732_create_block_category_table extends Migration
 //            'public' => 1,
 //        ]);
 
-//        $node11 = new BlockCategory();
+//        $node11 = new BlockSections();
 //        $node11->title = 'Родительская категория';
 //        $node11->makeRoot()->save() or die(var_dump($node11->getErrors()));
     }

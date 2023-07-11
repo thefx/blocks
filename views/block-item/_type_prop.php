@@ -1,27 +1,32 @@
 <?php
 
-/* @var BlockItem $model */
+/* @var $model BlockItem */
 /* @var $form yii\widgets\ActiveForm */
-/* @var int $value - propId */
+/* @var $value int - propId */
+/* @var $assignment BlockItemPropertyAssignments */
 
-use thefx\blocks\widgets\propInput\PropInput;
-use thefx\blocks\models\blocks\BlockItem;
-use thefx\dropzoneWidget\DropzoneWidget;
+use thefx\blocks\models\BlockItemPropertyAssignments;
+use thefx\blocks\widgets\PropertyInput\PropertyInputWidget;
+use thefx\blocks\models\BlockItem;
 
-/** @var thefx\blocks\models\blocks\BlockItemPropAssignments $assignment */
-$assignment = $model->getAssignmentByPropId($value);
+$assignments = $model->getAssignmentsByPropertyId($value);
 
-//try {
-if ($assignment->prop->type === 'image') {
-    echo $form->field($assignment, "[{$value}]value")->widget(DropzoneWidget::class, [
-        'extraData' => ['propId' => $assignment->prop->id]
-    ])->label($assignment->prop->title);
-} else {
-    echo $form->field($assignment, "[{$value}]value")->widget(PropInput::class)->label(false);
+//echo '<pre>';
+//print_r($assignments);
+
+echo '<div class="input-wrapper" data-property-id="' . $value . '">';
+foreach ($assignments as $assignmentId => $assignment) {
+//    var_dump(['key' => $key]);
+//    var_dump(['$assignment' => $assignment->attributes]);
+    try {
+        echo $form->field($assignment, "[$value][$assignmentId]value", ['template' => '{input}'])->widget(PropertyInputWidget::class, [
+            'type' => $assignment->property->type,
+//        'debug' => true,
+        ])->label(false);
+    } catch (Error $error) {
+        var_dump($error);
+        var_dump($value);
+        var_dump($assignment);
+    }
 }
-echo $form->field($assignment, "[{$value}]prop_id")->hiddenInput()->label(false);
-//} catch (Error $error) {
-//    var_dump($assignment);
-//    var_dump($value);
-//    var_dump($error);
-//}
+echo '</div>';

@@ -1,8 +1,8 @@
 <?php
 
-use thefx\blocks\forms\search\BlockItemSearch;
-use yii\helpers\Html;
+use thefx\blocks\models\forms\search\BlockItemSearch;
 use yii\grid\GridView;
+use yii\helpers\Html;
 use yii\widgets\Pjax;
 
 /* @var $this yii\web\View */
@@ -30,13 +30,13 @@ $this->params['breadcrumbs'][] = $this->title;
 
             'id',
             'title',
-            'path',
+            'alias',
             'anons',
             'text:ntext',
             //'photo',
             //'photo_preview',
             //'date',
-            //'parent_id',
+            //'section_id',
             //'public',
             //'sort',
             //'create_user',

@@ -18,15 +18,4 @@ class Module extends \yii\base\Module
         parent::init();
         BlockAsset::register(\Yii::$app->view);
     }
-
-//    /**
-//     * @inheritdoc
-//     */
-//    public function beforeAction($action)
-//    {
-//        if (parent::beforeAction($action)) {
-//            return true;
-//        }
-//        return false;
-//    }
 }

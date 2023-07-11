@@ -1,10 +1,10 @@
 <?php
 
-use thefx\blocks\forms\search\BlockSearch;
-use thefx\blocks\models\blocks\Block;
+use thefx\blocks\models\Block;
+use thefx\blocks\models\forms\search\BlockSearch;
 use yii\grid\ActionColumn;
-use yii\helpers\Html;
 use yii\grid\GridView;
+use yii\helpers\Html;
 use yii\helpers\Url;
 
 /* @var $this yii\web\View */

@@ -1,10 +1,10 @@
 <?php
 
-use thefx\blocks\assets\Select2Asset\Select2Asset;
-use thefx\blocks\models\blocks\Block;
-use thefx\blocks\models\blocks\BlockItem;
+use kartik\select2\Select2Asset;
+use thefx\blocks\models\Block;
+use thefx\blocks\models\BlockItem;
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+use yii\bootstrap4\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $model BlockItem */
@@ -55,7 +55,7 @@ Select2Asset::register($this);
 
                 <div class="tab-pane fade <?= $class ?>" id="custom-tabs-<?= $i ?>" role="tabpanel" aria-labelledby="custom-tabs-<?= $i ?>-tab">
                     <?php foreach ($items as $item) : ?>
-                        <?= $this->render('_type_' . $item['type'], ['form' => $form, 'model' => $model, 'block' => $block, 'value' => $item['value']]) ?>
+                        <?= $this->render('_type_' . $item['type'], ['form' => $form, 'model' => $model, /*'block' => $block,*/ 'value' => $item['value']]) ?>
                     <?php endforeach; ?>
                 </div>
 

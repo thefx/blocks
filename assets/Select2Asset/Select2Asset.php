@@ -18,4 +18,14 @@ class Select2Asset extends AssetBundle
 //        'plugins/select2/js/i18n/ru.js',
 //        'dist/js/adminlte.js',
     ];
+
+//    public $sourcePath = '@vendor/select2/select2/dist';
+//
+//    public $css = [
+//        'css/select2.min.css',
+//    ];
+//
+//    public $js = [
+//        'js/select2.full.min.js',
+//    ];
 }

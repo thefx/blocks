@@ -7,9 +7,11 @@
 
 namespace thefx\blocks\behaviors;
 
-use thefx\blocks\models\images\Images;
+use thefx\blocks\models\__images\Images;
+use thefx\blocks\models\BlockFiles;
 use Yii;
 use yii\base\Behavior;
+use yii\db\BaseActiveRecord;
 use yii\web\ServerErrorHttpException;
 use yii\web\UploadedFile;
 use yii\db\ActiveRecord;
@@ -56,6 +58,8 @@ class UploadImageBehavior extends Behavior
      * or anonymous function returns directory path
      */
     public $savePath = '';
+
+    public $dir = '';
     /**
      * @var bool|callable generate a new unique name for the file
      * set true (@see self::generateFileName()) or anonymous function takes the old file name and returns a new name
@@ -98,7 +102,7 @@ class UploadImageBehavior extends Behavior
 
     protected $imageManager;
 
-    public function __construct(Images $imageManager, array $config = [])
+    public function __construct(BlockFiles $imageManager, array $config = [])
     {
         $this->imageManager = $imageManager;
         parent::__construct($config);
@@ -107,10 +111,10 @@ class UploadImageBehavior extends Behavior
     public function events()
     {
         return [
-            ActiveRecord::EVENT_BEFORE_INSERT => 'beforeInsert',
-            ActiveRecord::EVENT_BEFORE_UPDATE => 'beforeUpdate',
-            ActiveRecord::EVENT_BEFORE_DELETE => 'beforeDelete',
-            ActiveRecord::EVENT_BEFORE_VALIDATE => 'beforeValidate',
+            BaseActiveRecord::EVENT_BEFORE_INSERT => 'beforeInsert',
+            BaseActiveRecord::EVENT_BEFORE_UPDATE => 'beforeUpdate',
+            BaseActiveRecord::EVENT_BEFORE_DELETE => 'beforeDelete',
+            BaseActiveRecord::EVENT_BEFORE_VALIDATE => 'beforeValidate',
         ];
     }
 
@@ -188,7 +192,9 @@ class UploadImageBehavior extends Behavior
             foreach ($this->files as $file) {
                 if ($file instanceof UploadedFile) {
                     $filename = $this->uploadFile($file);
-                    $this->imageManager->addImage($filename, $this->defaultCrop[0], $this->defaultCrop[1]);
+//                    $this->imageManager->addImage($filename, $this->defaultCrop[0], $this->defaultCrop[1]);
+                    $model = BlockFiles::create($this->savePath, $this->dir, $filename);
+                    $model->save();
                     $filenames[] = $filename;
                 }
             }
@@ -240,7 +246,11 @@ class UploadImageBehavior extends Behavior
             if (is_file($filePath)) {
                 unlink($filePath);
             }
-            $this->imageManager->removeImage($oldFileName);
+            $model = BlockFiles::findOne(['file_name' => $oldFileName]);
+            if ($model) {
+                $model->delete();
+            }
+//            $this->imageManager->removeImage($oldFileName);
             if ($this->crop !== false) {
                 foreach ($this->crop as $item) {
                     if (isset($item[2])) {

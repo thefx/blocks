@@ -2,27 +2,6 @@
     position: relative;
 }
 
-/*a.asc:after {*/
-/*    position: absolute;*/
-/*    bottom: 8px;*/
-/*    right: 8px;*/
-/*    display: block;*/
-/*    font-family: FontAwesome;*/
-/*    opacity: 0.5;*/
-/*    content: "\F078";*/
-/*    color: #5A738E;*/
-/*}*/
-/*a.desc:after {*/
-/*    position: absolute;*/
-/*    bottom: 8px;*/
-/*    right: 8px;*/
-/*    display: block;*/
-/*    font-family: FontAwesome;*/
-/*    opacity: 0.5;*/
-/*    content: "\F077";*/
-/*    color: #5A738E;*/
-/*}*/
-
 a.asc:after, a.desc:after {
     font-family: "Font Awesome 5 Free";
     color: #5A738E;

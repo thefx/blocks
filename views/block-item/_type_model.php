@@ -1,34 +1,29 @@
 <?php
 
-use thefx\blocks\widgets\select\Select2Input;
+use thefx\blocks\models\BlockItem;
+use thefx\blocks\models\BlockItemPropertyAssignments;
+use thefx\blocks\widgets\Select\Select2Input;
+use thefx\blocks\widgets\Switcher\SwitchInput;
 use thefx\widgetsCropper\FileInputCropper;
-use thefx\blocks\widgets\switcher\SwitchInput;
-use thefx\blocks\models\blocks\Block;
-use thefx\blocks\models\blocks\BlockItem;
-use thefx\blocks\models\blocks\BlockItemPropAssignments;
 use vova07\imperavi\Widget;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\jui\DatePicker;
 
 /** @var BlockItem $model */
-/** @var Block $block */
-/** @var BlockItemPropAssignments $form */
+/** @var BlockItemPropertyAssignments $form */
 /** @var string $value - field name */
 
 if (!$model->hasProperty($value)) {
-    return '';
+    return 'property ' . $value . ' not found';
 }
+
+$settings = array_merge(Yii::$app->params['blockItem'], Yii::$app->params['blockItem' . $model->block_id] ?? []);
 
 switch ($value) {
     case 'seo_title':
-    case 'path':
+    case 'alias':
     case 'title':
-    case 'article':
-    case 'price':
-    case 'price_old':
-    case 'currency':
-    case 'unit':
         echo $form->field($model, $value)->textInput(['maxlength' => true]);
         break;
 
@@ -49,63 +44,51 @@ switch ($value) {
         break;
 
     case 'photo_preview':
-        echo $form->field($model, $value)->widget(FileInputCropper::class,[
-            'cropAttribute'=>'photo_preview_crop',
-            'cropConfig'=> [
-                'savePath' => $block->settings->upload_path,
-                'dir' => "@webroot/upload/{$block->settings->upload_path}/",
-                'urlDir' => "/{$block->settings->upload_path}",
-                'defaultCrop' => [
-                    $block->settings->photo_preview_crop_width,
-                    $block->settings->photo_preview_crop_height,
-                    $block->settings->photo_preview_crop_type
-                ],
+        echo $form->field($model, $value)->widget(FileInputCropper::class, [
+            'cropAttribute' => 'photo_preview_crop',
+            'cropConfig' => [
+                'savePath' => $settings['photo_preview']['urlDir'],
+                'dir' => $settings['photo_preview']['dir'],
+                'urlDir' => $settings['photo_preview']['urlDir'],
+                'defaultCrop' => $settings['photo_preview']['defaultCrop'],
             ],
             'pluginOptions' => [
                 'showUpload' => true,
                 'browseLabel' => '',
                 'removeLabel' => '',
                 'mainClass' => 'input-group-lg',
-                'imagePreview' => $model->getPhoto($value) ? Html::img($model->getPhoto($value)) : '',
-                'imageUrl' => $model->getPhoto($value) ?: '',
+                'imagePreview' => $model->getPhotoPreviewPath() ? Html::img($model->getPhotoPreviewPath()) : '',
+                'imageUrl' => $model->getPhotoPreviewPath() ?: '',
             ]
         ]);
         break;
 
     case 'photo':
-        echo $form->field($model, $value)->widget(FileInputCropper::class,[
-            'cropAttribute'=>'photo_crop',
-            'cropConfig'=> [
-                'savePath' => $block->settings->upload_path,
-                'dir' => "@webroot/upload/{$block->settings->upload_path}/",
-                'urlDir' => '/' . $block->settings->upload_path,
-                'defaultCrop' => [
-                    $block->settings->photo_crop_width,
-                    $block->settings->photo_crop_height,
-                    $block->settings->photo_crop_type
-                ],
-                // только для поселков
-//                'crop' => array_filter($block->id == 12 ? [
-//                    [640, 1030, 'mobile', 'widen'],
-//                ] : [])
+        echo $form->field($model, $value)->widget(FileInputCropper::class, [
+            'cropAttribute' => 'photo_crop',
+            'cropConfig' => [
+                'savePath' => $settings['photo']['urlDir'],
+                'dir' => $settings['photo']['dir'],
+                'urlDir' => $settings['photo']['urlDir'],
+                'defaultCrop' => $settings['photo']['defaultCrop'],
             ],
             'pluginOptions' => [
                 'showUpload' => true,
                 'browseLabel' => '',
                 'removeLabel' => '',
                 'mainClass' => 'input-group-lg',
-                'imagePreview' => $model->getPhoto() ? Html::img($model->getPhoto()) : '',
-                'imageUrl' => $model->getPhoto() ?: '',
+                'imagePreview' => $model->getPhotoPath() ? Html::img($model->getPhotoPath()) : '',
+                'imageUrl' => $model->getPhotoPath() ?: '',
             ]
         ]);
         break;
 
-    case 'parent_id':
+    case 'section_id':
         echo $form->field($model, $value)->widget(Select2Input::class, [
-            'data' => $model->categoryList(),
+            'data' => $model->getSectionList(),
             'options' => ['placeholder' => 'Категория'],
             'pluginOptions' => [
-                'allowClear' => false
+                'allowClear' => false,
             ],
         ]);
         break;
@@ -122,5 +105,6 @@ switch ($value) {
     case 'seo_keywords':
         echo $form->field($model, $value)->textarea(['rows' => 6]);
         break;
-
+    default:
+        echo 'property ' . $value . ' not found';
 }

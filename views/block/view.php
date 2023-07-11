@@ -1,8 +1,8 @@
 <?php
 
 use thefx\blocks\assets\SortableJs\SortableJsAsset;
-use thefx\blocks\models\blocks\Block;
-use thefx\blocks\models\blocks\BlockProp;
+use thefx\blocks\models\Block;
+use thefx\blocks\models\BlockProperty;
 use yii\data\ActiveDataProvider;
 use yii\grid\GridView;
 use yii\helpers\Html;
@@ -13,7 +13,7 @@ use yii\widgets\Pjax;
 /* @var $this yii\web\View */
 /* @var $model Block */
 /* @var ActiveDataProvider $propsDataProvider */
-/* @var BlockProp $propsSearchModel */
+/* @var BlockProperty $propsSearchModel */
 
 $this->title = $model->title;
 $this->params['breadcrumbs'][] = ['label' => 'Блоки', 'url' => ['index']];
@@ -66,9 +66,6 @@ SortableJsAsset::register($this);
             <li class="nav-item">
                 <a class="nav-link" data-toggle="pill" href="#tab-3" role="tab" aria-selected="false">Характеристики</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" data-toggle="pill" href="#tab-4" role="tab" aria-selected="false">Настройки фото</a>
-            </li>
         </ul>
     </div>
     <div class="card-body">
@@ -80,11 +77,7 @@ SortableJsAsset::register($this);
                     'attributes' => [
                         'id',
                         'title',
-//                        'path',
-//                        'table',
-//                        'template',
                         'sort',
-                        'pagination',
                         'create_user',
                         'create_date',
                         'update_user',
@@ -100,8 +93,6 @@ SortableJsAsset::register($this);
                 <?= DetailView::widget([
                     'model' => $model->translate,
                     'attributes' => [
-//                        'id',
-//                        'block_id',
                         'category',
                         'categories',
                         'block_item',
@@ -121,7 +112,7 @@ SortableJsAsset::register($this);
             <div class="tab-pane fade" id="tab-3" role="tabpanel">
 
                 <p>
-                    <?= Html::a('Добавить характеристику', ['block-prop/create', 'block_id' => $model->id], ['class' => 'btn btn-success']) ?>
+                    <?= Html::a('Добавить характеристику', ['block-property/create', 'block_id' => $model->id], ['class' => 'btn btn-success']) ?>
                 </p>
 
                 <?php Pjax::begin(); ?>
@@ -137,15 +128,15 @@ SortableJsAsset::register($this);
                         ],
                         [
                             'attribute' => 'title',
-                            'content' => static function(BlockProp $model) {
-                                return Html::a($model->title, ['block-prop/update', 'id' => $model->id], ['data-pjax' => '0']);
+                            'content' => static function(BlockProperty $model) {
+                                return Html::a($model->title, ['block-property/update', 'id' => $model->id], ['data-pjax' => '0']);
                             }
                         ],
                         [
                             'attribute' => 'type',
                             'headerOptions' => ['style' => 'width:150px; text-align:center'],
                             'contentOptions' => ['style' => 'text-align:center'],
-                            'content' => static function(BlockProp $model) {
+                            'content' => static function(BlockProperty $model) {
                                 return $model->getTypeName();
                             }
                         ],
@@ -153,7 +144,7 @@ SortableJsAsset::register($this);
                             'attribute' => 'public',
                             'headerOptions' => ['style' => 'width:150px; text-align:center'],
                             'contentOptions' => ['style' => 'text-align:center'],
-                            'content' => static function(BlockProp $model) {
+                            'content' => static function(BlockProperty $model) {
                                 return $model->public ? '<span class="badge badge-success">Да</span>' : '<span class="badge">Нет</span>';
                             }
                         ],
@@ -161,16 +152,16 @@ SortableJsAsset::register($this);
                             'attribute' => 'multi',
                             'headerOptions' => ['style' => 'width:150px; text-align:center'],
                             'contentOptions' => ['style' => 'text-align:center'],
-                            'content' => static function(BlockProp $model) {
-                                return $model->multi ? '<span class="badge badge-success">Да</span>' : '<span class="badge">Нет</span>';
+                            'content' => static function(BlockProperty $model) {
+                                return $model->isMultiple() ? '<span class="badge badge-success">Да</span>' : '<span class="badge">Нет</span>';
                             }
                         ],
                         [
                             'attribute' => 'required',
                             'headerOptions' => ['style' => 'width:150px; text-align:center'],
                             'contentOptions' => ['style' => 'text-align:center'],
-                            'content' => static function(BlockProp $model) {
-                                return $model->required ? '<span class="badge badge-success">Да</span>' : '<span class="badge">Нет</span>';
+                            'content' => static function(BlockProperty $model) {
+                                return $model->isRequired() ? '<span class="badge badge-success">Да</span>' : '<span class="badge">Нет</span>';
                             }
                         ],
                         [
@@ -178,43 +169,21 @@ SortableJsAsset::register($this);
                             'headerOptions' => ['style' => 'width:150px; text-align:center'],
                             'contentOptions' => ['style' => 'text-align:center'],
                         ],
-                        //'block_id',
                         [
                             'attribute' => 'sort',
                             'headerOptions' => ['style' => 'width:75px; text-align:center'],
                             'contentOptions' => ['style' => 'text-align:center'],
                         ],
-                        //'code',
-                        //'in_filter',
-                        //'hint',
                         [
                             'class' => 'yii\grid\ActionColumn',
                             'headerOptions' => ['style' => 'width:50px; text-align:center'],
                             'contentOptions' => ['style' => 'text-align:center'],
-                            'controller' => 'block-prop',
+                            'controller' => 'block-property',
                             'template' => '{update}{delete}',
                         ],
                     ],
                 ]) ?>
                 <?php Pjax::end(); ?>
-
-            </div>
-            <div class="tab-pane fade" id="tab-4" role="tabpanel">
-
-                <?= DetailView::widget([
-                    'model' => $model->settings,
-                    'attributes' => [
-                        'upload_path',
-                        'photo_crop_width',
-                        'photo_crop_height',
-                        'photo_crop_type',
-                        'photo_preview_crop_width',
-                        'photo_preview_crop_height',
-                        'photo_preview_crop_type',
-                    ],
-                ]) ?>
-
-                <?= Html::a('Редактировать', ['block-settings/update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
 
             </div>
         </div>

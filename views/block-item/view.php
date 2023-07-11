@@ -1,6 +1,6 @@
 <?php
 
-use thefx\blocks\models\blocks\BlockItem;
+use thefx\blocks\models\BlockItem;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
@@ -31,13 +31,13 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             'id',
             'title',
-            'path',
+            'alias',
             'anons',
             'text:ntext',
             'photo',
             'photo_preview',
             'date',
-            'parent_id',
+            'section_id',
             'public',
             'sort',
             'create_user',

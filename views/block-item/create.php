@@ -3,25 +3,20 @@
 /* @var $this yii\web\View */
 /* @var $model BlockItem */
 /* @var $block Block */
-/* @var $category BlockCategory */
-/* @var $parents BlockCategory[] */
-/* @var $elem */
+/* @var $category BlockSections */
+/* @var $parents BlockSections[] */
 /* @var $modelFieldsForm BlockFieldsItemForm */
+/* @var $elem */
 
 use thefx\blocks\forms\BlockFieldsItemForm;
-use thefx\blocks\models\blocks\Block;
-use thefx\blocks\models\blocks\BlockCategory;
-use thefx\blocks\models\blocks\BlockItem;
+use thefx\blocks\models\Block;
+use thefx\blocks\models\BlockItem;
+use thefx\blocks\models\BlockSections;
 
 $this->title = $block->translate->block_create;
-foreach ($parents as $parent) {
-    $title = $parent->isRoot() ? $block->title : $parent->title;
-    $this->params['breadcrumbs'][] = ['label' => $title, 'url' => ['block-category/index', 'parent_id' => $parent->id]];
-}
-if (!$category->isRoot()) {
-    $this->params['breadcrumbs'][] = ['label' => $category->title, 'url' => ['block-category/index', 'parent_id' => $category->id]];
-}
+$this->params['breadcrumbs'][] = ['label' => $block->translate->blocks_item, 'url' => ['block-sections/index', 'block_id' => $model->block_id]];
 $this->params['breadcrumbs'][] = $this->title;
+
 ?>
 
 <div class="block-item-create">

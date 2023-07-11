@@ -1,6 +1,6 @@
 <?php
 
-use thefx\blocks\models\blocks\Block;
+use thefx\blocks\models\Block;
 
 /* @var $this yii\web\View */
 /* @var $model Block */

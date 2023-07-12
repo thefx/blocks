@@ -129,7 +129,7 @@ class BlockController extends Controller
         $blockPropsIds = BlockProperty::find()->select('id')->where(['block_id' => $id])->column();
 
         BlockItemPropertyAssignments::deleteAll(['property_id' => $blockPropsIds]);
-        BlockPropertyElement::deleteAll(['block_prop_id' => $blockPropsIds]);
+        BlockPropertyElement::deleteAll(['property_id' => $blockPropsIds]);
 
         BlockProperty::deleteAll(['block_id' => $id]);
         BlockItem::deleteAll(['block_id' => $id]);

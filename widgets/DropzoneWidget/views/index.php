@@ -20,7 +20,6 @@ use yii\base\Model;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
-
 $this->registerCss("
     .dropzone {
         padding: 3px 3px;

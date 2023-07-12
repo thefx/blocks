@@ -167,7 +167,7 @@ class BlockItemController extends Controller
         TagDependency::invalidate(Yii::$app->cache, 'block_items_' . $model->block_id);
         $model->delete();
         Yii::$app->session->setFlash('success', $elementName . ' удален');
-        return $this->redirect(['block-category/index', 'block_id' => $blockId, 'section_id' => $sectionId]);
+        return $this->redirect(['block-sections/index', 'block_id' => $model->block_id]);
     }
 
     /**

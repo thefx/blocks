@@ -37,7 +37,6 @@ class BlockProperty extends ActiveRecord
     public const TYPE_FLOAT = 'float';
     public const TYPE_LIST = 'list';
     public const TYPE_FILE = 'file';
-    public const TYPE_IMAGE = 'image';
     public const TYPE_RELATIVE_ITEM = 'relative_item';
     public const TYPE_CHECKBOX = 'checkbox';
 
@@ -62,7 +61,6 @@ class BlockProperty extends ActiveRecord
             self::TYPE_TEXT => 'Текст/Html',
             self::TYPE_LIST => 'Список',
             self::TYPE_FILE => 'Файл',
-            self::TYPE_IMAGE => 'Фото',
             self::TYPE_CHECKBOX => 'Чекбокс',
             self::TYPE_RELATIVE_ITEM => 'Связанный блок (элемент)',
         ];
@@ -115,11 +113,6 @@ class BlockProperty extends ActiveRecord
     public function isFile(): bool
     {
         return $this->type === self::TYPE_FILE;
-    }
-
-    public function isImage(): bool
-    {
-        return $this->type === self::TYPE_IMAGE;
     }
 
     public function isList(): bool

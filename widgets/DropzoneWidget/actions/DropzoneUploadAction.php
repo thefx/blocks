@@ -42,8 +42,8 @@ class DropzoneUploadAction extends Action
             'extensions' => $property->file_type,
             'fileAttribute' => 'file',
             'crop' => $params['crop'],
-            'path' => $params['crop']['dir'],
-            'url' => $params['crop']['urlDir'],
+            'path' => $params['dir'],
+            'url' => $params['urlDir'],
         ]);
 
         $form->load(Yii::$app->request->post());

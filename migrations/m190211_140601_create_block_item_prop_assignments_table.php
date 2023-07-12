@@ -3,7 +3,7 @@
 use yii\db\Migration;
 
 /**
- * Handles the creation of table `{{%block_item_prop_assignments}}`.
+ * Handles the creation of table `{{%block_item_property_assignments}}`.
  */
 class m190211_140601_create_block_item_prop_assignments_table extends Migration
 {

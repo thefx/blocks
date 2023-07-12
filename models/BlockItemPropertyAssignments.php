@@ -6,7 +6,7 @@ use yii\db\ActiveRecord;
 use yii\web\NotFoundHttpException;
 
 /**
- * This is the model class for table "{{%block_item_prop_assignments}}".
+ * This is the model class for table "{{%block_item_property_assignments}}".
  *
  * @property int $id
  * @property int $block_item_id
@@ -85,7 +85,7 @@ class BlockItemPropertyAssignments extends ActiveRecord
 
     public function getPropertyElements()
     {
-        return $this->hasMany(BlockPropertyElement::class, ['block_prop_id' => 'property_id']);
+        return $this->hasMany(BlockPropertyElement::class, ['property_id' => 'property_id']);
     }
 
     public function getFile()
@@ -95,7 +95,7 @@ class BlockItemPropertyAssignments extends ActiveRecord
 
     public function getPropertyElementAssigns()
     {
-        return $this->hasMany(BlockPropertyElement::class, ['block_prop_id' => 'property_id', 'id' => 'value']);
+        return $this->hasMany(BlockPropertyElement::class, ['property_id' => 'property_id', 'id' => 'value']);
     }
 
     public function getBlockItem()
@@ -108,7 +108,7 @@ class BlockItemPropertyAssignments extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%block_item_prop_assignments}}';
+        return '{{%block_item_property_assignments}}';
     }
 
     /**

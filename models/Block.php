@@ -39,8 +39,6 @@ class Block extends ActiveRecord
     {
         $model = new self();
         $model->sort  = 100;
-        $model->create_user  = \Yii::$app->user->id;
-        $model->create_date  = date('Y-m-d H:i:s');
 
         return $model;
     }
@@ -134,6 +132,7 @@ class Block extends ActiveRecord
     public function getDefaultFieldsCategoryTemplates()
     {
         return [
+            [ 'type' => 'model', 'value' => 'photo_preview' ],
             [ 'type' => 'model', 'value' => 'title' ],
             [ 'type' => 'model', 'value' => 'anons' ],
             [ 'type' => 'model', 'value' => 'public' ],
@@ -189,7 +188,7 @@ class Block extends ActiveRecord
             ->orderBy('left');
 
         return ArrayHelper::map($categories->all(), 'id', static function(BlockSections $row) use($divider) {
-            return str_repeat($divider, $row->depth) . '' . $row->title;
+            return str_repeat($divider, $row->depth) . ' ' . $row->title;
         });
     }
 
@@ -198,7 +197,7 @@ class Block extends ActiveRecord
         return $this->hasOne(BlockSections::class, ['block_id' => 'id']);
     }
 
-    public function getProps()
+    public function getProperties()
     {
         return $this->hasMany(BlockProperty::class, ['block_id' => 'id']);
     }
@@ -229,6 +228,12 @@ class Block extends ActiveRecord
             [
                 'class' => AttributesBehavior::class,
                 'attributes' => [
+                    'create_user' => [
+                        BaseActiveRecord::EVENT_BEFORE_INSERT => \Yii::$app->user->id,
+                    ],
+                    'create_date' => [
+                        BaseActiveRecord::EVENT_BEFORE_INSERT => date('Y-m-d H:i:s'),
+                    ],
                     'update_user' => [
                         BaseActiveRecord::EVENT_BEFORE_UPDATE => \Yii::$app->user->id,
                     ],
@@ -239,22 +244,6 @@ class Block extends ActiveRecord
             ],
         ];
     }
-
-//    public function transactions()
-//    {
-//        return [
-//            self::SCENARIO_DEFAULT => self::OP_ALL,
-//        ];
-//    }
-
-//    /**
-//     * @inheritdoc
-//     * @return BlockQuery the active query used by this AR class.
-//     */
-//    public static function find()
-//    {
-//        return new BlockQuery(static::class);
-//    }
 
     /**
      * @throws NotFoundHttpException

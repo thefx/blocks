@@ -7,7 +7,9 @@ use thefx\blocks\behaviors\UploadImageBehavior;
 use thefx\blocks\models\BlockItem;
 use thefx\blocks\models\BlockItemPropertyAssignments;
 use thefx\blocks\models\BlockProperty;
+use thefx\blocks\traits\TransactionTrait;
 use Yii;
+use yii\caching\TagDependency;
 use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
 
@@ -20,6 +22,8 @@ use yii\web\NotFoundHttpException;
  */
 class BlockItemForm extends BlockItem
 {
+    use TransactionTrait;
+
     public $photo_preview_crop;
     public $photo_crop;
 
@@ -56,7 +60,6 @@ class BlockItemForm extends BlockItem
             return $model;
         }
 
-
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 
@@ -90,7 +93,7 @@ class BlockItemForm extends BlockItem
                 $propertyAssignment->block_item_id = $this->id; // for new records
                 $propertyAssignment->save() or die(var_dump($propertyAssignment->property->type, $propertyAssignment, $propertyAssignment->getErrors()));
             }
-//        TagDependency::invalidate(Yii::$app->cache, 'content_' . $this->cat);
+            TagDependency::invalidate(Yii::$app->cache, 'block_items_' . $this->block_id);
         });
         return true;
     }
@@ -146,7 +149,7 @@ class BlockItemForm extends BlockItem
     public function loadPropertyAssignments($data)
     {
         $assignmentsForInsert = [];
-        $validate = true; // todo
+        $validate = true;
 
         foreach ($this->propertyAssignmentsUpdate as $propertyId => $assignments) {
             foreach ($assignments as $assignmentId => $assignment) {
@@ -181,6 +184,7 @@ class BlockItemForm extends BlockItem
                         'value' => $assignment->value,
                     ]);
                 }
+//                $validate = !$assignment->validate() ? false : $validate;
                 $assignment->validate() or die(var_dump($assignment->getErrors()));
             }
         }
@@ -251,10 +255,5 @@ class BlockItemForm extends BlockItem
             [['photo', 'photo_preview'], 'file', 'mimeTypes' => 'image/*'],
             [['section_id'], 'default', 'value' => 0],
         ];
-    }
-
-    protected function wrap(callable $function)
-    {
-        \Yii::$app->db->transaction($function);
     }
 }

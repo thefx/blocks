@@ -212,9 +212,10 @@ class BlockSectionsController extends Controller
     public function actionDelete($id)
     {
         $model = $this->findModel($id);
+        $block_id = $model->block_id;
         TagDependency::invalidate(Yii::$app->cache, 'block_categories_' . $model->block_id);
         $model->deleteWithChildren();
-        return $this->redirect(['block-category/index', 'parent_id' => (int) $_GET['parent_id']]);
+        return $this->redirect(['index', 'block_id' => $block_id]);
     }
 
     public function actionDeletePhoto($id, $field)

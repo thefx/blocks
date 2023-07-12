@@ -13,6 +13,12 @@ use yii\widgets\ActiveForm;
 $propertyElements = $model->property->elements;
 $propertyElementList = ArrayHelper::map($propertyElements, 'id', 'title');
 
+$this->registerCss("
+    .select2-container--krajee-bs4 .select2-selection--multiple .select2-selection__choice__remove {
+        padding: 3px 3px 0 0.2rem;
+    }
+", [], 'pi.list');
+
 ?>
 
 <div class="form-group">

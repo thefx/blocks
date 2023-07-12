@@ -63,27 +63,99 @@ class BlockItem extends ActiveRecord
         });
     }
 
+//    public function getPropertyValue($code = null)
+//    {
+//        $value = null;
+//        foreach ($this->propertyAssignments as $item) {
+//            if ($item->property->code === $code) {
+//                switch ($item->property->type) {
+//                    case BlockProperty::TYPE_LIST:
+//                        $value[$item->getValue()->id] = $item->getValue()->title;
+//                        break;
+//                    case BlockProperty::TYPE_FILE:
+//                        $value[] = $item->getValue();
+//                        break;
+//                    default:
+//                        $value[] = $item->getValue();
+//                }
+//                if (!$item->property->isMultiple()) {
+//                    return reset($value);
+//                }
+//            }
+//        }
+//        return $value;
+//    }
+//
+//    public function getPropertyValue($code = null)
+//    {
+//        $value = null;
+//
+//        foreach ($this->propertyAssignments as $item) {
+//            if ($item->property->code === $code) {
+//                switch ($item->property->type) {
+//                    case BlockProperty::TYPE_LIST:
+//                        $value[$item->getValue()->id] = $item->getValue()->title;
+//                        break;
+//                    case BlockProperty::TYPE_FILE:
+//                        $value[] = $item->getValue();
+//                        break;
+//                    default:
+//                        $value[] = $item->getValue();
+//                }
+//                if (!$item->property->isMultiple()) {
+//                    return reset($value);
+//                }
+//            }
+//        }
+//        if (($value === null) && $this->propertiesIndexed[$code]->isMultiple()) {
+//            return [];
+//        }
+//
+//        return $value;
+//    }
+
     public function getPropertyValue($code = null)
     {
         $value = null;
+
         foreach ($this->propertyAssignments as $item) {
-            if ($item->property->code === $code) {
-                switch ($item->property->type) {
-                    case BlockProperty::TYPE_LIST:
-                        $value[$item->getValue()->id] = $item->getValue()->title;
+            $property = $this->propertiesIndexed[$code];
+
+            if ($item->property_id === $property->id) {
+                switch ($property->type) {
+                    case BlockProperty::TYPE_STRING:
+                    case BlockProperty::TYPE_TEXT:
+                    case BlockProperty::TYPE_INT:
+                        $value[] = $item->value;
                         break;
                     case BlockProperty::TYPE_FILE:
-                        $value[] = $item->getValue();
+                        $value[] = $item->file;
+                        break;
+                    case BlockProperty::TYPE_LIST:
+                        $value[$item->propertyElement->id] = $item->propertyElement->title;
+                        break;
+                    case BlockProperty::TYPE_RELATIVE_ITEM:
+//                      $value[] = $this->relativeContent;
+                        $value[] = $item->value;
                         break;
                     default:
-                        $value[] = $item->getValue();
+                        $value[] = $item->value;
                 }
-                if (!$item->property->isMultiple()) {
+                if (!$property->isMultiple()) {
                     return reset($value);
                 }
             }
         }
+        if (($value === null) && $this->propertiesIndexed[$code]->isMultiple()) {
+            return [];
+        }
+
         return $value;
+    }
+
+    public function getPropLabel($code = null)
+    {
+        return isset($this->propertiesIndexed[$code]) ? $this->propertiesIndexed[$code]->title : null;
     }
 
     /**
@@ -137,15 +209,15 @@ class BlockItem extends ActiveRecord
         return $this->hasMany(BlockProperty::class, ['block_id' => 'block_id']);
     }
 
+    public function getPropertiesIndexed()
+    {
+        return $this->hasMany(BlockProperty::class, ['block_id' => 'block_id'])->indexBy('code');
+    }
+
     public function getPropertyAssignments()
     {
         return $this->hasMany(BlockItemPropertyAssignments::class, ['block_item_id' => 'id']);
     }
-
-//    public function getPropertiesIndexed()
-//    {
-//        return $this->hasMany(BlockProperty::class, ['block_id' => 'block_id'])->indexBy('code');
-//    }
 
 //    public function getPropertyAssignmentsIndexed()
 //    {
@@ -187,7 +259,7 @@ class BlockItem extends ActiveRecord
             [['anons', 'text'], 'string'],
             [['date', 'create_date', 'update_date'], 'safe'],
             [['block_id', 'section_id', 'public', 'sort', 'create_user', 'update_user'], 'integer'],
-            [['title', 'alias', /*'photo', 'photo_preview',*/ 'photo_crop', 'photo_preview_crop', 'seo_title', 'seo_keywords', 'seo_description'], 'string', 'max' => 255],
+            [['title', 'alias', 'seo_title', 'seo_keywords', 'seo_description'], 'string', 'max' => 255],
             [['photo', 'photo_preview'], 'file', 'mimeTypes' => 'image/*'],
         ];
     }

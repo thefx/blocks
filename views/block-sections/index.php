@@ -1,6 +1,5 @@
 <?php
 
-use thefx\blocks\forms\BlockFieldsCategoryForm;
 use thefx\blocks\models\Block;
 use thefx\blocks\models\BlockFields;
 use thefx\blocks\models\BlockSections;
@@ -17,8 +16,6 @@ use yii\helpers\Url;
 /* @var $block Block */
 /* @var $section BlockSections */
 /* @var $parents BlockSections[] */
-/* @var $modelFieldsForm BlockFieldsCategoryForm */
-/* @var $modelFieldsItemsForm BlockFieldsCategoryForm */
 
 $this->title = $block->translate->blocks_item;
 if ($section) {
@@ -35,6 +32,7 @@ if ($parents) {
 $this->params['breadcrumbs'][] = $this->title;
 
 //\thefx\blocks\assets\SortableJs\SortableJsAsset::register($this);
+$settings = array_merge(Yii::$app->params['block'], Yii::$app->params['block' . $block->id] ?? []);
 ?>
 
 <script>
@@ -241,7 +239,10 @@ $this->params['breadcrumbs'][] = $this->title;
 <!--    --><?php //\yii\widgets\Pjax::begin(); ?>
 
     <?= Html::a($block->translate->block_create, ['block-item/create', 'block_id' => $block->id, 'section_id' => $section->id], ['class' => 'btn btn-success']) ?>
-    <?= Html::a($block->translate->category_create, ['create', 'block_id' => $block->id, 'section_id' => $section->id], ['class' => 'btn btn-default']) ?>
+
+    <?php if ($settings['btn_add_group']) : ?>
+        <?= Html::a($block->translate->category_create, ['create', 'block_id' => $block->id, 'section_id' => $section->id], ['class' => 'btn btn-default']) ?>
+    <?php endif; ?>
 
     <?= $this->render('_search', ['model' => $searchModel]) ?>
 

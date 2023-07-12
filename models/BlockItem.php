@@ -54,65 +54,12 @@ class BlockItem extends ActiveRecord
 
     public function getSectionList()
     {
-        /** @var BlockSections $category */
-        $category = BlockSections::findOne(['id' => $this->section_id]);
-        $categories = BlockSections::find()->where(['block_id' => $category->block_id])->orderBy('left')->all();
+        $categories = BlockSections::find()->where(['block_id' => $this->block_id])->orderBy('left')->all();
 
         return ArrayHelper::map($categories, 'id', static function($row) {
             return str_repeat('↳', $row->depth) . ' ' . $row->title;
         });
     }
-
-//    public function getPropertyValue($code = null)
-//    {
-//        $value = null;
-//        foreach ($this->propertyAssignments as $item) {
-//            if ($item->property->code === $code) {
-//                switch ($item->property->type) {
-//                    case BlockProperty::TYPE_LIST:
-//                        $value[$item->getValue()->id] = $item->getValue()->title;
-//                        break;
-//                    case BlockProperty::TYPE_FILE:
-//                        $value[] = $item->getValue();
-//                        break;
-//                    default:
-//                        $value[] = $item->getValue();
-//                }
-//                if (!$item->property->isMultiple()) {
-//                    return reset($value);
-//                }
-//            }
-//        }
-//        return $value;
-//    }
-//
-//    public function getPropertyValue($code = null)
-//    {
-//        $value = null;
-//
-//        foreach ($this->propertyAssignments as $item) {
-//            if ($item->property->code === $code) {
-//                switch ($item->property->type) {
-//                    case BlockProperty::TYPE_LIST:
-//                        $value[$item->getValue()->id] = $item->getValue()->title;
-//                        break;
-//                    case BlockProperty::TYPE_FILE:
-//                        $value[] = $item->getValue();
-//                        break;
-//                    default:
-//                        $value[] = $item->getValue();
-//                }
-//                if (!$item->property->isMultiple()) {
-//                    return reset($value);
-//                }
-//            }
-//        }
-//        if (($value === null) && $this->propertiesIndexed[$code]->isMultiple()) {
-//            return [];
-//        }
-//
-//        return $value;
-//    }
 
     public function getPropertyValue($code = null)
     {

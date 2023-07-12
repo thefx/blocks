@@ -85,7 +85,7 @@ class Block extends ActiveRecord
         $propsRows = [];
 
         /** @var BlockProperty $prop */
-        foreach ($this->props as $prop) {
+        foreach ($this->properties as $prop) {
             $propsRows[] = ['type' => 'prop', 'value' => $prop->id, 'hint' => ($prop->isRequired() ? '~' : '') . $prop->title];
         }
 

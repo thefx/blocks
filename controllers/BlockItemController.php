@@ -103,9 +103,13 @@ class BlockItemController extends Controller
     {
         $this->layout = $this->module->layoutPure;
 
-        $block = Block::find()->with('fields')->where(['id' => $block_id])->one();
-
         $model = BlockItemForm::create($block_id, $section_id);
+
+        // for fields
+        $block = Block::find()
+            ->where(['id' => $model->block_id])
+            ->with(['fields.property', 'fields.children.property'])
+            ->one();
 
         if ($this->request->isPost && $model->load(Yii::$app->request->post()) && $model->loadPropertyAssignments(Yii::$app->request->post()) && $model->save()) {
             TagDependency::invalidate(Yii::$app->cache, 'block_items_' . $block->id);
@@ -132,6 +136,13 @@ class BlockItemController extends Controller
 
         $model = BlockItemForm::findForUpdate($id);
 
+        // for fields
+        $block = Block::find()
+            ->where(['id' => $model->block_id])
+//            ->with(['fields.property', 'fields.children.property'])
+            ->with(['fields', 'fields.children'])
+            ->one();
+
         if ($this->request->isPost &&
             $model->load(Yii::$app->request->post()) &&
             $model->loadPropertyAssignments(Yii::$app->request->post()) &&
@@ -143,7 +154,7 @@ class BlockItemController extends Controller
         }
 
         return $this->render('update', [
-            'block' => $model->block,
+            'block' => $block,
             'model' => $model,
         ]);
     }

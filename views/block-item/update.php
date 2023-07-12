@@ -5,10 +5,8 @@
 /* @var $block Block */
 /* @var $category BlockSections */
 /* @var $parents BlockSections[] */
-/* @var $modelFieldsForm BlockFieldsItemForm */
 /* @var $elem */
 
-use thefx\blocks\forms\BlockFieldsItemForm;
 use thefx\blocks\models\Block;
 use thefx\blocks\models\BlockItem;
 use thefx\blocks\models\BlockSections;

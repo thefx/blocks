@@ -90,23 +90,24 @@ class DropzoneWidget extends BaseWidget
             ->where(['id' => $this->model->value])
             ->all();
 
-        $photos = [];
+        $files = [];
 
         if (is_array($this->model->value)) {
             // save sorting
             foreach ($this->model->value as $fileId) {
-                $photos[$fileId] = $models[$fileId];
+                $files[$fileId] = $models[$fileId];
             }
         }
 
-        $photos = $this->getFilesData($photos);
+        $files = $this->getFilesData($files);
 
         return $this->render('index', [
             'widgetId' => $this->getId(),
             'hasModel' => $this->hasModel(),
             'model' => $this->model,
             'attributeName' => $this->attribute,
-            'photos' => $photos,
+            'files' => $files,
+
             // dropzone props
             'acceptedFiles' => $this->acceptedFiles,
             'resizeWidth' => $this->resizeWidth,

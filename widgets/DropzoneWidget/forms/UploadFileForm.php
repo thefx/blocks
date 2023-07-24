@@ -25,6 +25,8 @@ class UploadFileForm extends Model
 
     public $fileAttribute = 'file';
 
+    public $resizeQuality = 90;
+
     public function formName()
     {
         return '';
@@ -61,7 +63,7 @@ class UploadFileForm extends Model
             $img = $manager->make($this->file->tempName);
             foreach ($this->crop as $cropParam) {
                 $img->fit($cropParam[0], $cropParam[1]);
-                $img->save($fullDir . $cropParam[2] . $filename, 90);
+                $img->save($fullDir . $cropParam[2] . $filename, $this->resizeQuality);
             }
         } else {
             $this->file->saveAs($fullDir . $filename);

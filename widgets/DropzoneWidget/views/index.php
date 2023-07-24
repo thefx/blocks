@@ -2,7 +2,7 @@
 
 /* @var $form ActiveForm */
 /* @var string $widgetId */
-/* @var array $photos */
+/* @var array $files */
 /* @var Model $model */
 /* @var string $mimeTypes */
 /* @var string $attributeName */
@@ -81,7 +81,7 @@ $this->registerCss("
         var $listWrapper = $('#<?= $widgetId ?>-dz');
         var inputElement = $('#<?= $widgetId ?>');
 
-        var dataInit = <?= json_encode($photos, JSON_UNESCAPED_UNICODE) ?>;
+        var dataInit = <?= json_encode($files, JSON_UNESCAPED_UNICODE) ?>;
 
         function dropzoneAddFile(inputElement, value) {
             var imagesNameArray = inputElement.val().split(';');
@@ -120,11 +120,12 @@ $this->registerCss("
             acceptedFiles: '<?= $acceptedFiles ?>',
             resizeWidth: '<?= $resizeWidth ?>',
             resizeHeight: '<?= $resizeHeight ?>',
+            maxFiles: <?= $maxFiles ?? 256 ?>,
             paramName: 'file',
             resizeQuality: 1,
             thumbnailWidth: 180,
             thumbnailHeight: 180,
-            // maxFiles: <?php //= $maxFiles ?>//,
+            dictMaxFilesExceeded: "Вы не можете загрузить больше файлов",
             // maxFilesize: 2, // MB
             // parallelUploads: 1,
             // resizeMimeType: null,
@@ -135,7 +136,7 @@ $this->registerCss("
                 _csrf: yii.getCsrfToken(),
             },
             init: function() {
-                var myDropzone = this;
+                var _this = this;
 
                 // reset
                 inputElement.val('');
@@ -178,15 +179,18 @@ $this->registerCss("
                 dataInit.forEach(function (element) {
                     var mockFile = {
                         status: "success",
+                        accepted: true, // for files limit
                         id: element.id,
                         name:  element.file_name,
                         file_name:  element.path + element.file_name,
                         size: element.size,
                     }
-                    myDropzone.files.push(mockFile);    // add to files array
-                    myDropzone.emit("addedfile", mockFile);
-                    myDropzone.emit("thumbnail", mockFile, element.path + element.file_name);
-                    myDropzone.emit("complete", mockFile);
+                    // _this.addFile(mockFile);
+                    _this.files.push(mockFile);    // add to files array
+                    _this.emit("addFile", mockFile);
+                    _this.emit("addedfile", mockFile);
+                    _this.emit("thumbnail", mockFile, '/upload/' + element.path + element.file_name);
+                    _this.emit("complete", mockFile);
                 });
             }
         });

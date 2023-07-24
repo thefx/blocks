@@ -31,89 +31,8 @@ if ($parents) {
 }
 $this->params['breadcrumbs'][] = $this->title;
 
-//\thefx\blocks\assets\SortableJs\SortableJsAsset::register($this);
 $settings = array_merge(Yii::$app->params['block'], Yii::$app->params['block' . $block->id] ?? []);
 ?>
-
-<script>
-
-    //document.addEventListener("DOMContentLoaded", function () {
-    //
-    //    function sortFolders(data) {
-    //        if (data.prev.length !== 0) {
-    //            var dataJson = {'type': 'after', 'item': data.id, 'node': data.prev.data('key')};
-    //            $.get("<?php //=Url::to(['sort-category'])?>//", dataJson);
-    //        } else if (data.next.length !== 0) {
-    //            var dataJson = {'type': 'before', 'item': data.id, 'node': data.next.data('key')};
-    //            $.get("<?php //=Url::to(['sort-category'])?>//", dataJson);
-    //        }
-    //    }
-    //
-    //    // Sortable
-    //    document.querySelectorAll('table tbody').forEach(function (el) {
-    //        Sortable.create(el, {
-    //            draggable: 'tr[data-type="folder"]',
-    //            handle: ".handle",
-    //            onEnd: function (/**Event*/evt) {
-    //                var data = {
-    //                    'id'       : $(evt.item).data('key'),
-    //                    'next'     : $(evt.item).next('tr[data-type="folder"]'),
-    //                    'prev'     : $(evt.item).prev('tr[data-type="folder"]'),
-    //                };
-    //                sortFolders(data);
-    //                // var itemEl = evt.item;  // dragged HTMLElement
-    //                // evt.to;    // target list
-    //                // evt.from;  // previous list
-    //                // evt.oldIndex;  // element's old index within old parent
-    //                // evt.newIndex;  // element's new index within new parent
-    //                // evt.oldDraggableIndex; // element's old index within old parent, only counting draggable elements
-    //                // evt.newDraggableIndex; // element's new index within new parent, only counting draggable elements
-    //                // evt.clone // the clone element
-    //                // evt.pullMode;  // when item is in another sortable: `"clone"` if cloning, `true` if moving
-    //            },
-    //        });
-    //    });
-    //
-    //    // Sortable
-    //    //document.querySelectorAll('table tbody').forEach(function (el) {
-    //    //    Sortable.create(el, {
-    //    //        draggable: 'tr[data-type="item"]',
-    //    //        handle: ".handle",
-    //    //        onEnd: function (/**Event*/evt) {
-    //    //            var ids = [];
-    //    //            $(evt.target).find('tr[data-type="item"]').each(function (key, element) {
-    //    //                ids.push(element.getAttribute('data-key'));
-    //    //            });
-    //    //            $.get("<?////=Url::to(['sort-items'])?>////", {'ids': ids});
-    //    //        },
-    //    //    });
-    //    //});
-    //
-    //});
-
-</script>
-
-<style>
-    .table > thead > tr > th,
-    .table > tbody > tr > th,
-    .table > tfoot > tr > th,
-    .table > thead > tr > td,
-    .table > tbody > tr > td,
-    .table > tfoot > tr > td {
-        vertical-align:middle
-    }
-    .handle {
-        cursor: move;
-    }
-</style>
-
-<?php if (in_array(Yii::$app->user->id, $this->context->module->rootUsers, true)) :?>
-    <div class="mb-3">
-        <?= Html::a('<i class="fa fa-cog mr-1"></i>Элемент', ['block-fields/update', 'block_id' => $block->id, 'type' => BlockFields::TYPE_BLOCK_ITEM], ['class' => 'btn btn-default btn-sm']) ?>
-        <?= Html::a('<i class="fa fa-cog mr-1"></i>Категории', ['block-fields/update', 'block_id' => $block->id, 'type' => BlockFields::TYPE_BLOCK_CATEGORY], ['class' => 'btn btn-default btn-sm']) ?>
-        <hr>
-    </div>
-<?php endif; ?>
 
 <div class="block-category-index">
 
@@ -238,11 +157,25 @@ $settings = array_merge(Yii::$app->params['block'], Yii::$app->params['block' . 
 
 <!--    --><?php //\yii\widgets\Pjax::begin(); ?>
 
-    <?= Html::a($block->translate->block_create, ['block-item/create', 'block_id' => $block->id, 'section_id' => $section->id], ['class' => 'btn btn-success']) ?>
+    <div class="d-flex">
+        <div>
 
-    <?php if ($settings['btn_add_group']) : ?>
-        <?= Html::a($block->translate->category_create, ['create', 'block_id' => $block->id, 'section_id' => $section->id], ['class' => 'btn btn-default']) ?>
-    <?php endif; ?>
+            <?= Html::a($block->translate->block_create, ['block-item/create', 'block_id' => $block->id, 'section_id' => $section->id], ['class' => 'btn btn-success']) ?>
+
+            <?php if ($settings['btn_add_group']) : ?>
+                <?= Html::a($block->translate->category_create, ['create', 'block_id' => $block->id, 'section_id' => $section->id], ['class' => 'btn btn-default']) ?>
+            <?php endif; ?>
+
+        </div>
+        <div class="ml-auto">
+
+            <?php if (in_array(Yii::$app->user->id, $this->context->module->rootUsers, true)) :?>
+                <?= Html::a('<i class="fa fa-cog mr-1"></i>Элемент', ['block-fields/update', 'block_id' => $block->id, 'type' => BlockFields::TYPE_BLOCK_ITEM], ['class' => 'btn btn-default btn-sm']) ?>
+                <?= Html::a('<i class="fa fa-cog mr-1"></i>Категории', ['block-fields/update', 'block_id' => $block->id, 'type' => BlockFields::TYPE_BLOCK_CATEGORY], ['class' => 'btn btn-default btn-sm']) ?>
+            <?php endif; ?>
+
+        </div>
+    </div>
 
     <?= $this->render('_search', ['model' => $searchModel]) ?>
 

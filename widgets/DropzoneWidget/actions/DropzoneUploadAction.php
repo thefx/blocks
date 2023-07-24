@@ -41,9 +41,10 @@ class DropzoneUploadAction extends Action
         $form = new UploadFileForm([
             'extensions' => $property->file_type,
             'fileAttribute' => 'file',
-            'crop' => $params['crop'],
             'path' => $params['dir'],
             'url' => $params['urlDir'],
+            'crop' => $params['crop'],
+            'resizeQuality' => $params['resizeQuality'],
         ]);
 
         $form->load(Yii::$app->request->post());

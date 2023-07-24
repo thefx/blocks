@@ -189,7 +189,7 @@ $this->registerCss("
                     _this.files.push(mockFile);    // add to files array
                     _this.emit("addFile", mockFile);
                     _this.emit("addedfile", mockFile);
-                    _this.emit("thumbnail", mockFile, '/upload/' + element.path + element.file_name);
+                    _this.emit("thumbnail", mockFile, element.path + element.file_name);
                     _this.emit("complete", mockFile);
                 });
             }

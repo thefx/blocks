@@ -11,7 +11,7 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 
-$cropParams = array_merge(Yii::$app->params['property']['crop'], Yii::$app->params['property' . $model->property->id]['crop'] ?? []);
+$cropParams = array_merge(Yii::$app->params['blockProperty']['crop'], Yii::$app->params['blockProperty' . $model->property->id]['crop'] ?? []);
 $maxDimension = max(ArrayHelper::getColumn($cropParams, 0) + ArrayHelper::getColumn($cropParams, 1));
 ?>
 

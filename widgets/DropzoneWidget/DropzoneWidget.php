@@ -122,8 +122,8 @@ class DropzoneWidget extends BaseWidget
     {
         return array_map(static function(BlockFiles $row) {
             $attributes = $row->getAttributes();
-            $attributes['photo_path'] = '/upload/' . $row->path . $row->file_name;
-            $attributes['photo_path_preview'] = '/upload/' . $row->path . $row->file_name;
+            $attributes['photo_path'] = $row->path . $row->file_name;
+            $attributes['photo_path_preview'] = $row->path . $row->file_name;
             $attributes['update_time'] = time();
             $attributes['name'] = $row->path . $row->file_name;
             return $attributes;

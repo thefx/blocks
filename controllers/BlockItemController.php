@@ -49,8 +49,8 @@ class BlockItemController extends Controller
                 'path' => \Yii::getAlias("@webroot") . '/upload/redactor/block-item/' . $id,
                 'unique' => true,
                 'validatorOptions' => [
-                    'maxWidth' => 2000,
-                    'maxHeight' => 2000
+                    'maxWidth' => 4000,
+                    'maxHeight' => 4000
                 ]
             ],
             'get-uploaded-images' => [

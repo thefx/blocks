@@ -2,7 +2,7 @@
 
 namespace thefx\blocks\models;
 
-use thefx\blocks\behaviors\Slug;
+use thefx\blocks\behaviors\SlugBehavior;
 use thefx\user\models\User;
 use yii\behaviors\AttributesBehavior;
 use yii\db\ActiveRecord;
@@ -221,7 +221,7 @@ class Block extends ActiveRecord
     {
         return [
             'slug' => [
-                'class' => Slug::class,
+                'class' => SlugBehavior::class,
                 'in_attribute' => 'title',
                 'out_attribute' => 'alias'
             ],

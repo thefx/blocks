@@ -2,13 +2,9 @@
 
 namespace thefx\blocks\controllers;
 
-use thefx\blocks\forms\BlockFieldsCategoryForm;
-use thefx\blocks\forms\BlockFieldsItemForm;
 use thefx\blocks\models\Block;
-use thefx\blocks\models\BlockFields;
 use thefx\blocks\models\BlockItem;
 use thefx\blocks\models\BlockSections;
-use thefx\blocks\models\forms\BlockFieldsForm;
 use thefx\blocks\models\forms\search\BlockSectionsSearch;
 use Yii;
 use yii\caching\TagDependency;

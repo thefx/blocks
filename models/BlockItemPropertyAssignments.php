@@ -14,21 +14,12 @@ use yii\web\NotFoundHttpException;
  * @property string $value
  * @property BlockProperty $property
  * @property BlockItem $blockItem
- * @property BlockItem $relativeBlockItem
  * @property BlockPropertyElement $propertyElement
  * @property BlockFiles $file
  * @property BlockPropertyElement[] $propertyElements
- * @property ContentPropertyElements[] $propertyElementAssign
  */
 class BlockItemPropertyAssignments extends ActiveRecord
 {
-    protected $imageManager;
-
-    public function __construct(array $config = [])
-    {
-        parent::__construct($config);
-    }
-
     public function getValue()
     {
         switch ($this->property->type) {

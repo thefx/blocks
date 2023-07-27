@@ -31,12 +31,9 @@ use yii\web\NotFoundHttpException;
  * @property string|null $create_date
  * @property int|null $update_user
  * @property string|null $update_date
- * @property BlockSections $category
  * @property BlockProperty[] $propertiesAll
  * @property BlockProperty[] $propertiesIndexed
  * @property BlockItemPropertyAssignments[] $propertyAssignments
- * @property BlockItemPropertyAssignments[] $propertyAssignmentsIndexed
- * @property BlockItemPropertyAssignments[] $propertyAssignmentsFilter
  * @property Block $block
  * @property User[] $createUser
  */
@@ -165,21 +162,6 @@ class BlockItem extends ActiveRecord
     {
         return $this->hasMany(BlockItemPropertyAssignments::class, ['block_item_id' => 'id']);
     }
-
-//    public function getPropertyAssignmentsIndexed()
-//    {
-//        return $this->hasMany(BlockItemPropertyAssignments::class, ['block_item_id' => 'id'])->indexBy('id');
-//    }
-
-//    public function getPropertyAssignmentsFilter()
-//    {
-//        return $this->hasMany(BlockItemPropertyAssignments::class, ['block_item_id' => 'id']);
-//    }
-
-//    public function getSection()
-//    {
-//        return $this->hasOne(BlockSections::class, ['id' => 'section_id']);
-//    }
 
     public function getCreateUser()
     {

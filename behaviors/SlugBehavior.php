@@ -9,7 +9,7 @@ use yii\db\ActiveRecord;
 /**
  * @property ActiveRecord $owner
  */
-class Slug extends Behavior
+class SlugBehavior extends Behavior
 {
     public $in_attribute = 'title';
     public $out_attribute = 'path';

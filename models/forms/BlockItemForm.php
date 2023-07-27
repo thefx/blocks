@@ -2,7 +2,7 @@
 
 namespace thefx\blocks\models\forms;
 
-use thefx\blocks\behaviors\Slug;
+use thefx\blocks\behaviors\SlugBehavior;
 use thefx\blocks\behaviors\UploadImageBehavior;
 use thefx\blocks\models\BlockItem;
 use thefx\blocks\models\BlockItemPropertyAssignments;
@@ -16,16 +16,31 @@ use yii\web\NotFoundHttpException;
 /**
  * This is the model class for table "{{%block_item}}".
  *
- * @property BlockItemPropertyAssignments[] $propertyAssignmentsInsert
- * @property BlockItemPropertyAssignments[] $propertyAssignmentsUpdate
  * @property BlockProperty[] $propertiesAll
  */
 class BlockItemForm extends BlockItem
 {
     use TransactionTrait;
 
+    /**
+     * @var string
+     */
     public $photo_preview_crop;
+
+    /**
+     * @var string
+     */
     public $photo_crop;
+
+    /**
+     * @var BlockItemPropertyAssignments[]
+     */
+    public $propertyAssignmentsUpdate;
+
+    /**
+     * @var BlockItemPropertyAssignments[]
+     */
+    public $propertyAssignmentsInsert;
 
     public static function create($block_id, $section_id)
     {
@@ -83,16 +98,29 @@ class BlockItemForm extends BlockItem
             parent::save($runValidation, $attributeNames);
 
             // save properties
-            BlockItemPropertyAssignments::deleteAll(['id' => ArrayHelper::getColumn($this->propertyAssignments, 'id')]);
+            BlockItemPropertyAssignments::deleteAll(['block_item_id' => $this->id]);
 
-            $propertyAssignments = array_filter($this->propertyAssignmentsInsert, static function ($data) {
-                return $data->value !== '';
-            });
+            $propertyAssignments = [];
 
-            foreach ($propertyAssignments as $propertyAssignment) {
-                $propertyAssignment->block_item_id = $this->id; // for new records
-                $propertyAssignment->save() or die(var_dump($propertyAssignment->property->type, $propertyAssignment, $propertyAssignment->getErrors()));
+            foreach ($this->propertyAssignmentsInsert as $assignment) {
+                if ($assignment->value === '') {
+                    continue;
+                }
+                $propertyAssignments[] = [
+                    'block_item_id' => $this->id, // for new records
+                    'property_id' => $assignment->property_id,
+                    'value' => $assignment->value,
+                ];
             }
+
+            if (!empty($propertyAssignments)) {
+                Yii::$app->db->createCommand()->batchInsert(
+                    BlockItemPropertyAssignments::tableName(),
+                    array_keys(reset($propertyAssignments)),
+                    $propertyAssignments
+                )->execute();
+            }
+
             TagDependency::invalidate(Yii::$app->cache, 'block_items_' . $this->block_id);
         });
         return true;
@@ -141,7 +169,7 @@ class BlockItemForm extends BlockItem
             }
         }
 
-        $this->populateRelation('propertyAssignmentsUpdate', $assignments);
+        $this->propertyAssignmentsUpdate = $assignments;
 
         return $this;
     }
@@ -193,7 +221,7 @@ class BlockItemForm extends BlockItem
 //            return $data->value !== '' || !$data->getIsNewRecord();
 //        });
 
-        $this->populateRelation('propertyAssignmentsInsert', $assignmentsForInsert);
+        $this->propertyAssignmentsInsert = $assignmentsForInsert;
 
         return $validate;
     }
@@ -237,7 +265,7 @@ class BlockItemForm extends BlockItem
     {
         return [
             'slug' => [
-                'class' => Slug::class,
+                'class' => SlugBehavior::class,
                 'in_attribute' => 'title',
                 'out_attribute' => 'alias'
             ],

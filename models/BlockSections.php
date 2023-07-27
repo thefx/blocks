@@ -3,7 +3,7 @@
 namespace thefx\blocks\models;
 
 use paulzi\nestedsets\NestedSetsQueryTrait;
-use thefx\blocks\behaviors\Slug;
+use thefx\blocks\behaviors\SlugBehavior;
 use thefx\blocks\behaviors\UploadImageBehavior;
 use thefx\blocks\components\NestedSetsBehavior;
 use thefx\blocks\components\TreeHelperNested;
@@ -149,7 +149,7 @@ class BlockSections extends ActiveRecord
     public function behaviors() {
         return [
             'slug' => [
-                'class' => Slug::class,
+                'class' => SlugBehavior::class,
                 'in_attribute' => 'title',
                 'out_attribute' => 'alias'
             ],

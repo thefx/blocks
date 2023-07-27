@@ -1,7 +1,5 @@
 <?php
 
-use kartik\select2\Select2;
-use thefx\blocks\forms\BlockFieldsCategoryForm;
 use thefx\blocks\models\Block;
 use thefx\blocks\models\BlockSections;
 use thefx\blocks\widgets\Select\Select2Input;
@@ -16,7 +14,6 @@ use yii\helpers\Url;
 /* @var $model BlockSections */
 /* @var $block Block */
 /* @var $form ActiveForm */
-/* @var $modelFieldsForm BlockFieldsCategoryForm */
 /* @var $parents array */
 
 if ($parents) {

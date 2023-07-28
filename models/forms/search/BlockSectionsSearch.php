@@ -101,13 +101,17 @@ class BlockSectionsSearch extends BlockSections
                 'defaultOrder' => [
                     'type' => SORT_ASC,
                     'update_date' => SORT_DESC,
-                    'create_date' => SORT_DESC,
+//                    'create_date' => SORT_DESC,
 //                    'id' => SORT_ASC
                 ],
                 'attributes' => [
                     'id',
-                    'update_date',
-                    'create_date',
+//                    'update_date',
+                    'update_date' => [
+                        'asc' => ['IFNULL(update_date,create_date)' => SORT_ASC],
+                        'desc' => ['IFNULL(update_date,create_date)' => SORT_DESC],
+                    ],
+//                    'create_date',
                     'public',
                     'title',
                     'anons',
@@ -115,7 +119,7 @@ class BlockSectionsSearch extends BlockSections
                     'sort',
                     'left',
                     'type',
-                ]
+                ],
             ]
         ]);
 

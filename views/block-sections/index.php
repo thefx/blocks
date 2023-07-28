@@ -122,13 +122,14 @@ $settings = array_merge(Yii::$app->params['block'], Yii::$app->params['block' . 
                         }
                     ];
                     break;
+                case 'create_date':
                 case 'update_date':
                     $columns[] = [
-                        'attribute' => 'update_date',
+                        'attribute' => $item['value'],
                         'headerOptions' => ['style' => 'width:200px; text-align:center'],
                         'contentOptions' => ['style' => 'text-align:center'],
-                        'content' => static function(BlockSections $row) {
-                            return $row->update_date ? date('d.m.Y H:i:s', strtotime($row->update_date)) : date('d.m.Y H:i:s', strtotime($row->create_date));
+                        'content' => static function(BlockSections $row) use ($item){
+                            return $row->{$item['value']} ? date('d.m.Y H:i:s', strtotime($row->{$item['value']})) : null;
                         }
                     ];
                     break;

@@ -65,7 +65,7 @@ $settings = array_merge(Yii::$app->params['block'], Yii::$app->params['block' . 
                         'contentOptions' => ['style' => 'width:140px; text-align:center'],
                         'format' => 'html',
                         'value' => static function(BlockSections $model) use ($block, $item) {
-                            $imgPath = $item['value'] === 'photo' ? $model->getPhotoPath() : $model->getPhotoPreviewPath();
+                            $imgPath = $item['value'] === 'photo' ? $model->getPhotoPath('min_') : $model->getPhotoPreviewPath('min_');
                             $img = Html::img($imgPath, ['style' => 'max-width:100px; max-height:100px']);
                             $url = $model->isFolder() ? ['index', 'block_id' => $block->id, 'section_id' => $model->id] : ['block-item/update', 'id' => $model->id];
                             return Html::a($img, $url, ['data-pjax' => '0']);

@@ -51,13 +51,14 @@ switch ($value) {
                 'dir' => $settings['photo_preview']['dir'],
                 'urlDir' => $settings['photo_preview']['urlDir'],
                 'defaultCrop' => $settings['photo_preview']['defaultCrop'],
+                'crop' => $settings['photo']['crop'],
             ],
             'pluginOptions' => [
                 'showUpload' => true,
                 'browseLabel' => '',
                 'removeLabel' => '',
                 'mainClass' => 'input-group-lg',
-                'imagePreview' => $model->getPhotoPreviewPath() ? Html::img($model->getPhotoPreviewPath()) : '',
+                'imagePreview' => $model->getPhotoPreviewPath('min_') ? Html::img($model->getPhotoPreviewPath('min_')) : '',
                 'imageUrl' => $model->getPhotoPreviewPath() ?: '',
             ]
         ]);
@@ -71,13 +72,14 @@ switch ($value) {
                 'dir' => $settings['photo']['dir'],
                 'urlDir' => $settings['photo']['urlDir'],
                 'defaultCrop' => $settings['photo']['defaultCrop'],
+                'crop' => $settings['photo']['crop'],
             ],
             'pluginOptions' => [
                 'showUpload' => true,
                 'browseLabel' => '',
                 'removeLabel' => '',
                 'mainClass' => 'input-group-lg',
-                'imagePreview' => $model->getPhotoPath() ? Html::img($model->getPhotoPath()) : '',
+                'imagePreview' => $model->getPhotoPath('min_') ? Html::img($model->getPhotoPath('min_')) : '',
                 'imageUrl' => $model->getPhotoPath() ?: '',
             ]
         ]);

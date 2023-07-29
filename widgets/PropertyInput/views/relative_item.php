@@ -1,13 +1,14 @@
 <?php
 
-use backend\models\ContentPropertyAssignments;
+use thefx\blocks\models\BlockItemPropertyAssignments;
 use yii\helpers\Html;
 use yii\web\View;
 use yii\widgets\ActiveForm;
 
-/* @var $model ContentPropertyAssignments */
+/* @var $model BlockItemPropertyAssignments */
 /* @var $form ActiveForm */
 /* @var $attributeName string */
+/* @var $label string */
 
 $relBlockItemList = $model->property->getAssignBlockItemsList();
 
@@ -19,7 +20,7 @@ $this->registerJs($js, View::POS_READY);
 
 <div class="form-group">
 
-    <?= HTML::label($model->property->title) ?>
+    <?= HTML::label($label) ?>
 
     <?= \kartik\select2\Select2::widget([
         'model' => $model,

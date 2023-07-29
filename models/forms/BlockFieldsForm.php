@@ -39,14 +39,10 @@ class BlockFieldsForm extends Model
 
     public function prettyJson(array $template)
     {
-        $template = json_encode($template, JSON_UNESCAPED_UNICODE);
-        $template = str_replace('[', "[\r", $template);
-        $template = str_replace('}]', "}\r]", $template);
-        $template = str_replace('}[', "}\r\r[", $template);
-        $template = str_replace('],"', "],\r\"", $template);
-        $template = str_replace('},{', "},\r{", $template);
-
-        return $template;
+        return str_replace(
+            ['[',       '}]',   '}[',     '],"',    '},{',       '","' ],
+            ["[\r    ", "}\r]", "}\r\r[", "],\r\"", "},\r    {", '", "'],
+            json_encode($template, JSON_UNESCAPED_UNICODE));
     }
 
     public function getDefaultTemplate()
@@ -97,6 +93,7 @@ class BlockFieldsForm extends Model
                             'parent_id' => $field->id,
                             'type' => $child->type,
                             'value' => $child->value,
+                            'name' => $child->name,
                             'sort' => $k,
                         ];
                     }
@@ -109,6 +106,7 @@ class BlockFieldsForm extends Model
                         'parent_id' => 0,
                         'type' => $child->type,
                         'value' => $child->value,
+                        'name' => $child->name,
                         'sort' => $k,
                     ];
                 }

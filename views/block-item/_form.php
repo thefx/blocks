@@ -55,7 +55,7 @@ Select2Asset::register($this);
 
                 <div class="tab-pane fade <?= $class ?>" id="custom-tabs-<?= $i ?>" role="tabpanel" aria-labelledby="custom-tabs-<?= $i ?>-tab">
                     <?php foreach ($items as $item) : ?>
-                        <?= $this->render('_type_' . $item['type'], ['form' => $form, 'model' => $model, /*'block' => $block,*/ 'value' => $item['value']]) ?>
+                        <?= $this->render('_type_' . $item['type'], ['form' => $form, 'model' => $model, 'label' => $item['name'], 'value' => $item['value']]) ?>
                     <?php endforeach; ?>
                 </div>
 

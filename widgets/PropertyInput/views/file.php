@@ -2,7 +2,8 @@
 
 /* @var $model BlockItemPropertyAssignments */
 /* @var $form ActiveForm */
-/* @var string $attributeName */
+/* @var $attributeName string */
+/* @var $label string */
 
 use thefx\blocks\models\BlockItemPropertyAssignments;
 use thefx\blocks\widgets\DropzoneWidget\DropzoneWidget;
@@ -17,7 +18,7 @@ $maxDimension = max(ArrayHelper::getColumn($cropParams, 0) + ArrayHelper::getCol
 
 <div class="form-group">
 
-    <?= Html::label($model->property->title) ?>
+    <?= HTML::label($label) ?>
 
     <?= $form->field($model, $attributeName)->widget(DropzoneWidget::class, [
             'extraData' => ['propertyId' => $model->property->id],

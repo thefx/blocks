@@ -32,6 +32,8 @@ if ($parents) {
 $this->params['breadcrumbs'][] = $this->title;
 
 $settings = array_merge(Yii::$app->params['block'], Yii::$app->params['block' . $block->id] ?? []);
+$bsModel = new BlockSections();
+
 ?>
 
 <div class="block-category-index">
@@ -60,7 +62,8 @@ $settings = array_merge(Yii::$app->params['block'], Yii::$app->params['block' . 
                 case 'photo_preview':
                 case 'photo':
                     $columns[] = [
-                        'attribute' => 'photo_preview',
+                        'attribute' => $item['value'],
+                        'label' => $item['name'] ?: $bsModel->getAttributeLabel($item['value']),
                         'headerOptions' => ['style' => 'width:140px; text-align:center'],
                         'contentOptions' => ['style' => 'width:140px; text-align:center'],
                         'format' => 'html',
@@ -75,7 +78,7 @@ $settings = array_merge(Yii::$app->params['block'], Yii::$app->params['block' . 
                 case 'title':
                     $columns[] = [
                         'attribute' => 'title',
-    //                'label' => '',
+                        'label' => $item['name'] ?: $bsModel->getAttributeLabel($item['value']),
                         'format' => 'html',
                         'value' => static function(BlockSections $model) use ($block) {
                             if ($model->isFolder()) {
@@ -87,18 +90,22 @@ $settings = array_merge(Yii::$app->params['block'], Yii::$app->params['block' . 
                     break;
                 case 'sort':
                     $columns[] = [
-                        'label' => 'Сорт.',
                         'attribute' => 'sort',
+                        'label' => $item['name'] ?: $bsModel->getAttributeLabel($item['value']),
                         'headerOptions' => ['style' => 'width:85px; text-align:center'],
                         'contentOptions' => ['style' => 'text-align:center'],
                     ];
                     break;
                 case 'date':
-                    $columns[] = 'date';
+                    $columns[] = [
+                        'attribute' => 'date',
+                        'label' => $item['name'] ?: $bsModel->getAttributeLabel($item['value']),
+                    ];
                     break;
                 case 'anons':
                     $columns[] = [
                         'attribute' => 'anons',
+                        'label' => $item['name'] ?: $bsModel->getAttributeLabel($item['value']),
                         'content' => static function(BlockSections $row) {
                             return strip_tags($row->anons);
                         }
@@ -107,6 +114,7 @@ $settings = array_merge(Yii::$app->params['block'], Yii::$app->params['block' . 
                 case 'text':
                     $columns[] = [
                         'attribute' => 'text',
+                        'label' => $item['name'] ?: $bsModel->getAttributeLabel($item['value']),
                         'content' => static function(BlockSections $row) {
                             return strip_tags($row->text);
                         }
@@ -115,6 +123,7 @@ $settings = array_merge(Yii::$app->params['block'], Yii::$app->params['block' . 
                 case 'public':
                     $columns[] = [
                         'attribute' => 'public',
+                        'label' => $item['name'] ?: $bsModel->getAttributeLabel($item['value']),
                         'headerOptions' => ['style' => 'width:85px; text-align:center'],
                         'contentOptions' => ['style' => 'text-align:center'],
                         'content' => static function(BlockSections $row) {
@@ -126,6 +135,7 @@ $settings = array_merge(Yii::$app->params['block'], Yii::$app->params['block' . 
                 case 'update_date':
                     $columns[] = [
                         'attribute' => $item['value'],
+                        'label' => $item['name'] ?: $bsModel->getAttributeLabel($item['value']),
                         'headerOptions' => ['style' => 'width:200px; text-align:center'],
                         'contentOptions' => ['style' => 'text-align:center'],
                         'content' => static function(BlockSections $row) use ($item){
@@ -136,6 +146,7 @@ $settings = array_merge(Yii::$app->params['block'], Yii::$app->params['block' . 
                 case 'id':
                     $columns[] = [
                         'attribute' => 'id',
+                        'label' => $item['name'] ?: $bsModel->getAttributeLabel($item['value']),
                         'headerOptions' => ['style' => 'width:85px; text-align:center'],
                         'contentOptions' => ['style' => 'text-align:center'],
                     ];

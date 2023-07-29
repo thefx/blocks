@@ -9,6 +9,7 @@ use yii\widgets\ActiveForm;
 /* @var $model BlockItemPropertyAssignments */
 /* @var $form ActiveForm */
 /* @var $attributeName string */
+/* @var $label string */
 
 $propertyElements = $model->property->elements;
 $propertyElementList = ArrayHelper::map($propertyElements, 'id', 'title');
@@ -23,7 +24,7 @@ $this->registerCss("
 
 <div class="form-group">
 
-    <?= Html::label($model->property->title) ?>
+    <?= HTML::label($label) ?>
 
 <!--    --><?php //= Select2::widget([
 //        'model' => $model,

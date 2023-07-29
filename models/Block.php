@@ -61,15 +61,27 @@ class Block extends ActiveRecord
     {
         if ($this->fields) {
             $arr = [];
+            $blockItemModel = new BlockItem();
             foreach ($this->fields as $field) {
                 if ($field->parent_id == 0) {
                     $children = [];
                     foreach ($field->children as $item) {
-                        $hint = $withHint && $item->type === BlockFields::TYPE_PROP && $item->property ? (($item->property->isRequired() ? '~' : '') . $item->property->title) : null;
+                        if ($withHint) {
+                            switch ($item->type) {
+                                case BlockFields::TYPE_PROP:
+                                    $hint = ($item->property->isRequired() ? '~' : '') . $item->property->title;
+                                    break;
+                                case BlockFields::TYPE_MODEL:
+                                    $hint = $blockItemModel->getAttributeLabel($item->value);
+                                    break;
+                            }
+                        }
+
                         $children[] = [
                             'type' => $item->type,
                             'value' => $item->value,
-                            'hint' => $hint,
+                            'name' => $item->name ?? "",
+                            'hint' => $hint ?? null,
                         ];
                     }
                     $arr[$field->value] = $children;
@@ -83,6 +95,7 @@ class Block extends ActiveRecord
     public function getDefaultFieldsTemplates()
     {
         $propsRows = [];
+        $blModel = new BlockItem();
 
         /** @var BlockProperty $prop */
         foreach ($this->properties as $prop) {
@@ -91,24 +104,24 @@ class Block extends ActiveRecord
 
         return [
             'Краткая информация' => [
-                [ 'type' => 'model', 'value' => 'title' ],
-                [ 'type' => 'model', 'value' => 'alias' ],
-                [ 'type' => 'model', 'value' => 'date' ],
-                [ 'type' => 'model', 'value' => 'anons' ],
-                [ 'type' => 'model', 'value' => 'photo_preview' ],
-                [ 'type' => 'model', 'value' => 'section_id' ],
-                [ 'type' => 'model', 'value' => 'public' ],
-                [ 'type' => 'model', 'value' => 'sort' ],
+                [ 'type' => 'model', 'name' => "", 'value' => 'title', 'hint' => $blModel->getAttributeLabel('title') ],
+                [ 'type' => 'model', 'name' => "", 'value' => 'alias', 'hint' => $blModel->getAttributeLabel('alias') ],
+                [ 'type' => 'model', 'name' => "", 'value' => 'date', 'hint' => $blModel->getAttributeLabel('date') ],
+                [ 'type' => 'model', 'name' => "", 'value' => 'anons', 'hint' => $blModel->getAttributeLabel('anons') ],
+                [ 'type' => 'model', 'name' => "", 'value' => 'photo_preview', 'hint' => $blModel->getAttributeLabel('photo_preview') ],
+                [ 'type' => 'model', 'name' => "", 'value' => 'section_id', 'hint' => $blModel->getAttributeLabel('section_id') ],
+                [ 'type' => 'model', 'name' => "", 'value' => 'public', 'hint' => $blModel->getAttributeLabel('public') ],
+                [ 'type' => 'model', 'name' => "", 'value' => 'sort', 'hint' => $blModel->getAttributeLabel('sort') ],
             ],
             'Подробная информация' => [
-                [ 'type' => 'model', 'value' => 'photo' ],
-                [ 'type' => 'model', 'value' => 'text' ],
+                [ 'type' => 'model', 'name' => "", 'value' => 'photo', 'hint' => $blModel->getAttributeLabel('photo') ],
+                [ 'type' => 'model', 'name' => "", 'value' => 'text', 'hint' => $blModel->getAttributeLabel('text') ],
             ],
             'Характеристики' => $propsRows,
             'Сео' => [
-                [ 'type' => 'model', 'value' => 'seo_title' ],
-                [ 'type' => 'model', 'value' => 'seo_keywords' ],
-                [ 'type' => 'model', 'value' => 'seo_description' ],
+                [ 'type' => 'model', 'name' => "", 'value' => 'seo_title', 'hint' => $blModel->getAttributeLabel('seo_title') ],
+                [ 'type' => 'model', 'name' => "", 'value' => 'seo_keywords', 'hint' => $blModel->getAttributeLabel('seo_keywords') ],
+                [ 'type' => 'model', 'name' => "", 'value' => 'seo_description', 'hint' => $blModel->getAttributeLabel('seo_description') ],
             ],
         ];
     }
@@ -117,11 +130,13 @@ class Block extends ActiveRecord
     {
         if ($this->fieldsCategory) {
             $arr = [];
+            $bsModel = new BlockSections();
             foreach ($this->fieldsCategory as $field) {
                 $arr[] = [
                     'type' => $field->type,
                     'value' => $field->value,
-                    'name' => $field->name,
+                    'name' => $field->name ?? "",
+                    'hint' => $bsModel->getAttributeLabel($field->value),
                 ];
             }
             return $arr;
@@ -131,13 +146,14 @@ class Block extends ActiveRecord
 
     public function getDefaultFieldsCategoryTemplates()
     {
+        $bsModel = new BlockSections();
         return [
-            [ 'type' => 'model', 'value' => 'photo_preview' ],
-            [ 'type' => 'model', 'value' => 'title' ],
-            [ 'type' => 'model', 'value' => 'anons' ],
-            [ 'type' => 'model', 'value' => 'public' ],
-            [ 'type' => 'model', 'value' => 'id' ],
-            [ 'type' => 'model', 'value' => 'update_date' ],
+            [ 'type' => 'model', 'name' => "", 'value' => 'photo_preview', 'hint' => $bsModel->getAttributeLabel('photo_preview') ],
+            [ 'type' => 'model', 'name' => "", 'value' => 'title', 'hint' => $bsModel->getAttributeLabel('title')],
+            [ 'type' => 'model', 'name' => "", 'value' => 'anons', 'hint' => $bsModel->getAttributeLabel('anons') ],
+            [ 'type' => 'model', 'name' => "", 'value' => 'public', 'hint' => $bsModel->getAttributeLabel('public') ],
+            [ 'type' => 'model', 'name' => "", 'value' => 'id', 'hint' => $bsModel->getAttributeLabel('id') ],
+            [ 'type' => 'model', 'name' => "", 'value' => 'update_date', 'hint' => $bsModel->getAttributeLabel('update_date') ],
         ];
     }
 

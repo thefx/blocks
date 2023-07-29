@@ -6,15 +6,16 @@ use vova07\imperavi\Widget;
 use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 
-/* @var BlockItemPropertyAssignments $model */
-/* @var string $attributeName */
-/* @var ActiveForm $form */
+/* @var $model BlockItemPropertyAssignments */
+/* @var $form ActiveForm */
+/* @var $attributeName string */
+/* @var $label string */
 
 ?>
 
 <div class="form-group">
 
-    <?= HTML::label($model->property->title) ?>
+    <?= HTML::label($label) ?>
 
     <?php if ($model->property->redactor) : ?>
         <?= $form->field($model, $attributeName)->widget(Widget::class, [
@@ -32,5 +33,3 @@ use yii\widgets\ActiveForm;
     <?= Html::error($model, $attributeName, ['class' => 'help-block help-block-error']) ?>
 
 </div>
-
-

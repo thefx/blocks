@@ -14,6 +14,8 @@ class PropertyInputWidget extends InputWidget
 
     public $type;
 
+    public $label;
+
     public $debug = false;
 
     /**
@@ -31,7 +33,8 @@ class PropertyInputWidget extends InputWidget
             'model' => $this->model,
             'form' => $this->field->form,
             'attributeName' => $this->attribute,
-            'unique' => $this->id,
+            'label' => $this->label,
+//            'unique' => $this->id,
             'debug' => $this->debug,
         ]);
     }

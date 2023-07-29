@@ -13,6 +13,7 @@ use yii\jui\DatePicker;
 /** @var BlockItem $model */
 /** @var BlockItemPropertyAssignments $form */
 /** @var string $value - field name */
+/** @var string $label - field label */
 
 if (!$model->hasProperty($value)) {
     return 'property ' . $value . ' not found';
@@ -20,15 +21,17 @@ if (!$model->hasProperty($value)) {
 
 $settings = array_merge(Yii::$app->params['blockItem'], Yii::$app->params['blockItem' . $model->block_id] ?? []);
 
+$label = $label ?: $model->getAttributeLabel($value);
+
 switch ($value) {
     case 'seo_title':
     case 'alias':
     case 'title':
-        echo $form->field($model, $value)->textInput(['maxlength' => true]);
+        echo $form->field($model, $value)->textInput(['maxlength' => true])->label($label);
         break;
 
     case 'date':
-        echo $form->field($model, $value)->widget(DatePicker::class);
+        echo $form->field($model, $value)->widget(DatePicker::class)->label($label);
         break;
 
     case 'text':
@@ -40,7 +43,7 @@ switch ($value) {
                     'select' => Url::to(['get-uploaded-images', 'id' => $model->id])
                 ],
             ]
-        ]);
+        ])->label($label);
         break;
 
     case 'photo_preview':
@@ -61,7 +64,7 @@ switch ($value) {
                 'imagePreview' => $model->getPhotoPreviewPath('min_') ? Html::img($model->getPhotoPreviewPath('min_')) : '',
                 'imageUrl' => $model->getPhotoPreviewPath() ?: '',
             ]
-        ]);
+        ])->label($label);
         break;
 
     case 'photo':
@@ -82,7 +85,7 @@ switch ($value) {
                 'imagePreview' => $model->getPhotoPath('min_') ? Html::img($model->getPhotoPath('min_')) : '',
                 'imageUrl' => $model->getPhotoPath() ?: '',
             ]
-        ]);
+        ])->label($label);
         break;
 
     case 'section_id':
@@ -92,20 +95,20 @@ switch ($value) {
             'pluginOptions' => [
                 'allowClear' => false,
             ],
-        ]);
+        ])->label($label);
         break;
 
     case 'public':
-        echo $form->field($model, $value)->widget(SwitchInput::class);
+        echo $form->field($model, $value)->widget(SwitchInput::class)->label($label);
         break;
 
     case 'sort':
-        echo $form->field($model, $value)->textInput();
+        echo $form->field($model, $value)->textInput()->label($label);
         break;
 
     case 'seo_description':
     case 'seo_keywords':
-        echo $form->field($model, $value)->textarea(['rows' => 6]);
+        echo $form->field($model, $value)->textarea(['rows' => 6])->label($label);
         break;
     default:
         echo 'property ' . $value . ' not found';

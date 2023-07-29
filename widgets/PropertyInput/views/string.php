@@ -2,19 +2,21 @@
 
 use thefx\blocks\models\BlockItemPropertyAssignments;
 use yii\helpers\Html;
+use yii\widgets\ActiveForm;
 
 /* @var $model BlockItemPropertyAssignments */
-/* @var $attributeName string  */
+/* @var $form ActiveForm */
+/* @var $attributeName string */
+/* @var $label string */
 
 ?>
 
 <div class="form-group">
 
-    <?= HTML::label($model->property->title) ?>
+    <?= HTML::label($label) ?>
 
     <?= Html::activeTextInput($model, $attributeName, ['class' => 'form-control']) ?>
 
     <?= Html::error($model, $attributeName, ['class' => 'help-block help-block-error']) ?>
 
 </div>
-

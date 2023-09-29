@@ -9,15 +9,15 @@ use yii\helpers\Html;
 
 //$model->{$attributeName} = ($model->{$attributeName} !== null) ? $model->{$attributeName} : 1;
 
-$this->registerCss("
-    .btn-default:not(:disabled):not(.disabled).active, 
-    .btn-default:not(:disabled):not(.disabled):active, 
-    .show>.btn-default.dropdown-toggle {
-        color: #fff;
-        background-color: #28a745;
-        border-color: #28a745;
-    }
-");
+//$this->registerCss("
+//    .btn-default:not(:disabled):not(.disabled).active,
+//    .btn-default:not(:disabled):not(.disabled):active,
+//    .show>.btn-default.dropdown-toggle {
+//        color: #fff;
+//        background-color: #28a745;
+//        border-color: #28a745;
+//    }
+//");
 
 echo '<br />' . HTML::activeRadioList($model, $attributeName, [0 => 'Нет', 1 => 'Да'], [
 //    'radioTemplate' => '{input}',

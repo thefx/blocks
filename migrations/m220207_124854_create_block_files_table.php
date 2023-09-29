@@ -2,9 +2,6 @@
 
 use yii\db\Migration;
 
-/**
- * Class m220207_124854_create_block_files_table
- */
 class m220207_124854_create_block_files_table extends Migration
 {
     /**

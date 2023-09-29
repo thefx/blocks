@@ -14,11 +14,11 @@ use yii\db\ActiveRecord;
  * @property string $value
  * @property int $parent_id
  * @property int $sort
- * @property BlockFields[] $children
+ * @property BlockField[] $children
  * @property BlockProperty $property
  * @property string $name [varchar(255)]
  */
-class BlockFields extends ActiveRecord
+class BlockField extends ActiveRecord
 {
     const TYPE_BLOCK_ITEM = 'item';
     const TYPE_BLOCK_CATEGORY = 'category';
@@ -27,7 +27,7 @@ class BlockFields extends ActiveRecord
     const TYPE_PROP = 'prop';
     const TYPE_GROUP = 'group';
 
-    public static function createGroup($block_id, $block_type, $name, $sort): BlockFields
+    public static function createGroup($block_id, $block_type, $name, $sort): BlockField
     {
         $model = new self();
         $model->block_id = $block_id;

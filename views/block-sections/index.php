@@ -1,9 +1,9 @@
 <?php
 
 use thefx\blocks\models\Block;
-use thefx\blocks\models\BlockFields;
-use thefx\blocks\models\BlockSections;
-use thefx\blocks\models\forms\search\BlockSectionsSearch;
+use thefx\blocks\models\BlockField;
+use thefx\blocks\models\BlockSection;
+use thefx\blocks\models\forms\search\BlockSectionSearch;
 use yii\grid\ActionColumn;
 use yii\grid\CheckboxColumn;
 use yii\grid\GridView;
@@ -11,11 +11,11 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 
 /* @var $this yii\web\View */
-/* @var $searchModel BlockSectionsSearch */
+/* @var $searchModel BlockSectionSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 /* @var $block Block */
-/* @var $section BlockSections */
-/* @var $parents BlockSections[] */
+/* @var $section BlockSection */
+/* @var $parents BlockSection[] */
 
 $this->title = $block->translate->blocks_item;
 if ($section) {
@@ -32,7 +32,7 @@ if ($parents) {
 $this->params['breadcrumbs'][] = $this->title;
 
 $settings = array_merge(Yii::$app->params['block'], Yii::$app->params['block' . $block->id] ?? []);
-$bsModel = new BlockSections();
+$bsModel = new BlockSection();
 
 ?>
 
@@ -44,8 +44,8 @@ $bsModel = new BlockSections();
             'class' => CheckboxColumn::class,
             'headerOptions' => ['style' => 'width:40px; text-align:center'],
             'contentOptions' => ['style' => 'text-align:center'],
-            'content' => static function(BlockSections $row) {
-                return $row->type === BlockSections::TYPE_ITEM ? Html::checkbox('selection[]', false, ['value' => $row->id]) : null;
+            'content' => static function(BlockSection $row) {
+                return $row->type === BlockSection::TYPE_ITEM ? Html::checkbox('selection[]', false, ['value' => $row->id]) : null;
             }
         ];
 //        $columns[] = [
@@ -67,7 +67,7 @@ $bsModel = new BlockSections();
                         'headerOptions' => ['style' => 'width:140px; text-align:center'],
                         'contentOptions' => ['style' => 'width:140px; text-align:center'],
                         'format' => 'html',
-                        'value' => static function(BlockSections $model) use ($block, $item) {
+                        'value' => static function(BlockSection $model) use ($block, $item) {
                             $imgPath = $item['value'] === 'photo' ? $model->getPhotoPath('min_') : $model->getPhotoPreviewPath('min_');
                             $img = Html::img($imgPath, ['style' => 'max-width:100px; max-height:100px']);
                             $url = $model->isFolder() ? ['index', 'block_id' => $block->id, 'section_id' => $model->id] : ['block-item/update', 'id' => $model->id];
@@ -80,7 +80,7 @@ $bsModel = new BlockSections();
                         'attribute' => 'title',
                         'label' => $item['name'] ?: $bsModel->getAttributeLabel($item['value']),
                         'format' => 'html',
-                        'value' => static function(BlockSections $model) use ($block) {
+                        'value' => static function(BlockSection $model) use ($block) {
                             if ($model->isFolder()) {
                                 return '<i class="fa fa-folder text-muted position-left"></i> ' . Html::a($model->title, ['index', 'block_id' => $block->id, 'section_id' => $model->id]);
                             }
@@ -106,7 +106,7 @@ $bsModel = new BlockSections();
                     $columns[] = [
                         'attribute' => 'anons',
                         'label' => $item['name'] ?: $bsModel->getAttributeLabel($item['value']),
-                        'content' => static function(BlockSections $row) {
+                        'content' => static function(BlockSection $row) {
                             return strip_tags($row->anons);
                         }
                     ];
@@ -115,7 +115,7 @@ $bsModel = new BlockSections();
                     $columns[] = [
                         'attribute' => 'text',
                         'label' => $item['name'] ?: $bsModel->getAttributeLabel($item['value']),
-                        'content' => static function(BlockSections $row) {
+                        'content' => static function(BlockSection $row) {
                             return strip_tags($row->text);
                         }
                     ];
@@ -126,7 +126,7 @@ $bsModel = new BlockSections();
                         'label' => $item['name'] ?: $bsModel->getAttributeLabel($item['value']),
                         'headerOptions' => ['style' => 'width:85px; text-align:center'],
                         'contentOptions' => ['style' => 'text-align:center'],
-                        'content' => static function(BlockSections $row) {
+                        'content' => static function(BlockSection $row) {
                             return $row->public ? '<span class="badge badge-success">Да</span>' : '<span class="badge">Нет</span>';
                         }
                     ];
@@ -138,7 +138,7 @@ $bsModel = new BlockSections();
                         'label' => $item['name'] ?: $bsModel->getAttributeLabel($item['value']),
                         'headerOptions' => ['style' => 'width:200px; text-align:center'],
                         'contentOptions' => ['style' => 'text-align:center'],
-                        'content' => static function(BlockSections $row) use ($item){
+                        'content' => static function(BlockSection $row) use ($item){
                             return $row->{$item['value']} ? date('d.m.Y H:i:s', strtotime($row->{$item['value']})) : null;
                         }
                     ];
@@ -158,7 +158,7 @@ $bsModel = new BlockSections();
             'template' => '{update}{delete}',
             'headerOptions' => ['style' => 'width:40px; text-align:center'],
             'contentOptions' => ['style' => 'text-align:center'],
-            'urlCreator' => static function($action, BlockSections $model, $key, $index) use ($section) {
+            'urlCreator' => static function($action, BlockSection $model, $key, $index) use ($section) {
                 $params = is_array($key) ? $key : ['id' => (string)$key];
 //                $params['section_id'] = $section->id;
                 $params[0] = ($model->isFolder() ? 'block-sections' : 'block-item') . '/' . $action;
@@ -182,8 +182,8 @@ $bsModel = new BlockSections();
         <div class="ml-auto">
 
             <?php if (in_array(Yii::$app->user->id, $this->context->module->rootUsers, true)) :?>
-                <?= Html::a('<i class="fa fa-cog mr-1"></i>Элемент', ['block-fields/update', 'block_id' => $block->id, 'type' => BlockFields::TYPE_BLOCK_ITEM], ['class' => 'btn btn-default btn-sm']) ?>
-                <?= Html::a('<i class="fa fa-cog mr-1"></i>Категории', ['block-fields/update', 'block_id' => $block->id, 'type' => BlockFields::TYPE_BLOCK_CATEGORY], ['class' => 'btn btn-default btn-sm']) ?>
+                <?= Html::a('<i class="fa fa-cog mr-1"></i>Элемент', ['block-fields/update', 'block_id' => $block->id, 'type' => BlockField::TYPE_BLOCK_ITEM], ['class' => 'btn btn-default btn-sm']) ?>
+                <?= Html::a('<i class="fa fa-cog mr-1"></i>Категории', ['block-fields/update', 'block_id' => $block->id, 'type' => BlockField::TYPE_BLOCK_CATEGORY], ['class' => 'btn btn-default btn-sm']) ?>
             <?php endif; ?>
 
         </div>

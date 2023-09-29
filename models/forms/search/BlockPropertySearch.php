@@ -6,9 +6,6 @@ use thefx\blocks\models\BlockProperty;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 
-/**
- * BlockPropertySearch represents the model behind the search form of `app\shop\entities\Block\BlockProperty`.
- */
 class BlockPropertySearch extends BlockProperty
 {
     /**

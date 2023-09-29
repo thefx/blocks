@@ -15,7 +15,7 @@ namespace thefx\blocks\models;
  * @property string|null $create_date
  * @property int|null $create_user
  */
-class BlockFiles extends \yii\db\ActiveRecord
+class BlockFile extends \yii\db\ActiveRecord
 {
     public static function create($path, $url, $filename)
     {

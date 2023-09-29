@@ -20,15 +20,15 @@ use yii\web\NotFoundHttpException;
  * @property string $create_date
  * @property int $update_user
  * @property string $update_date
- * @property BlockSections $category
+ * @property BlockSection $category
  * @property BlockProperty[] $properties
  * @property BlockTranslate $translate
- * @property BlockFields[] $fields
+ * @property BlockField[] $fields
  * @property array $fieldsTemplates
  * @property array $defaultFieldsCategoryTemplates
  * @property array $fieldsCategoryTemplates
  * @property array $defaultFieldsTemplates
- * @property BlockFields[] $fieldsCategory
+ * @property BlockField[] $fieldsCategory
  * @property User $createUser
  * @property User $updateUser
  * @property int $sort [int(10)]
@@ -68,10 +68,10 @@ class Block extends ActiveRecord
                     foreach ($field->children as $item) {
                         if ($withHint) {
                             switch ($item->type) {
-                                case BlockFields::TYPE_PROP:
+                                case BlockField::TYPE_PROP:
                                     $hint = ($item->property->isRequired() ? '~' : '') . $item->property->title;
                                     break;
-                                case BlockFields::TYPE_MODEL:
+                                case BlockField::TYPE_MODEL:
                                     $hint = $blockItemModel->getAttributeLabel($item->value);
                                     break;
                             }
@@ -130,7 +130,7 @@ class Block extends ActiveRecord
     {
         if ($this->fieldsCategory) {
             $arr = [];
-            $bsModel = new BlockSections();
+            $bsModel = new BlockSection();
             foreach ($this->fieldsCategory as $field) {
                 $arr[] = [
                     'type' => $field->type,
@@ -146,7 +146,7 @@ class Block extends ActiveRecord
 
     public function getDefaultFieldsCategoryTemplates()
     {
-        $bsModel = new BlockSections();
+        $bsModel = new BlockSection();
         return [
             [ 'type' => 'model', 'name' => "", 'value' => 'photo_preview', 'hint' => $bsModel->getAttributeLabel('photo_preview') ],
             [ 'type' => 'model', 'name' => "", 'value' => 'title', 'hint' => $bsModel->getAttributeLabel('title')],
@@ -164,7 +164,7 @@ class Block extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%block}}';
+        return '{{%blocks}}';
     }
 
     /**
@@ -199,18 +199,18 @@ class Block extends ActiveRecord
 
     public function getSectionList($divider = '.')
     {
-        $categories = BlockSections::find()
+        $categories = BlockSection::find()
             ->where(['block_id' => $this->id])
             ->orderBy('left');
 
-        return ArrayHelper::map($categories->all(), 'id', static function(BlockSections $row) use($divider) {
+        return ArrayHelper::map($categories->all(), 'id', static function(BlockSection $row) use($divider) {
             return str_repeat($divider, $row->depth) . ' ' . $row->title;
         });
     }
 
     public function getCategory()
     {
-        return $this->hasOne(BlockSections::class, ['block_id' => 'id']);
+        return $this->hasOne(BlockSection::class, ['block_id' => 'id']);
     }
 
     public function getProperties()
@@ -225,12 +225,12 @@ class Block extends ActiveRecord
 
     public function getFields()
     {
-        return $this->hasMany(BlockFields::class, ['block_id' => 'id'])->onCondition(['block_type' => BlockFields::TYPE_BLOCK_ITEM]);
+        return $this->hasMany(BlockField::class, ['block_id' => 'id'])->onCondition(['block_type' => BlockField::TYPE_BLOCK_ITEM]);
     }
 
     public function getFieldsCategory()
     {
-        return $this->hasMany(BlockFields::class, ['block_id' => 'id'])->onCondition(['block_type' => BlockFields::TYPE_BLOCK_CATEGORY]);
+        return $this->hasMany(BlockField::class, ['block_id' => 'id'])->onCondition(['block_type' => BlockField::TYPE_BLOCK_CATEGORY]);
     }
 
     public function behaviors()

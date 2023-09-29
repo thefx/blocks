@@ -51,7 +51,7 @@ class BlockTranslate extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%block_translate}}';
+        return '{{%block_translates}}';
     }
 
     /**

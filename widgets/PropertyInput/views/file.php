@@ -1,11 +1,11 @@
 <?php
 
-/* @var $model BlockItemPropertyAssignments */
+/* @var $model BlockItemPropertyAssignment */
 /* @var $form ActiveForm */
 /* @var $attributeName string */
 /* @var $label string */
 
-use thefx\blocks\models\BlockItemPropertyAssignments;
+use thefx\blocks\models\BlockItemPropertyAssignment;
 use thefx\blocks\widgets\DropzoneWidget\DropzoneWidget;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
@@ -20,7 +20,7 @@ $maxDimension = max(ArrayHelper::getColumn($cropParams, 0) + ArrayHelper::getCol
 
     <?= HTML::label($label) ?>
 
-    <?= $form->field($model, $attributeName)->widget(DropzoneWidget::class, [
+    <?= $form->field($model, $attributeName, ['enableClientValidation' => false])->widget(DropzoneWidget::class, [
             'extraData' => ['propertyId' => $model->property->id],
             'uploadUrl' => Url::to(['add-file']),
             'acceptedFiles' => $model->property->file_type ?: null,

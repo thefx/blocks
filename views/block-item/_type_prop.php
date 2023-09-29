@@ -4,9 +4,9 @@
 /* @var $form yii\widgets\ActiveForm */
 /* @var $value int - propId */
 /* @var $label */
-/* @var $assignment BlockItemPropertyAssignments */
+/* @var $assignment BlockItemPropertyAssignment */
 
-use thefx\blocks\models\BlockItemPropertyAssignments;
+use thefx\blocks\models\BlockItemPropertyAssignment;
 use thefx\blocks\widgets\PropertyInput\PropertyInputWidget;
 use thefx\blocks\models\BlockItem;
 

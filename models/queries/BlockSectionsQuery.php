@@ -3,14 +3,14 @@
 namespace thefx\blocks\models\queries;
 
 use paulzi\nestedsets\NestedSetsQueryTrait;
-use thefx\blocks\models\BlockSections;
+use thefx\blocks\models\BlockSection;
 
 /**
- * This is the ActiveQuery class for [[thefx\blocks\models\BlockSections]].
+ * This is the ActiveQuery class for [[thefx\blocks\models\BlockSection]].
  *
  * @property mixed $root
  *
- * @see BlockSections
+ * @see BlockSection
  */
 class BlockSectionsQuery extends \yii\db\ActiveQuery
 {

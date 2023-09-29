@@ -37,7 +37,7 @@ use yii\web\NotFoundHttpException;
  * @property int $update_user
  * @property string $update_date
  * @property int $public
- * @property BlockFields[] $fields
+ * @property BlockField[] $fields
  * @property Block $block
  * @property BlockItem[] $items
  * @property int $sort [int(11)]
@@ -47,7 +47,7 @@ use yii\web\NotFoundHttpException;
  * @mixin NestedSetsBehavior
  * @mixin NestedSetsQueryTrait
  */
-class BlockSections extends ActiveRecord
+class BlockSection extends ActiveRecord
 {
     public $type;
     public $photo_preview_crop;

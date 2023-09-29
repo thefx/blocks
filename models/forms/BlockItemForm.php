@@ -5,16 +5,15 @@ namespace thefx\blocks\models\forms;
 use thefx\blocks\behaviors\SlugBehavior;
 use thefx\blocks\behaviors\UploadImageBehavior;
 use thefx\blocks\models\BlockItem;
-use thefx\blocks\models\BlockItemPropertyAssignments;
+use thefx\blocks\models\BlockItemPropertyAssignment;
 use thefx\blocks\models\BlockProperty;
 use thefx\blocks\traits\TransactionTrait;
 use Yii;
 use yii\caching\TagDependency;
-use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
 
 /**
- * This is the model class for table "{{%block_item}}".
+ * This is the model class for table "{{%block_items}}".
  *
  * @property BlockProperty[] $propertiesAll
  */
@@ -33,12 +32,12 @@ class BlockItemForm extends BlockItem
     public $photo_crop;
 
     /**
-     * @var BlockItemPropertyAssignments[]
+     * @var BlockItemPropertyAssignment[]
      */
     public $propertyAssignmentsUpdate;
 
     /**
-     * @var BlockItemPropertyAssignments[]
+     * @var BlockItemPropertyAssignment[]
      */
     public $propertyAssignmentsInsert;
 
@@ -98,7 +97,7 @@ class BlockItemForm extends BlockItem
             parent::save($runValidation, $attributeNames);
 
             // save properties
-            BlockItemPropertyAssignments::deleteAll(['block_item_id' => $this->id]);
+            BlockItemPropertyAssignment::deleteAll(['block_item_id' => $this->id]);
 
             $propertyAssignments = [];
 
@@ -115,7 +114,7 @@ class BlockItemForm extends BlockItem
 
             if (!empty($propertyAssignments)) {
                 Yii::$app->db->createCommand()->batchInsert(
-                    BlockItemPropertyAssignments::tableName(),
+                    BlockItemPropertyAssignment::tableName(),
                     array_keys(reset($propertyAssignments)),
                     $propertyAssignments
                 )->execute();
@@ -136,7 +135,7 @@ class BlockItemForm extends BlockItem
                 if ($assignment->isForProperty($property->id)) {
                     if ($property->isMultiple()) {
 
-                        if ($property->isList() || $property->isRelativeItem() || $property->isFile()) {
+                        if ($property->isList() || $property->isRelativeItem() || $property->isFile() || $property->isTag()) {
                             if (isset($assignments[$property->id][0]) && is_array($assignments[$property->id][0]->value)) {
                                 $values = $assignments[$property->id][0]->value;
                                 $values[] = $assignment->value;
@@ -157,7 +156,7 @@ class BlockItemForm extends BlockItem
                 }
             }
             if (!$isset) {
-                $newAssignment = new BlockItemPropertyAssignments([
+                $newAssignment = new BlockItemPropertyAssignment([
                     'property_id' => $property->id,
                     'block_item_id' => $this->id,
                 ]);
@@ -184,12 +183,14 @@ class BlockItemForm extends BlockItem
                 $assignment->setAttributes($data[$assignment->formName()][$propertyId][$assignmentId]);
 
                 if (is_array($assignment->value) && $assignment->property->isMultiple()) {
-                    $assignment->value = array_filter(array_map(static function ($data) {
-                        return (int)$data;
-                    }, $assignment->value));
+                    if (!$assignment->property->isTag()) {
+                        $assignment->value = array_filter(array_map(static function ($data) {
+                            return (int)$data;
+                        }, $assignment->value));
+                    }
                     $values = $assignment->value;
                     foreach ($values as $value) {
-                        $assignmentsForInsert[] = new BlockItemPropertyAssignments([
+                        $assignmentsForInsert[] = new BlockItemPropertyAssignment([
                             'property_id' => $assignment->property_id,
                             'block_item_id' => $assignment->block_item_id,
                             'value' => $value,
@@ -199,14 +200,14 @@ class BlockItemForm extends BlockItem
                     // if empty value
                     $assignment->value = $assignment->value ? explode(';', $assignment->value) : [];
                     foreach ($assignment->value as $value) {
-                        $assignmentsForInsert[] = new BlockItemPropertyAssignments([
+                        $assignmentsForInsert[] = new BlockItemPropertyAssignment([
                             'property_id' => $assignment->property_id,
                             'block_item_id' => $assignment->block_item_id,
                             'value' => $value,
                         ]);
                     }
                 } else {
-                    $assignmentsForInsert[] = new BlockItemPropertyAssignments([
+                    $assignmentsForInsert[] = new BlockItemPropertyAssignment([
                         'property_id' => $assignment->property_id,
                         'block_item_id' => $assignment->block_item_id,
                         'value' => $assignment->value,

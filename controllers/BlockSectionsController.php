@@ -4,8 +4,8 @@ namespace thefx\blocks\controllers;
 
 use thefx\blocks\models\Block;
 use thefx\blocks\models\BlockItem;
-use thefx\blocks\models\BlockSections;
-use thefx\blocks\models\forms\search\BlockSectionsSearch;
+use thefx\blocks\models\BlockSection;
+use thefx\blocks\models\forms\search\BlockSectionSearch;
 use Yii;
 use yii\caching\TagDependency;
 use yii\filters\VerbFilter;
@@ -14,7 +14,7 @@ use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
 /**
- * BlockSectionsController implements the CRUD actions for BlockSections model.
+ * BlockSectionsController implements the CRUD actions for BlockSection model.
  */
 class BlockSectionsController extends Controller
 {
@@ -66,18 +66,18 @@ class BlockSectionsController extends Controller
     }
 
     /**
-     * Lists all BlockSections models.
+     * Lists all BlockSection models.
      * @param int $section_id
      * @return string|Response
      * @throws NotFoundHttpException
      */
     public function actionIndex($block_id, $section_id = 0)
     {
-        $searchModel = new BlockSectionsSearch();
+        $searchModel = new BlockSectionSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         if ($section_id) {
-            $section = BlockSections::findOrFail(['id' => $section_id]);
+            $section = BlockSection::findOrFail(['id' => $section_id]);
             $parents = $section->getParents()->all();
         }
 
@@ -96,7 +96,7 @@ class BlockSectionsController extends Controller
     }
 
     /**
-     * Displays a single BlockSections model.
+     * Displays a single BlockSection model.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
@@ -109,7 +109,7 @@ class BlockSectionsController extends Controller
     }
 
     /**
-     * Creates a new BlockSections model.
+     * Creates a new BlockSection model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @param $section_id
      * @return mixed
@@ -122,17 +122,17 @@ class BlockSectionsController extends Controller
         $block = Block::findOrFail($block_id);
 
         if ($section_id) {
-            $section = BlockSections::findOrFail(['id' => $section_id]);
+            $section = BlockSection::findOrFail(['id' => $section_id]);
             $parents = $section->getParents()->all();
         }
 
-        $model = BlockSections::create($block->id, $section_id);
+        $model = BlockSection::create($block->id, $section_id);
 
         if ($this->request->isPost && $model->load(Yii::$app->request->post()) && $model->validate()) {
             if ($model->section_id) {
-                $parentNode = BlockSections::findOne(['id' => $model->section_id]);
+                $parentNode = BlockSection::findOne(['id' => $model->section_id]);
                 $model->appendTo($parentNode);
-            } else if (($lastNode = BlockSections::getLastNode($model->block_id, $model->id)) !== null){
+            } else if (($lastNode = BlockSection::getLastNode($model->block_id, $model->id)) !== null){
                 $model->insertAfter($lastNode);
             } else {
                 $model->makeRoot();
@@ -153,7 +153,7 @@ class BlockSectionsController extends Controller
     }
 
     /**
-     * Updates an existing BlockSections model.
+     * Updates an existing BlockSection model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -166,15 +166,15 @@ class BlockSectionsController extends Controller
         $model = $this->findModel($id);
 
         if ($model->section_id) {
-            $category = BlockSections::findOrFail($model->section_id);
+            $category = BlockSection::findOrFail($model->section_id);
             $parents = $category->getParents()->all();
         }
 
         if ($this->request->isPost && $model->load(Yii::$app->request->post()) && $model->validate()) {
             if ($model->section_id) {
-                $parentNode = BlockSections::findOne(['id' => $model->section_id]);
+                $parentNode = BlockSection::findOne(['id' => $model->section_id]);
                 $model->appendTo($parentNode);
-            } else if (($lastNode = BlockSections::getLastNode($model->block_id, $model->id)) !== null){
+            } else if (($lastNode = BlockSection::getLastNode($model->block_id, $model->id)) !== null){
                 $model->insertAfter($lastNode);
             } else {
                 $model->makeRoot();
@@ -197,7 +197,7 @@ class BlockSectionsController extends Controller
     }
 
     /**
-     * Deletes an existing BlockSections model.
+     * Deletes an existing BlockSection model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -216,7 +216,7 @@ class BlockSectionsController extends Controller
 
     public function actionDeletePhoto($id, $field)
     {
-        $model = BlockSections::findOrFail($id);
+        $model = BlockSection::findOrFail($id);
 //        (new Images())->removeImage($model->{$field});
         $model->updateAttributes([$field => null]);
         TagDependency::invalidate(Yii::$app->cache, 'block_categories_' . $model->block_id);
@@ -227,8 +227,8 @@ class BlockSectionsController extends Controller
 //    {
 //        Yii::$app->response->format = Response::FORMAT_JSON;
 //
-//        $node = BlockSections::findOne($node);
-//        $item = BlockSections::findOne($item);
+//        $node = BlockSection::findOne($node);
+//        $item = BlockSection::findOne($item);
 //
 //        if ($type === 'after') {
 //            $item->insertAfter($node)->save() or die(var_dump($item->getErrors()));
@@ -340,15 +340,15 @@ class BlockSectionsController extends Controller
     }
 
     /**
-     * Finds the BlockSections model based on its primary key value.
+     * Finds the BlockSection model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return BlockSections the loaded model
+     * @return BlockSection the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = BlockSections::findOne(['id' => $id])) !== null) {
+        if (($model = BlockSection::findOne(['id' => $id])) !== null) {
             return $model;
         }
 

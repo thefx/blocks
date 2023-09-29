@@ -15,10 +15,10 @@ use yii\web\NotFoundHttpException;
  * @property BlockProperty $property
  * @property BlockItem $blockItem
  * @property BlockPropertyElement $propertyElement
- * @property BlockFiles $file
+ * @property BlockFile $file
  * @property BlockPropertyElement[] $propertyElements
  */
-class BlockItemPropertyAssignments extends ActiveRecord
+class BlockItemPropertyAssignment extends ActiveRecord
 {
     public function getValue()
     {
@@ -81,7 +81,7 @@ class BlockItemPropertyAssignments extends ActiveRecord
 
     public function getFile()
     {
-        return $this->hasOne(BlockFiles::class, ['id' => 'value']);
+        return $this->hasOne(BlockFile::class, ['id' => 'value']);
     }
 
     public function getPropertyElementAssigns()

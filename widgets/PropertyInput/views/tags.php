@@ -11,8 +11,13 @@ use yii\widgets\ActiveForm;
 /* @var $attributeName string */
 /* @var $label string */
 
-$propertyElements = $model->property->elements;
-$propertyElementList = ArrayHelper::map($propertyElements, 'id', 'title');
+$propertyElements = (new \yii\db\Query())
+    ->select('value')
+    ->from(BlockItemPropertyAssignment::tableName())
+    ->where(['property_id' => $model->property_id])
+    ->all();
+
+$propertyElementList = ArrayHelper::map($propertyElements, 'value', 'value');
 
 $this->registerCss("
     .select2-container--krajee-bs4 .select2-selection--multiple .select2-selection__choice__remove {
@@ -26,35 +31,22 @@ $this->registerCss("
 
     <?= HTML::label($label) ?>
 
-<!--    --><?php //= Select2::widget([
-//        'model' => $model,
-//        'bsVersion' => '4.x',
-//        'attribute' => $attributeName,
-//        'data' => $propertyElementList,
-//        'options' => [
-//            'prompt' => 'Не выбрано',
-//            'multiple' => $model->property->isMultiple()
-//        ],
-//        'pluginOptions' => [
-//            'allowClear' => true,
-////            'tags' => true,
-//        ],
-//    ]) ?>
-<!---->
-<!--    --><?php //= Html::error($model, $attributeName, ['class' => 'invalid-feedback']) ?>
-
     <?= $form->field($model, $attributeName, ['enableClientValidation' => false])->widget(Select2::class, [
         'data' => $propertyElementList,
         'bsVersion' => '4.x',
-//        'theme' => Select2::THEME_KRAJEE,
         'options' => [
             'placeholder' => '',
             'multiple' => $model->property->isMultiple(),
         ],
         'pluginOptions' => [
             'allowClear' => ! $model->property->isMultiple(),
-//            'tags' => true,
-        ],
+//            'ajax' => [
+//                'url' => \yii\helpers\Url::to(['get-tags']),
+//                'dataType' => 'json',
+//                'data' => new \yii\web\JsExpression('function(params) {return {q:params.term}; }')
+//            ],
+            'tags' => true,
+        ]
     ])->label(false) ?>
 
 </div>

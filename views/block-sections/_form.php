@@ -1,7 +1,7 @@
 <?php
 
 use thefx\blocks\models\Block;
-use thefx\blocks\models\BlockSections;
+use thefx\blocks\models\BlockSection;
 use thefx\blocks\widgets\Select\Select2Input;
 use thefx\blocks\widgets\Switcher\SwitchInput;
 use thefx\widgetsCropper\FileInputCropper;
@@ -11,7 +11,7 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 
 /* @var $this yii\web\View */
-/* @var $model BlockSections */
+/* @var $model BlockSection */
 /* @var $block Block */
 /* @var $form ActiveForm */
 /* @var $parents array */
@@ -115,7 +115,7 @@ $settings = array_merge(Yii::$app->params['block'], Yii::$app->params['block' . 
                 ]) ?>
 
                 <?= $form->field($model, 'section_id')->widget(Select2Input::class, [
-                    'data' => BlockSections::getSectionsList($model->block_id, $model->id),
+                    'data' => BlockSection::getSectionsList($model->block_id, $model->id),
 //                    ['prompt' => 'Выберите раздел ...'],
 //                    'data' => $model->categoryList(),
 //                    'options' => ['placeholder' => 'Категория'],

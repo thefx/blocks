@@ -210,7 +210,7 @@ $this->registerCss("
             <!--            <div class="dz-size"><span data-dz-size><strong>0</strong> b</span></div>-->
             <!--            <div class="dz-filename"><span data-dz-nam></span></div>-->
             <!--            <div class="dz-filename2"></div>-->
-            <button>Удалить</button>
+            <button class="btn btn-default btn-sm">Удалить</button>
         </div>
         <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
         <div class="dz-error-message"><span data-dz-errormessage></span></div>

@@ -1,7 +1,7 @@
 <?php
 
 use thefx\blocks\models\BlockItem;
-use thefx\blocks\models\BlockItemPropertyAssignments;
+use thefx\blocks\models\BlockItemPropertyAssignment;
 use thefx\blocks\widgets\Select\Select2Input;
 use thefx\blocks\widgets\Switcher\SwitchInput;
 use thefx\widgetsCropper\FileInputCropper;
@@ -11,7 +11,7 @@ use yii\helpers\Url;
 use yii\jui\DatePicker;
 
 /** @var BlockItem $model */
-/** @var BlockItemPropertyAssignments $form */
+/** @var BlockItemPropertyAssignment $form */
 /** @var string $value - field name */
 /** @var string $label - field label */
 

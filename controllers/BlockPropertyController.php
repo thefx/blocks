@@ -2,7 +2,7 @@
 
 namespace thefx\blocks\controllers;
 
-use thefx\blocks\models\BlockFields;
+use thefx\blocks\models\BlockField;
 use thefx\blocks\models\BlockProperty;
 use thefx\blocks\models\BlockPropertyElement;
 use Yii;
@@ -165,7 +165,7 @@ class BlockPropertyController extends Controller
     {
         $model = $this->findModel($id);
         $block_id = $model->block_id;
-        BlockFields::deleteAll(['block_id' => $block_id, 'type' => 'prop', 'value' => $model->id]);
+        BlockField::deleteAll(['block_id' => $block_id, 'type' => 'prop', 'value' => $model->id]);
         $model->delete();
         return $this->redirect(['block/view', 'id' => $block_id]);
     }

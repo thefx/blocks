@@ -6,9 +6,6 @@ use thefx\blocks\models\BlockItem;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 
-/**
- * BlockItemSearch represents the model behind the search form of `app\shop\entities\Block\BlockItem`.
- */
 class BlockItemSearch extends BlockItem
 {
     /**

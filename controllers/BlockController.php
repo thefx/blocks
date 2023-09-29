@@ -3,12 +3,12 @@
 namespace thefx\blocks\controllers;
 
 use thefx\blocks\models\Block;
-use thefx\blocks\models\BlockFields;
+use thefx\blocks\models\BlockField;
 use thefx\blocks\models\BlockItem;
-use thefx\blocks\models\BlockItemPropertyAssignments;
+use thefx\blocks\models\BlockItemPropertyAssignment;
 use thefx\blocks\models\BlockProperty;
 use thefx\blocks\models\BlockPropertyElement;
-use thefx\blocks\models\BlockSections;
+use thefx\blocks\models\BlockSection;
 use thefx\blocks\models\BlockTranslate;
 use thefx\blocks\models\forms\search\BlockPropertySearch;
 use thefx\blocks\models\forms\search\BlockSearch;
@@ -128,13 +128,13 @@ class BlockController extends Controller
     {
         $blockPropsIds = BlockProperty::find()->select('id')->where(['block_id' => $id])->column();
 
-        BlockItemPropertyAssignments::deleteAll(['property_id' => $blockPropsIds]);
+        BlockItemPropertyAssignment::deleteAll(['property_id' => $blockPropsIds]);
         BlockPropertyElement::deleteAll(['property_id' => $blockPropsIds]);
 
         BlockProperty::deleteAll(['block_id' => $id]);
         BlockItem::deleteAll(['block_id' => $id]);
-        BlockSections::deleteAll(['block_id' => $id]);
-        BlockFields::deleteAll(['block_id' => $id]);
+        BlockSection::deleteAll(['block_id' => $id]);
+        BlockField::deleteAll(['block_id' => $id]);
         BlockTranslate::deleteAll(['block_id' => $id]);
         Block::deleteAll(['id' => $id]);
 

@@ -3,7 +3,7 @@
 namespace thefx\blocks\widgets\DropzoneWidget;
 
 use thefx\blocks\models\BlockFiles;
-use thefx\blocks\models\BlockItemPropertyAssignments;
+use thefx\blocks\models\BlockItemPropertyAssignment;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\base\Model;
@@ -13,7 +13,7 @@ use yii\helpers\Html;
 class DropzoneWidget extends BaseWidget
 {
     /**
-     * @var BlockItemPropertyAssignments|null The data model that this widget is associated with.
+     * @var BlockItemPropertyAssignment|null The data model that this widget is associated with.
      */
     public $model;
 

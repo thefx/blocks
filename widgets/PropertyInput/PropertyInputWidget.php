@@ -2,13 +2,13 @@
 
 namespace thefx\blocks\widgets\PropertyInput;
 
-use thefx\blocks\models\BlockItemPropertyAssignments;
+use thefx\blocks\models\BlockItemPropertyAssignment;
 use yii\widgets\InputWidget;
 
 class PropertyInputWidget extends InputWidget
 {
     /**
-     * @var BlockItemPropertyAssignments
+     * @var BlockItemPropertyAssignment
      */
     public $model;
 

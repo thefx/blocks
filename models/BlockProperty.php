@@ -20,8 +20,8 @@ use yii\helpers\ArrayHelper;
  * @property string $hint
  * @property Block $block
  * @property BlockPropertyElement[] $elements
- * @property BlockItemPropertyAssignments[] $assignments
- * @property BlockItemPropertyAssignments[] $blockItemsList
+ * @property BlockItemPropertyAssignment[] $assignments
+ * @property BlockItemPropertyAssignment[] $blockItemsList
  * @property int $relative_item
  * @property int $relative_category
  * @property int $redactor
@@ -137,7 +137,7 @@ class BlockProperty extends ActiveRecord
 
     public function getAssignments(): ActiveQuery
     {
-        return $this->hasMany(BlockItemPropertyAssignments::class, ['property_id' => 'id']);
+        return $this->hasMany(BlockItemPropertyAssignment::class, ['property_id' => 'id']);
     }
 
     public function getBlockItemsList(): ActiveQuery
@@ -157,7 +157,7 @@ class BlockProperty extends ActiveRecord
      */
     public static function tableName(): string
     {
-        return '{{%block_property}}';
+        return '{{%block_properties}}';
     }
 
     /**

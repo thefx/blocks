@@ -2,6 +2,7 @@
 
 namespace thefx\blocks\controllers;
 
+use thefx\blocks\actions\GetTagsAction;
 use thefx\blocks\models\Block;
 use thefx\blocks\models\BlockItem;
 use thefx\blocks\models\forms\BlockItemForm;
@@ -61,6 +62,9 @@ class BlockItemController extends Controller
             'add-file' => [
                 'class' => DropzoneUploadAction::class,
             ],
+//            'get-tags' => [
+//                'class' => GetTagsAction::class,
+//            ]
         ];
     }
 

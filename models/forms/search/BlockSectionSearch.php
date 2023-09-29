@@ -3,16 +3,13 @@
 namespace thefx\blocks\models\forms\search;
 
 use thefx\blocks\models\BlockItem;
-use thefx\blocks\models\BlockSections;
+use thefx\blocks\models\BlockSection;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use yii\db\Expression;
 use yii\db\Query;
 
-/**
- * BlockSectionSearch represents the model behind the search form of `app\shop\entities\Block\BlockSections`.
- */
-class BlockSectionsSearch extends BlockSections
+class BlockSectionSearch extends BlockSection
 {
     /**
      * @inheritdoc
@@ -71,13 +68,13 @@ class BlockSectionsSearch extends BlockSections
 
         $query1 = (new Query())
             ->select(array_merge($commonFields, [ new Expression('"folder" as type') ], ['`left`']))
-            ->from(BlockSections::tableName());
+            ->from(BlockSection::tableName());
 
         $query2 = (new Query())
             ->select(array_merge($commonFields, [ new Expression('"item" as type') ], ['`sort` AS `left`']))
             ->from(BlockItem::tableName());
 
-        $unionQuery = BlockSections::find()
+        $unionQuery = BlockSection::find()
             ->from($query1->union($query2));
 
         if ($this->section_id) {

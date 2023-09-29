@@ -3,7 +3,7 @@
 namespace thefx\blocks\models\forms;
 
 use thefx\blocks\models\Block;
-use thefx\blocks\models\BlockFields;
+use thefx\blocks\models\BlockField;
 use thefx\blocks\traits\TransactionTrait;
 use Yii;
 use yii\base\Model;
@@ -28,7 +28,7 @@ class BlockFieldsForm extends Model
     {
         $this->block = $block;
         $this->block_type = $block_type;
-        $template = $block_type === BlockFields::TYPE_BLOCK_ITEM
+        $template = $block_type === BlockField::TYPE_BLOCK_ITEM
             ? $this->block->getFieldsTemplates(true)
             : $this->block->getFieldsCategoryTemplates();
 
@@ -47,7 +47,7 @@ class BlockFieldsForm extends Model
 
     public function getDefaultTemplate()
     {
-        $template = $this->block_type === BlockFields::TYPE_BLOCK_ITEM
+        $template = $this->block_type === BlockField::TYPE_BLOCK_ITEM
             ? $this->block->getDefaultFieldsTemplates()
             : $this->block->getDefaultFieldsCategoryTemplates();
 
@@ -70,7 +70,7 @@ class BlockFieldsForm extends Model
 
         $this->wrap(function () {
 
-            BlockFields::deleteAll(['block_id' => $this->block->id, 'block_type' => $this->block_type]);
+            BlockField::deleteAll(['block_id' => $this->block->id, 'block_type' => $this->block_type]);
 
             $template = json_decode($this->template, false);
 
@@ -81,9 +81,9 @@ class BlockFieldsForm extends Model
             $sortGroups = 0;
             $childrenArr = [];
 
-            if ($this->block_type === BlockFields::TYPE_BLOCK_ITEM) {
+            if ($this->block_type === BlockField::TYPE_BLOCK_ITEM) {
                 foreach ($template as $groupName => $children) {
-                    $field = BlockFields::createGroup($this->block->id, $this->block_type, $groupName, $sortGroups++);
+                    $field = BlockField::createGroup($this->block->id, $this->block_type, $groupName, $sortGroups++);
                     $field->save();
 
                     foreach ($children as $k => $child) {
@@ -114,7 +114,7 @@ class BlockFieldsForm extends Model
 
             if (!empty($childrenArr)) {
                 Yii::$app->db->createCommand()
-                    ->batchInsert(BlockFields::tableName(), array_keys(reset($childrenArr)), $childrenArr)
+                    ->batchInsert(BlockField::tableName(), array_keys(reset($childrenArr)), $childrenArr)
                     ->execute();
             }
         });

@@ -1,11 +1,11 @@
 <?php
 
-use thefx\blocks\models\BlockItemPropertyAssignments;
+use thefx\blocks\models\BlockItemPropertyAssignment;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
-/* @var $model BlockItemPropertyAssignments */
+/* @var $model BlockItemPropertyAssignment */
 /* @var $form ActiveForm */
 /* @var $attributeName string */
 /* @var $label string */

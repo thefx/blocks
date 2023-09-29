@@ -2,9 +2,6 @@
 
 use yii\db\Migration;
 
-/**
- * Class m190405_143409_1
- */
 class m190405_143409_create_block_fields_table extends Migration
 {
     /**

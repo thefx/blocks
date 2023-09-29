@@ -2,7 +2,7 @@
 
 namespace thefx\blocks\widgets\DropzoneWidget\forms;
 
-use thefx\blocks\models\BlockFiles;
+use thefx\blocks\models\BlockFile;
 use Intervention\Image\ImageManager;
 use yii\base\Model;
 use yii\helpers\ArrayHelper;
@@ -69,7 +69,7 @@ class UploadFileForm extends Model
             $this->file->saveAs($fullDir . $filename);
         }
 
-        $model = BlockFiles::create($this->path, $this->url, $filename);
+        $model = BlockFile::create($this->path, $this->url, $filename);
         $model->save() or die(var_dump($model->errors));
 
         return [

@@ -10,7 +10,7 @@ use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
 
 /**
- * This is the model class for table "{{%block_item}}".
+ * This is the model class for table "{{%block_items}}".
  *
  * @property int $id
  * @property int|null $block_id
@@ -33,7 +33,7 @@ use yii\web\NotFoundHttpException;
  * @property string|null $update_date
  * @property BlockProperty[] $propertiesAll
  * @property BlockProperty[] $propertiesIndexed
- * @property BlockItemPropertyAssignments[] $propertyAssignments
+ * @property BlockItemPropertyAssignment[] $propertyAssignments
  * @property Block $block
  * @property User[] $createUser
  */
@@ -160,7 +160,7 @@ class BlockItem extends ActiveRecord
 
     public function getPropertyAssignments()
     {
-        return $this->hasMany(BlockItemPropertyAssignments::class, ['block_item_id' => 'id']);
+        return $this->hasMany(BlockItemPropertyAssignment::class, ['block_item_id' => 'id']);
     }
 
     public function getCreateUser()
@@ -175,7 +175,7 @@ class BlockItem extends ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%block_item}}';
+        return '{{%block_items}}';
     }
 
     /**

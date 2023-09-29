@@ -2,7 +2,7 @@
 
 namespace thefx\blocks\widgets\DropzoneWidget;
 
-use thefx\blocks\models\BlockFiles;
+use thefx\blocks\models\BlockFile;
 use thefx\blocks\models\BlockItemPropertyAssignment;
 use Yii;
 use yii\base\InvalidConfigException;
@@ -85,7 +85,7 @@ class DropzoneWidget extends BaseWidget
     {
         $this->registerClientScripts();
 
-        $models = BlockFiles::find()
+        $models = BlockFile::find()
             ->indexBy('id')
             ->where(['id' => $this->model->value])
             ->all();
@@ -120,7 +120,7 @@ class DropzoneWidget extends BaseWidget
 
     public function getFilesData($data)
     {
-        return array_map(static function(BlockFiles $row) {
+        return array_map(static function(BlockFile $row) {
             $attributes = $row->getAttributes();
             $attributes['photo_path'] = $row->path . $row->file_name;
             $attributes['photo_path_preview'] = $row->path . $row->file_name;

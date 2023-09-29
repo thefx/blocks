@@ -8,7 +8,7 @@
 namespace thefx\blocks\behaviors;
 
 use thefx\blocks\models\__images\Images;
-use thefx\blocks\models\BlockFiles;
+use thefx\blocks\models\BlockFile;
 use Yii;
 use yii\base\Behavior;
 use yii\db\BaseActiveRecord;
@@ -102,7 +102,7 @@ class UploadImageBehavior extends Behavior
 
     protected $imageManager;
 
-    public function __construct(BlockFiles $imageManager, array $config = [])
+    public function __construct(BlockFile $imageManager, array $config = [])
     {
         $this->imageManager = $imageManager;
         parent::__construct($config);
@@ -193,7 +193,7 @@ class UploadImageBehavior extends Behavior
                 if ($file instanceof UploadedFile) {
                     $filename = $this->uploadFile($file);
 //                    $this->imageManager->addImage($filename, $this->defaultCrop[0], $this->defaultCrop[1]);
-                    $model = BlockFiles::create($this->savePath, $this->dir, $filename);
+                    $model = BlockFile::create($this->savePath, $this->dir, $filename);
                     $model->save();
                     $filenames[] = $filename;
                 }
@@ -246,7 +246,7 @@ class UploadImageBehavior extends Behavior
             if (is_file($filePath)) {
                 unlink($filePath);
             }
-            $model = BlockFiles::findOne(['file_name' => $oldFileName]);
+            $model = BlockFile::findOne(['file_name' => $oldFileName]);
             if ($model) {
                 $model->delete();
             }

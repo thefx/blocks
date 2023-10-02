@@ -97,9 +97,11 @@ class DropzoneWidget extends BaseWidget
             foreach ($this->model->value as $fileId) {
                 $files[$fileId] = $models[$fileId];
             }
+        } else {
+            $files[$this->model->value] = $models[$this->model->value];
         }
 
-        $files = $this->getFilesData($files);
+        $files = $models ? $this->getFilesData($files) : [];
 
         return $this->render('index', [
             'widgetId' => $this->getId(),

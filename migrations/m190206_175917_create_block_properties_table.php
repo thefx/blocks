@@ -21,11 +21,13 @@ class m190206_175917_create_block_properties_table extends Migration
             'required' => $this->integer(1)->notNull()->defaultValue(0),
             'sort' => $this->integer()->notNull()->defaultValue(100),
             'code' => $this->string(),
-            'in_filter' => $this->integer(1)->notNull()->defaultValue(0),
+            'file_type' => $this->string(),
+            'with_description' => $this->integer(1),
             'hint' => $this->string(),
             'relative_item' => $this->integer(),
-            'redactor' => $this->integer(1)->notNull()->defaultValue(0),
+            'relative_category' => $this->integer(),
             'default_value' => $this->string(),
+            'redactor' => $this->integer(1)->notNull()->defaultValue(0),
         ], $tableOptions);
 
 //        $this->createIndex('block_properties_block_id_code', '{{%block_properties}}', ['block_id', 'code'], true);

@@ -149,7 +149,7 @@ SortableJsAsset::register($this);
                             }
                         ],
                         [
-                            'attribute' => 'multi',
+                            'attribute' => 'multiple',
                             'headerOptions' => ['style' => 'width:150px; text-align:center'],
                             'contentOptions' => ['style' => 'text-align:center'],
                             'content' => static function(BlockProperty $model) {

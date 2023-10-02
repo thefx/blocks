@@ -18,3 +18,7 @@ a.asc:after {
 a.desc:after {
     content: "\F077";
 }
+
+.dz-image {
+    background: #eee;
+}

@@ -14,7 +14,7 @@ class m190201_191727_create_blocks_table extends Migration
         $this->createTable('{{%blocks}}', [
             'id' => $this->primaryKey(),
             'title' => $this->string(),
-            'path' => $this->string(),
+            'alias' => $this->string(),
             'sort' => $this->integer(5)->defaultValue(20)->defaultValue(100),
             'create_user' => $this->integer(),
             'create_date' => $this->dateTime(),

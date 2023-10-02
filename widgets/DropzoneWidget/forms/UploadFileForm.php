@@ -62,7 +62,10 @@ class UploadFileForm extends Model
             $manager = new ImageManager(array('driver' => 'gd'));
             $img = $manager->make($this->file->tempName);
             foreach ($this->crop as $cropParam) {
-                $img->fit($cropParam[0], $cropParam[1]);
+                $img->resize($cropParam[0] > 0 ? $cropParam[0] : null, $cropParam[1] > 0 ? $cropParam[1] : null, function ($constraint) {
+                    $constraint->aspectRatio();
+                    $constraint->upsize();
+                });
                 $img->save($fullDir . $cropParam[2] . $filename, $this->resizeQuality);
             }
         } else {

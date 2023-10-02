@@ -15,13 +15,13 @@ class m190204_192026_create_block_items_table extends Migration
             'id' => $this->primaryKey(),
             'block_id'  => $this->integer()->null(),
             'title' => $this->string(),
-            'path' => $this->string(),
+            'alias' => $this->string(),
             'anons' => $this->text(),
             'text' => $this->text(),
             'photo' => $this->string(),
             'photo_preview' => $this->string(),
             'date' => $this->date(),
-            'parent_id' => $this->integer()->notNull(),
+            'section_id' => $this->integer()->notNull(),
             'public' => $this->integer(1)->notNull()->defaultValue(1),
             'sort' => $this->integer()->notNull()->defaultValue(100),
             'seo_title' => $this->string(),
@@ -33,7 +33,7 @@ class m190204_192026_create_block_items_table extends Migration
             'update_date' => $this->dateTime(),
         ], $tableOptions);
 
-        $this->createIndex('block_items_parent_id_path', '{{%block_items}}', ['parent_id', 'path']);
+        $this->createIndex('block_items_section_id_alias', '{{%block_items}}', ['section_id', 'alias']);
     }
 
     /**

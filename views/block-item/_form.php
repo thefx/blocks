@@ -8,7 +8,7 @@ use yii\bootstrap4\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $model BlockItem */
-/* @var $form yii\widgets\ActiveForm */
+/* @var $form ActiveForm */
 /* @var $block Block */
 
 Select2Asset::register($this);

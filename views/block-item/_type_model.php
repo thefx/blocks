@@ -31,7 +31,7 @@ switch ($value) {
         break;
 
     case 'date':
-        echo $form->field($model, $value)->widget(DatePicker::class)->label($label);
+        echo $form->field($model, $value)->widget(DatePicker::class, ['options' => ['class' => 'form-control', 'autocomplete' => 'off']])->label($label);
         break;
 
     case 'text':

@@ -13,7 +13,7 @@ class m190206_181427_create_block_property_elements_table extends Migration
 
         $this->createTable('{{%block_property_elements}}', [
             'id'  => $this->primaryKey(),
-            'block_prop_id'  => $this->integer()->notNull(),
+            'property_id'  => $this->integer()->notNull(),
             'title' => $this->string()->notNull(),
             'code' => $this->string()->notNull(),
             'sort' => $this->integer()->notNull()->defaultValue(100),

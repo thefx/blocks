@@ -42,7 +42,6 @@ use yii\web\NotFoundHttpException;
  * @property BlockItem[] $items
  * @property int $sort [int(11)]
  * @property string $alias [varchar(255)]
- * @property string $icon
  *
  * @mixin NestedSetsBehavior
  * @mixin NestedSetsQueryTrait
@@ -186,7 +185,7 @@ class BlockSection extends ActiveRecord
         return [
             [['title'], 'required'],
             [['block_id', 'section_id', 'left', 'right', 'depth', 'create_user', 'update_user', 'public', 'sort'], 'integer'],
-            [['anons', 'text', 'icon'], 'string'],
+            [['anons', 'text'], 'string'],
             [['date', 'create_date', 'update_date'], 'safe'],
 //            [['lft', 'rgt', 'depth'], 'required'],
             [['title', 'alias', 'photo_crop', 'photo_preview_crop', 'seo_title', 'seo_keywords', 'seo_description'], 'string', 'max' => 255],
@@ -209,7 +208,6 @@ class BlockSection extends ActiveRecord
             'text' => 'Подробное описание',
             'photo' => 'Фото',
             'photo_preview' => 'Фото для анонса',
-            'icon' => 'Иконка',
             'date' => 'Дата создания',
             'section_id' => 'Категория',
             'left' => 'left',

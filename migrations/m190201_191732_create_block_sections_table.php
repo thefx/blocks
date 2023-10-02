@@ -15,7 +15,7 @@ class m190201_191732_create_block_sections_table extends Migration
             'id' => $this->primaryKey(),
             'block_id'  => $this->integer()->null(),
             'title' => $this->string(),
-            'path' => $this->string(),
+            'alias' => $this->string(),
             'anons' => $this->text(),
             'text' => $this->text(),
             'photo' => $this->string(),
@@ -25,7 +25,7 @@ class m190201_191732_create_block_sections_table extends Migration
             'seo_keywords' => $this->string(),
             'seo_description' => $this->string(),
             'public' => $this->integer(1)->notNull()->defaultValue(0),
-            'parent_id' => $this->integer()->notNull()->defaultValue(1),
+            'section_id' => $this->integer()->notNull()->defaultValue(1),
             'left'   => $this->integer()->notNull(),
             'right'   => $this->integer()->notNull(),
             'depth' => $this->integer()->notNull(),
@@ -37,7 +37,7 @@ class m190201_191732_create_block_sections_table extends Migration
 
         $this->createIndex('block_sections_left_right', '{{%block_sections}}', ['block_id', 'left', 'right']);
         $this->createIndex('block_sections_right', '{{%block_sections}}', ['block_id', 'right']);
-        $this->createIndex('block_sections_url_parent_id_path', '{{%block_sections}}', ['parent_id', 'path']);
+        $this->createIndex('block_sections_url_section_id_alias', '{{%block_sections}}', ['section_id', 'alias']);
     }
 
     /**

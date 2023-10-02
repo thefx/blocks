@@ -36,6 +36,7 @@ use yii\web\NotFoundHttpException;
  * @property BlockItemPropertyAssignment[] $propertyAssignments
  * @property Block $block
  * @property User[] $createUser
+ * @property string $path [varchar(255)]
  */
 class BlockItem extends ActiveRecord
 {
@@ -51,7 +52,7 @@ class BlockItem extends ActiveRecord
 
     public function getSectionList()
     {
-        $categories = BlockSections::find()->where(['block_id' => $this->block_id])->orderBy('left')->all();
+        $categories = BlockSection::find()->where(['block_id' => $this->block_id])->orderBy('left')->all();
 
         return ArrayHelper::map($categories, 'id', static function($row) {
             return str_repeat('↳', $row->depth) . ' ' . $row->title;

@@ -54,7 +54,7 @@ class BlockSectionSearch extends BlockSection
             'block_id',
             'public',
             'anons',
-            'date',
+//            'date',
             'create_user',
             'create_date',
             'update_user',

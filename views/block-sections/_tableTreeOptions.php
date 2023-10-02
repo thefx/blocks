@@ -1,8 +1,13 @@
 <?php
-/** @var $block \thefx\blocks\models\Block */
+/** @var $block Block */
 
 //$this->registerJs(" $('#{$inputId}').select2();", \yii\web\View::POS_READY);
-\thefx\blocks\assets\Select2Asset\Select2Asset::register($this);
+use thefx\blocks\assets\Select2Asset\Select2Asset;
+use thefx\blocks\models\Block;
+
+Select2Asset::register($this);
+
+$sectionList = $block->getSectionList('.');
 ?>
 {summary}
 {items}
@@ -75,17 +80,21 @@
                 <select name="task" id="treeCategoryTask" class="form-control mr-sm-2">
                     <option value="activate">Активировать</option>
                     <option value="deactivate">Деактивировать</option>
+                    <?php if ($sectionList) : ?>
                     <option value="move">Переместить</option>
+                    <?php endif; ?>
                     <option value="delete">Удалить</option>
                 </select>
+                <?php if ($sectionList) : ?>
                 <div id="treeCategoryWrapper" class="mr-sm-2">
                     <label class="sr-only" for="treeCategory">Category</label>
                     <select name="sectionId" id="treeCategory" class="form-control mr-sm-2">
-                        <?php foreach ($block->getSectionList('.') as $catId => $catName) : ?>
+                        <?php foreach ($sectionList as $catId => $catName) : ?>
                             <option value="<?= $catId ?>"><?= $catName ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
+                <?php endif; ?>
                 <button type="button" class="btn btn-primary ml-0">Отправить</button>
             </form>
         </td>

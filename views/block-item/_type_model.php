@@ -36,14 +36,18 @@ switch ($value) {
 
     case 'text':
     case 'anons':
-        echo $form->field($model, $value)->widget(Widget::class, [
-            'settings' => [
-                'image' => [
-                    'upload' => Url::to(['upload-image', 'id' => $model->id]),
-                    'select' => Url::to(['get-uploaded-images', 'id' => $model->id])
-                ],
-            ]
-        ])->label($label);
+        if ($settings[$value . '_redactor'] === false) {
+            echo $form->field($model, $value)->textarea(['class' => 'form-control', 'rows' => 6])->label($label);
+        } else {
+            echo $form->field($model, $value)->widget(Widget::class, [
+                'settings' => [
+                    'image' => [
+                        'upload' => Url::to(['upload-image', 'id' => $model->id]),
+                        'select' => Url::to(['get-uploaded-images', 'id' => $model->id])
+                    ],
+                ]
+            ])->label($label);
+        }
         break;
 
     case 'photo_preview':

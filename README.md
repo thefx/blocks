@@ -57,6 +57,96 @@ Add access only for auth users
     ],
 ```
 
+Example config
+```
+return [
+    'block' => [
+        'btn_add_group' => true, // show add_group btn
+    ],
+    'block1' => [
+        'btn_add_group' => false,
+    ],
+    'blockSection' => [
+        'photo_preview' => [
+            'dir' => '@webroot/upload/blocks/',
+            'urlDir' => '/upload/blocks/',
+            'defaultCrop' => [1920, 0, 'fit'],
+            'crop' => [
+                [200, 0, 'min', 'fit'], // admin preview
+            ]
+        ],
+        'photo' => [
+            'dir' => '@webroot/upload/blocks/',
+            'urlDir' => '/upload/blocks/',
+            'defaultCrop' => [1920, 0, 'fit'],
+            'crop' => [
+                [200, 0, 'min', 'fit'], // admin preview
+            ]
+        ],
+    ],
+    'blockItem' => [
+        'anons_redactor' => true,
+        'text_redactor' => true,
+        'photo_preview' => [
+            'dir' => '@webroot/upload/blocks/',
+            'urlDir' => '/upload/blocks/',
+            'defaultCrop' => [1920, 0, 'fit'],
+            'crop' => [
+                [200, 0, 'min', 'fit'], // admin preview
+            ]
+        ],
+        'photo' => [
+            'dir' => '@webroot/upload/blocks/',
+            'urlDir' => '/upload/blocks/',
+            'defaultCrop' => [1920, 0, 'fit'],
+            'crop' => [
+                [200, 0, 'min', 'fit'], // admin preview
+            ]
+        ],
+    ],
+    'blockItem2' => [
+        'anons_redactor' => false,
+        'text_redactor' => false,
+        'photo_preview' => [
+            'dir' => '@webroot/upload/blocks/',
+            'urlDir' => '/upload/blocks/',
+            'defaultCrop' => [0, 600, 'fit'],
+            'crop' => [
+                [200, 0, 'min', 'fit'], // admin preview
+            ]
+        ],
+        'photo' => [
+            'dir' => '@webroot/upload/blocks/',
+            'urlDir' => '/upload/blocks/',
+            'defaultCrop' => [1920, 0, 'fit'],
+            'crop' => [
+                [200, 0, 'min', 'fit'], // admin preview
+            ]
+        ],
+    ],
+    'blockProperty' => [
+        'dir' => '@webroot/upload/blocks/',
+        'urlDir' => '/upload/blocks/',
+        'resizeQuality' => 90,
+        'crop' => [
+            [1280, 785, ''],
+            [247, 247, 'list_'],
+            [150, 150, 'prev_'],
+        ]
+    ],
+    'blockProperty5' => [
+        'dir' => '@webroot/upload/blocks/',
+        'urlDir' => '/upload/blocks/',
+        'resizeQuality' => 90,
+        'crop' => [
+            [1280, 0, ''],
+            [247, 0, 'list_'],
+            [150, 0, 'prev_'],
+        ]
+    ],
+];
+```
+
 Usage
 -----
 

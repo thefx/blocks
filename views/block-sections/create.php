@@ -1,13 +1,13 @@
 <?php
 
 /* @var $this yii\web\View */
-/* @var $model BlockSections */
+/* @var $model BlockSection */
 /* @var $block Block */
-/* @var $category BlockSections */
-/* @var $parents BlockSections[] */
+/* @var $category BlockSection */
+/* @var $parents BlockSection[] */
 
 use thefx\blocks\models\Block;
-use thefx\blocks\models\BlockSections;
+use thefx\blocks\models\BlockSection;
 
 $this->title = $block->translate->category_create;
 ?>

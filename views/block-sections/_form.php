@@ -26,7 +26,7 @@ if ($parents) {
 }
 $this->params['breadcrumbs'][] = $this->title;
 
-$settings = array_merge(Yii::$app->params['block'], Yii::$app->params['block' . $model->block_id] ?? []);
+$settings = array_merge(Yii::$app->params['blockSection'], Yii::$app->params['blockSection' . $model->block_id] ?? []);
 ?>
 
 <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
@@ -58,23 +58,31 @@ $settings = array_merge(Yii::$app->params['block'], Yii::$app->params['block' . 
 
                 <?= $form->field($model, 'alias')->textInput(['maxlength' => true]) ?>
 
-                <?= $form->field($model, 'anons')->widget(Widget::class, [
-                    'settings' => [
-                        'image' => [
-                            'upload' => Url::to(['upload-image', 'id' => $model->id]),
-                            'select' => Url::to(['get-uploaded-images', 'id' => $model->id])
-                        ],
-                    ]
-                ]) ?>
+                <?php if ($settings['anons_redactor'] === false) {
+                    echo $form->field($model, 'anons')->textarea(['class' => 'form-control', 'rows' => 6]);
+                } else {
+                    echo $form->field($model, 'anons')->widget(Widget::class, [
+                        'settings' => [
+                            'image' => [
+                                'upload' => Url::to(['upload-image', 'id' => $model->id]),
+                                'select' => Url::to(['get-uploaded-images', 'id' => $model->id])
+                            ],
+                        ]
+                    ]);
+                } ?>
 
-                <?= $form->field($model, 'text')->widget(Widget::class, [
-                    'settings' => [
-                        'image' => [
-                            'upload' => Url::to(['upload-image', 'id' => $model->id]),
-                            'select' => Url::to(['get-uploaded-images', 'id' => $model->id])
-                        ],
-                    ]
-                ]) ?>
+                <?php if ($settings['text_redactor'] === false) {
+                    echo $form->field($model, 'text')->textarea(['class' => 'form-control', 'rows' => 6]);
+                } else {
+                    echo $form->field($model, 'text')->widget(Widget::class, [
+                        'settings' => [
+                            'image' => [
+                                'upload' => Url::to(['upload-image', 'id' => $model->id]),
+                                'select' => Url::to(['get-uploaded-images', 'id' => $model->id])
+                            ],
+                        ]
+                    ]);
+                } ?>
 
                 <?= $form->field($model, 'photo_preview')->widget(FileInputCropper::class, [
                     'cropAttribute' => 'photo_preview_crop',

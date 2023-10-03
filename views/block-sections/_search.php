@@ -1,11 +1,11 @@
 <?php
 
-use thefx\blocks\models\forms\search\BlockSectionsSearch;
+use thefx\blocks\models\forms\search\BlockSectionSearch;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model BlockSectionsSearch */
+/* @var $model BlockSectionSearch */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
@@ -32,7 +32,7 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'title', ['template' => '{input}'])->textInput(['placeholder' => 'Поиск']) ?>
 
     <div class="input-group-append">
-        <?= Html::submitButton('<i class="fas fa-search"></i>', ['class' => 'btn btn-default']) ?>
+        <?= Html::submitButton('<i class="fas fa-search"></i>', ['class' => 'btn btn-default btn-sm']) ?>
     </div>
 </div>
 

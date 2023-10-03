@@ -95,7 +95,7 @@ $sectionList = $block->getSectionList('.');
                     </select>
                 </div>
                 <?php endif; ?>
-                <button type="button" class="btn btn-primary ml-0">Отправить</button>
+                <button type="button" class="btn btn-primary btn-sm ml-0">Отправить</button>
             </form>
         </td>
     </tr>

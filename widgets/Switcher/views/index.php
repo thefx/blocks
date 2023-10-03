@@ -26,7 +26,7 @@ echo '<br />' . HTML::activeRadioList($model, $attributeName, [0 => 'Нет', 1 
             $checked = $checked ? 'checked' : '';
             $active = $checked ? 'active' : '';
 
-            $return = '<label class="btn btn-default ' . $active . '">';
+            $return = '<label class="btn btn-default btn-sm ' . $active . '">';
             $return .= '<input type="radio" name="' . $name . '" value="' . $value . '" ' . $checked . '>' . ucwords($label);
             $return .= '</label>';
 

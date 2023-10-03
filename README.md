@@ -67,6 +67,8 @@ return [
         'btn_add_group' => false,
     ],
     'blockSection' => [
+        'anons_redactor' => true,
+        'text_redactor' => true,
         'photo_preview' => [
             'dir' => '@webroot/upload/blocks/',
             'urlDir' => '/upload/blocks/',
@@ -104,6 +106,7 @@ return [
             ]
         ],
     ],
+    // Where 2 - Block ID
     'blockItem2' => [
         'anons_redactor' => false,
         'text_redactor' => false,
@@ -134,6 +137,7 @@ return [
             [150, 150, 'prev_'],
         ]
     ],
+    // Where 5 - Property ID
     'blockProperty5' => [
         'dir' => '@webroot/upload/blocks/',
         'urlDir' => '/upload/blocks/',

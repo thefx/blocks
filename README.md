@@ -7,13 +7,13 @@ Installation
 The preferred way to install this extension is through [composer](http://getcomposer.org/download/).
 
 ```
-composer require thefx/yii2-blocks:dev-master
+composer require thefx/yii2-blocks:v2.x-dev
 ```
 
 or add
 
 ```
-"thefx/yii2-blocks": "dev-master"
+"thefx/yii2-blocks":  "v2.x-dev"
 ```
 
 to the require section of your `composer.json` file.

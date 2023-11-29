@@ -135,7 +135,7 @@ class BlockItemForm extends BlockItem
                 if ($assignment->isForProperty($property->id)) {
                     if ($property->isMultiple()) {
 
-                        if ($property->isList() || $property->isRelativeItem() || $property->isFile() || $property->isTag()) {
+                        if ($property->isList() || $property->isRelativeItem() || $property->isFile() /*|| $property->isTag()*/) {
                             if (isset($assignments[$property->id][0]) && is_array($assignments[$property->id][0]->value)) {
                                 $values = $assignments[$property->id][0]->value;
                                 $values[] = $assignment->value;
@@ -183,11 +183,11 @@ class BlockItemForm extends BlockItem
                 $assignment->setAttributes($data[$assignment->formName()][$propertyId][$assignmentId]);
 
                 if (is_array($assignment->value) && $assignment->property->isMultiple()) {
-                    if (!$assignment->property->isTag()) {
+//                    if (!$assignment->property->isTag()) {
                         $assignment->value = array_filter(array_map(static function ($data) {
                             return (int)$data;
                         }, $assignment->value));
-                    }
+//                    }
                     $values = $assignment->value;
                     foreach ($values as $value) {
                         $assignmentsForInsert[] = new BlockItemPropertyAssignment([

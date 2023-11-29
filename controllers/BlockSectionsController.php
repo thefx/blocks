@@ -323,7 +323,7 @@ class BlockSectionsController extends Controller
     /**
      * @throws NotFoundHttpException
      */
-    public function actionOptionsTaskDelete(int $sectionId, array $keys = [])
+    public function actionOptionsTaskDelete(array $keys = [])
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
 

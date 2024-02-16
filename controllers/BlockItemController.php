@@ -347,7 +347,7 @@ class BlockItemController extends Controller
 
         try {
             if (copy($fileSrc, $fileDest)) {
-                echo "Copy success!";
+                // echo "Copy success!";
 
                 $file = new Files([
                     'file' => $newFilename,
@@ -358,11 +358,9 @@ class BlockItemController extends Controller
 
                 return $newFilename;
             }
-            echo "Copy failed.";
+            // echo "Copy failed.";
         } catch (\yii\base\ErrorException $e) {
-            echo "Copy failed.";
-//            var_dump($fileSrc);
-//            die;
+            // echo "Copy failed.";
         }
         return '';
     }

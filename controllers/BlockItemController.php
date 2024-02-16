@@ -8,11 +8,13 @@ use thefx\blocks\models\blocks\Block;
 use thefx\blocks\models\blocks\BlockCategory;
 use thefx\blocks\models\blocks\BlockItem;
 use thefx\blocks\models\blocks\BlockItemPropAssignments;
+use thefx\blocks\models\blocks\BlockProp;
 use thefx\blocks\models\files\Files;
 use thefx\blocks\models\images\Images;
 use Yii;
 use yii\caching\TagDependency;
 use yii\db\StaleObjectException;
+use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -175,6 +177,55 @@ class BlockItemController extends Controller
         ]);
     }
 
+    public function actionCopy($id)
+    {
+        $model = $this->findModel($id);
+
+        $newModel = new BlockItem($model->getAttributes());
+
+        $newModel->id = null;
+        $newModel->title .= ' - Копия';
+        $newModel->photo = $this->copyFile($model->photo);
+        $newModel->photo_preview = $this->copyFile($model->photo_preview);
+        $newModel->create_user = Yii::$app->user->id;
+        $newModel->create_date = date('Y-m-d H:i:s');
+
+        $newModel->save(false) or die('error');
+
+        $properties = BlockProp::find()->indexBy('id')->where(['block_id' => $model->block_id])->all();
+
+        foreach ($model->propAssignments as $propAssignment) {
+
+            if ($properties[$propAssignment->prop_id]->type === BlockProp::TYPE_IMAGE) {
+                $newValues = [];
+                $values  = explode(';', $propAssignment->value);
+                foreach ($values as $value) {
+                    $newValues[] = $this->copyFile($value);
+                    $this->copyFile($value, 'prev_');
+                    $this->copyFile($value, 'square_');
+                }
+                $newValues = implode(',', $newValues);
+            } else if ($properties[$propAssignment->prop_id]->type === BlockProp::TYPE_FILE) {
+                $newValues = [];
+                $values  = explode(';', $propAssignment->value);
+                foreach ($values as $value) {
+                    $newValues[] = $this->copyFile($value);
+                }
+                $newValues = implode(',', $newValues);
+            } else {
+                $newValues = $propAssignment->value;
+            }
+
+            $newPropAssignment = new BlockItemPropAssignments($propAssignment->getAttributes());
+            $newPropAssignment->id = null;
+            $newPropAssignment->block_item_id = $newModel->id;
+            $newPropAssignment->value = $newValues;
+            $newPropAssignment->save(false) or die('error 2'); // todo: проверить сохранение
+        }
+
+        return $this->redirect(['update', 'id' => $newModel->id, 'parent_id' => $model->parent_id]);
+    }
+
     public function actionDeletePhoto($id, $field)
     {
         $model = $this->findModel($id);
@@ -280,6 +331,40 @@ class BlockItemController extends Controller
             'result' => 'success',
             'model' => $model,
         ];
+    }
+
+    private function copyFile($filename, $prefix = '')
+    {
+        if (!$filename) {
+            return '';
+        }
+        $fileExtension = pathinfo($filename, PATHINFO_EXTENSION);
+        $newFilename = uniqid('', false) . $prefix . '.' . $fileExtension;
+
+//        $fileSrc = Url::to('/upload/blocks/', true) . $filename;
+        $fileSrc = $_SERVER['DOCUMENT_ROOT'] . '/upload/blocks/' . $filename;
+        $fileDest = $_SERVER['DOCUMENT_ROOT'] . '/upload/blocks/' . $newFilename;
+
+        try {
+            if (copy($fileSrc, $fileDest)) {
+                echo "Copy success!";
+
+                $file = new Files([
+                    'file' => $newFilename,
+                    'title' => $newFilename,
+                ]);
+
+                $file->save();
+
+                return $newFilename;
+            }
+            echo "Copy failed.";
+        } catch (\yii\base\ErrorException $e) {
+            echo "Copy failed.";
+            var_dump($fileSrc);
+            die;
+        }
+        return '';
     }
 
     /**

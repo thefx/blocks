@@ -67,7 +67,7 @@ class Files extends \yii\db\ActiveRecord
 
     public function getPath()
     {
-        return  \Yii::getAlias($this->webPath) . '/' . $this->file;
+        return  \Yii::getAlias($this->webPath) . $this->file;
     }
 
     public function __toString()

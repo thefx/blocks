@@ -224,7 +224,7 @@ $this->params['breadcrumbs'][] = $this->title;
         }
         $columns[] = [
             'class' => ActionColumn::class,
-            'template' => '{update}{delete}',
+            'template' => '{update}{copy}{delete}',
             'headerOptions' => ['style' => 'width:40px; text-align:center'],
             'contentOptions' => ['style' => 'text-align:center'],
             'urlCreator' => static function($action, BlockCategory $model, $key, $index) use ($category) {
@@ -233,6 +233,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 $params[0] = ($model->isFolder() ? 'block-category' : 'block-item') . '/' . $action;
                 return Url::toRoute(array_filter($params));
             },
+            'buttons' => [
+                'copy' => static function($url, $model) {
+                    return Html::a('<span class="fa fa-copy position-left mr-2"></span>Копировать', $url, ['title' => 'Копировать', 'class'=> 'dropdown-item', 'data-pjax' => '0']);
+                }
+            ]
         ];
     ?>
 

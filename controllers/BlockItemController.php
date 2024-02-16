@@ -361,8 +361,8 @@ class BlockItemController extends Controller
             echo "Copy failed.";
         } catch (\yii\base\ErrorException $e) {
             echo "Copy failed.";
-            var_dump($fileSrc);
-            die;
+//            var_dump($fileSrc);
+//            die;
         }
         return '';
     }

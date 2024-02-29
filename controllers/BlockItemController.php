@@ -11,7 +11,9 @@ use thefx\blocks\models\blocks\BlockItemPropAssignments;
 use thefx\blocks\models\blocks\BlockProp;
 use thefx\blocks\models\files\Files;
 use thefx\blocks\models\images\Images;
+use thefx\blocks\services\TransactionManager;
 use Yii;
+use yii\base\Module;
 use yii\caching\TagDependency;
 use yii\db\StaleObjectException;
 use yii\helpers\Url;
@@ -25,6 +27,8 @@ use yii\web\Response;
  */
 class BlockItemController extends Controller
 {
+    public $transaction;
+
     /**
      * @inheritdoc
      */
@@ -38,6 +42,12 @@ class BlockItemController extends Controller
                 ],
             ],
         ];
+    }
+
+    public function __construct($id, Module $module, TransactionManager $transaction, array $config = [])
+    {
+        $this->transaction = $transaction;
+        parent::__construct($id, $module, $config);
     }
 
     public function actions()
@@ -180,48 +190,50 @@ class BlockItemController extends Controller
     public function actionCopy($id)
     {
         $model = $this->findModel($id);
-
         $newModel = new BlockItem($model->getAttributes());
-
-        $newModel->id = null;
-        $newModel->title .= ' - Копия';
-        $newModel->photo = $this->copyFile($model->photo);
-        $newModel->photo_preview = $this->copyFile($model->photo_preview);
-        $newModel->create_user = Yii::$app->user->id;
-        $newModel->create_date = date('Y-m-d H:i:s');
-
-        $newModel->save(false) or die('error');
-
         $properties = BlockProp::find()->indexBy('id')->where(['block_id' => $model->block_id])->all();
 
-        foreach ($model->propAssignments as $propAssignment) {
+        $this->transaction->wrap(function () use ($model, $newModel, $properties) {
 
-            if ($properties[$propAssignment->prop_id]->type === BlockProp::TYPE_IMAGE) {
-                $newValues = [];
-                $values  = explode(';', $propAssignment->value);
-                foreach ($values as $value) {
-                    $newValues[] = $this->copyFile($value);
-                    $this->copyFile($value, 'prev_');
-                    $this->copyFile($value, 'square_');
+            $newModel->id = null;
+            $newModel->title .= ' - Копия';
+            $newModel->photo = $this->copyFile($model->photo);
+            $newModel->photo_preview = $this->copyFile($model->photo_preview);
+            $newModel->create_user = Yii::$app->user->id;
+            $newModel->create_date = date('Y-m-d H:i:s');
+
+            $newModel->save(false) or die('error');
+
+            foreach ($model->propAssignments as $propAssignment) {
+
+                if ($properties[$propAssignment->prop_id]->type === BlockProp::TYPE_IMAGE) {
+                    $newValues = [];
+                    $values  = explode(';', $propAssignment->value);
+                    foreach ($values as $value) {
+                        $newFilename = uniqid('', false);
+                        $newValues[] = $this->copyFile($value, $newFilename);
+                        $this->copyFile('prev_' . $value, 'prev_' . $newFilename);
+                        $this->copyFile('square_' . $value, 'square_' . $newFilename);
+                    }
+                    $newValues = implode(';', $newValues);
+                } else if ($properties[$propAssignment->prop_id]->type === BlockProp::TYPE_FILE) {
+                    $newValues = [];
+                    $values  = explode(';', $propAssignment->value);
+                    foreach ($values as $value) {
+                        $newValues[] = $this->copyFile($value);
+                    }
+                    $newValues = implode(';', $newValues);
+                } else {
+                    $newValues = $propAssignment->value;
                 }
-                $newValues = implode(';', $newValues);
-            } else if ($properties[$propAssignment->prop_id]->type === BlockProp::TYPE_FILE) {
-                $newValues = [];
-                $values  = explode(';', $propAssignment->value);
-                foreach ($values as $value) {
-                    $newValues[] = $this->copyFile($value);
-                }
-                $newValues = implode(';', $newValues);
-            } else {
-                $newValues = $propAssignment->value;
+
+                $newPropAssignment = new BlockItemPropAssignments($propAssignment->getAttributes());
+                $newPropAssignment->id = null;
+                $newPropAssignment->block_item_id = $newModel->id;
+                $newPropAssignment->value = $newValues;
+                $newPropAssignment->save(false) or die('error 2'); // todo: проверить сохранение
             }
-
-            $newPropAssignment = new BlockItemPropAssignments($propAssignment->getAttributes());
-            $newPropAssignment->id = null;
-            $newPropAssignment->block_item_id = $newModel->id;
-            $newPropAssignment->value = $newValues;
-            $newPropAssignment->save(false) or die('error 2'); // todo: проверить сохранение
-        }
+        });
 
         return $this->redirect(['update', 'id' => $newModel->id, 'parent_id' => $model->parent_id]);
     }
@@ -333,13 +345,14 @@ class BlockItemController extends Controller
         ];
     }
 
-    private function copyFile($filename, $prefix = '')
+    private function copyFile($filename, $newFilename = '')
     {
         if (!$filename) {
             return '';
         }
         $fileExtension = pathinfo($filename, PATHINFO_EXTENSION);
-        $newFilename = uniqid('', false) . $prefix . '.' . $fileExtension;
+        $newFilename = $newFilename ?: uniqid('', false);
+        $newFilename .= '.' . $fileExtension;
 
 //        $fileSrc = Url::to('/upload/blocks/', true) . $filename;
         $fileSrc = $_SERVER['DOCUMENT_ROOT'] . '/upload/blocks/' . $filename;

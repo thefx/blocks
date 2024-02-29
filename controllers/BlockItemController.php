@@ -204,14 +204,14 @@ class BlockItemController extends Controller
                     $this->copyFile($value, 'prev_');
                     $this->copyFile($value, 'square_');
                 }
-                $newValues = implode(',', $newValues);
+                $newValues = implode(';', $newValues);
             } else if ($properties[$propAssignment->prop_id]->type === BlockProp::TYPE_FILE) {
                 $newValues = [];
                 $values  = explode(';', $propAssignment->value);
                 foreach ($values as $value) {
                     $newValues[] = $this->copyFile($value);
                 }
-                $newValues = implode(',', $newValues);
+                $newValues = implode(';', $newValues);
             } else {
                 $newValues = $propAssignment->value;
             }

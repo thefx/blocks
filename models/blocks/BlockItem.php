@@ -27,6 +27,7 @@ use yii\web\UploadedFile;
  * @property string|null $photo_preview
  * @property string|null $date
  * @property int $parent_id
+ * @property int $series_id
  * @property int $public
  * @property int $sort
  * @property string|null $seo_title
@@ -41,6 +42,7 @@ use yii\web\UploadedFile;
  * @property float|null $price_old
  * @property string|null $currency
  * @property string|null $unit
+ * @property string $type
  * @property BlockCategory $category
  * @property BlockProp[] $propAll
  * @property BlockItemPropAssignments[] $propAssignments
@@ -53,9 +55,36 @@ use yii\web\UploadedFile;
  */
 class BlockItem extends ActiveRecord
 {
+    const TYPE_ITEM = 'item';
+    const TYPE_SERIES = 'series';
+
     public $propAssignmentsTemp;
     public $photo_preview_crop;
     public $photo_crop;
+
+    public static function create($block_id, $parent_id, $type = self::TYPE_ITEM)
+    {
+        $model = new self();
+        $model->block_id = $block_id;
+        $model->parent_id = $parent_id;
+        $model->type = $type;
+        $model->sort = 100;
+        $model->public = 1;
+        $model->create_user = Yii::$app->user->id;
+        $model->create_date = date('Y-m-d H:i:s');
+
+        return $model;
+    }
+
+    public function isSeries()
+    {
+        return $this->type === self::TYPE_SERIES;
+    }
+
+    public function isItem()
+    {
+        return $this->type === self::TYPE_ITEM;
+    }
 
     public function getPhoto($attribute = 'photo')
     {
@@ -84,6 +113,18 @@ class BlockItem extends ActiveRecord
         }
 
         return Yii::getAlias('@web/upload/' . $path) . '/';
+    }
+
+    public function seriesList()
+    {
+        /** @var BlockCategory $category */
+        $category = BlockCategory::findOne(['id' => $this->parent_id]);
+        $items = BlockItem::find()->where([
+            'block_id' => $category->block_id,
+            'type' => self::TYPE_SERIES
+        ])->orderBy('title')->all();
+
+        return ArrayHelper::map($items, 'id', 'title');
     }
 
     public function categoryList()
@@ -408,7 +449,7 @@ class BlockItem extends ActiveRecord
             [['title', 'block_id', 'parent_id', 'sort'], 'required'],
             [['anons', 'text'], 'string'],
             [['date', 'create_date', 'update_date'], 'safe'],
-            [['block_id', 'parent_id', 'public', 'sort', 'create_user', 'update_user'], 'integer'],
+            [['block_id', 'parent_id', 'series_id', 'public', 'sort', 'create_user', 'update_user'], 'integer'],
             [['title', 'path', /*'photo', 'photo_preview',*/ 'photo_crop', 'photo_preview_crop', 'seo_title', 'seo_keywords', 'seo_description'], 'string', 'max' => 255],
             [['photo', 'photo_preview'], 'file', 'mimeTypes' => 'image/*'],
 
@@ -434,6 +475,7 @@ class BlockItem extends ActiveRecord
             'photo_preview' => 'Фото для анонса',
             'date' => 'Дата',
             'parent_id' => 'Категория',
+            'series_id' => 'Серия',
             'public' => 'Активность',
             'sort' => 'Сортировка',
             'seo_title' => 'Заголовок в браузере',

@@ -7,13 +7,15 @@
 /* @var $parents BlockCategory[] */
 /* @var $elem */
 /* @var $modelFieldsForm BlockFieldsItemForm */
+/* @var $template array */
 
 use thefx\blocks\forms\BlockFieldsItemForm;
 use thefx\blocks\models\blocks\Block;
 use thefx\blocks\models\blocks\BlockCategory;
 use thefx\blocks\models\blocks\BlockItem;
 
-$this->title = $block->translate->block_create;
+$this->title = $model->isItem() ? $block->translate->block_create : 'Добавить серию';
+
 foreach ($parents as $parent) {
     $title = $parent->isRoot() ? $block->title : $parent->title;
     $this->params['breadcrumbs'][] = ['label' => $title, 'url' => ['block-category/index', 'parent_id' => $parent->id]];
@@ -30,6 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'block' => $block,
         'elem' => $elem,
+        'template' => $template,
     ]) ?>
 
 </div>

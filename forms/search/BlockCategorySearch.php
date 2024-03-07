@@ -14,13 +14,35 @@ use yii\db\Query;
  */
 class BlockCategorySearch extends BlockCategory
 {
+    const TYPE_FOLDER = 'folder';
+    const TYPE_ITEM = 'item';
+
+    public $series_id;
+    public $item_type;
+    public $type;
+
+    public function isFolder()
+    {
+        return $this->type === self::TYPE_FOLDER;
+    }
+
+    public function isSeries()
+    {
+        return $this->item_type === BlockItem::TYPE_SERIES;
+    }
+
+    public function isItem()
+    {
+        return $this->item_type === BlockItem::TYPE_ITEM;
+    }
+
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['id', 'block_id', 'parent_id', 'lft', 'rgt', 'depth', 'create_user', 'update_user', 'public', 'sort'], 'integer'],
+            [['id', 'block_id', 'parent_id', 'series_id', 'lft', 'rgt', 'depth', 'create_user', 'update_user', 'public', 'sort'], 'integer'],
             [['title', 'path', 'anons', 'text', 'photo', 'photo_preview', 'date', 'create_date', 'update_date'], 'safe'],
         ];
     }
@@ -70,20 +92,27 @@ class BlockCategorySearch extends BlockCategory
         $this->load($params);
 
         $query1 = (new Query())
-            ->select(array_merge($commonFields, [ new Expression('"folder" as type') ], ['`lft`']))
+            ->select(array_merge($commonFields, [ new Expression('"folder" as type, null as series_id, null as item_type') ], ['`lft`']))
             ->from(BlockCategory::tableName());
 
         $query2 = (new Query())
-            ->select(array_merge($commonFields, [ new Expression('"item" as type') ], ['`sort` AS `lft`']))
+            ->select(array_merge($commonFields, [ new Expression('"item" as type') ], [ 'series_id', 'type as item_type' ], ['`sort` AS `lft`']))
             ->from(BlockItem::tableName());
 
-        $unionQuery = BlockCategory::find()
+        $unionQuery = self::find()
             ->from($query1->union($query2));
 
         if ($this->block_id && $this->title) {
             $unionQuery->andFilterWhere(['block_id' => $this->block_id]);
         } else {
             $unionQuery->andFilterWhere(['parent_id' => $this->parent_id]);
+        }
+
+        // for series
+        if ($this->series_id) {
+            $unionQuery->andWhere(['series_id' => $this->series_id]);
+        } else {
+            $unionQuery->andWhere(['series_id' => null]);
         }
 
         $unionQuery->andFilterWhere(['or',

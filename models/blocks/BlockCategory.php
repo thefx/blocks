@@ -49,17 +49,13 @@ use yii\web\NotFoundHttpException;
  */
 class BlockCategory extends ActiveRecord
 {
-    public $type;
     public $photo_preview_crop;
     public $photo_crop;
-
-    const TYPE_FOLDER = 'folder';
-    const TYPE_ITEM = 'item';
 
     public static function createRoot()
     {
         $model = new self();
-        $model->title = 'Родительская категория';
+        $model->title = 'Без категории';
         $model->path = '0';
         $model->parent_id = '0';
         $model->create_user = Yii::$app->user->id;
@@ -68,13 +64,15 @@ class BlockCategory extends ActiveRecord
         return $model;
     }
 
-    public static function create($block_id, $parent_id, $title)
+    public static function create($block_id, $parent_id)
     {
         $model = new self();
         $model->block_id = $block_id;
-        $model->$parent_id = $parent_id;
-        $model->$title = $title;
+        $model->parent_id = $parent_id;
+        $model->sort = 100;
         $model->public = 1;
+        $model->create_user = Yii::$app->user->id;
+        $model->create_date = date('Y-m-d H:i:s');
 
         return $model;
     }
@@ -82,11 +80,6 @@ class BlockCategory extends ActiveRecord
     public function isNotRoot()
     {
         return $this->parent_id != 0;
-    }
-
-    public function isFolder()
-    {
-        return $this->type == self::TYPE_FOLDER;
     }
 
     public function categoryList()

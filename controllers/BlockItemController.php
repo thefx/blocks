@@ -2,8 +2,6 @@
 
 namespace thefx\blocks\controllers;
 
-use thefx\blocks\forms\BlockFieldsItemForm;
-use thefx\blocks\forms\search\BlockItemSearch;
 use thefx\blocks\models\blocks\Block;
 use thefx\blocks\models\blocks\BlockCategory;
 use thefx\blocks\models\blocks\BlockItem;
@@ -16,10 +14,8 @@ use Yii;
 use yii\base\Module;
 use yii\caching\TagDependency;
 use yii\db\StaleObjectException;
-use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 use yii\web\Response;
 
 /**
@@ -29,77 +25,10 @@ class BlockItemController extends Controller
 {
     public $transaction;
 
-    /**
-     * @inheritdoc
-     */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::class,
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
-    }
-
     public function __construct($id, Module $module, TransactionManager $transaction, array $config = [])
     {
         $this->transaction = $transaction;
         parent::__construct($id, $module, $config);
-    }
-
-    public function actions()
-    {
-        $id = (int) Yii::$app->request->get('id');
-
-        return [
-            'upload-image' => [
-                'class' => 'vova07\imperavi\actions\UploadFileAction',
-                'url' => '/upload/redactor/block-item/' . $id . '/',
-                'path' => \Yii::getAlias("@webroot") . '/upload/redactor/block-item/' . $id,
-                'unique' => true,
-                'validatorOptions' => [
-                    'maxWidth' => 4000,
-                    'maxHeight' => 4000
-                ]
-            ],
-            'get-uploaded-images' => [
-                'class' => 'vova07\imperavi\actions\GetImagesAction',
-                'url' => '/upload/redactor/block-item/' . $id . '/',
-                'path' => \Yii::getAlias("@webroot") . '/upload/redactor/block-item/' . $id,
-                'options' => ['only' => ['*.jpg', '*.jpeg', '*.png', '*.gif', '*.ico']],
-            ]
-        ];
-    }
-
-    /**
-     * Lists all BlockItem models.
-     * @return mixed
-     */
-    public function actionIndex()
-    {
-        $searchModel = new BlockItemSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
-    }
-
-    /**
-     * Displays a single BlockItem model.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
     }
 
     /**
@@ -109,33 +38,44 @@ class BlockItemController extends Controller
      * @return mixed
      * @throws NotFoundHttpException
      */
-    public function actionCreate($parent_id)
+    public function actionCreate($parent_id, $type = null, $series_id = null)
     {
-        $this->layout = $this->module->layoutPure;
+        $this->layout = 'pure';
 
         $category = BlockCategory::findOrFail($parent_id);
+        $series = $series_id ? BlockItem::findOrFail($series_id) : null;
         $block = Block::find()->with('fields')->where(['id' => $category->block_id])->one();
         $parents = $category->getParents()->all();
 
-        $model = new BlockItem([
-            'block_id' => $block->id,
-            'parent_id' => $parent_id,
-            'sort' => 100,
-            'public' => 1,
-        ]);
-
+        $blockItemType = $type === BlockItem::TYPE_SERIES ? BlockItem::TYPE_SERIES : BlockItem::TYPE_ITEM;
+        $model = BlockItem::create($block->id, $parent_id, $blockItemType);
+        if ($series) {
+            $model->series_id = $series->id;
+        }
         $model->populateAssignments();
 
         if ($model->load(Yii::$app->request->post()) /*&& $model->save()*/) {
             $model->loadAssignments(Yii::$app->request->post());
             if ($model->validate()) {
-                $model->setAttribute('create_user', Yii::$app->user->id);
-                $model->setAttribute('create_date', date('Y-m-d H:i:s'));
+                if ($series) {
+                    $model->parent_id = $series->parent_id;
+                }
                 $model->save();
                 TagDependency::invalidate(Yii::$app->cache, 'block_items_' . $category->block_id);
                 Yii::$app->session->setFlash('success', $block->translate->block_item . ' добавлен');
+
+                if ($series) {
+                    return $this->redirect(['block-category/index', 'series_id' => $series->id, 'parent_id' => $series->parent_id]);
+                }
                 return $this->redirect(['block-category/index', 'parent_id' => $parent_id]);
             }
+        }
+
+        $fieldType = $model->type === BlockItem::TYPE_SERIES ? 'fields' : 'fieldsSeries';
+        $template = $block->getFieldsTemplates($fieldType);
+
+        if ($series) {
+            $template = $this->changeParentIdToSeries($template);
         }
 
         return $this->render('create', [
@@ -143,9 +83,11 @@ class BlockItemController extends Controller
             'category' => $category,
             'parents' => $parents,
             'model' => $model,
+            'template' => $template,
             'elem' => $model->propAssignments,
         ]);
     }
+
 
     /**
      * Updates an existing BlockItem model.
@@ -157,10 +99,12 @@ class BlockItemController extends Controller
      */
     public function actionUpdate($id, $parent_id)
     {
-        $this->layout = $this->module->layoutPure;
+        $this->layout = 'pure';
 
         $model = $this->findModel($id);
         $category = BlockCategory::findOrFail($model->parent_id);
+        $series = $model->series_id ? BlockItem::findOrFail($model->series_id) : null;
+
         $block = Block::findOrFail($category->block_id);
         $parents = $category->getParents()->all();
 
@@ -171,11 +115,25 @@ class BlockItemController extends Controller
             if ($model->validate()) {
                 $model->setAttribute('update_user', Yii::$app->user->id);
                 $model->setAttribute('update_date', date('Y-m-d H:i:s'));
+                if ($model->series_id) {
+                    $series2 = BlockItem::findOrFail($model->series_id);
+                    $model->parent_id = $series2->parent_id;
+                }
                 $model->save();
                 TagDependency::invalidate(Yii::$app->cache, 'block_items_' . $category->block_id);
                 Yii::$app->session->setFlash('success', $block->translate->block_item . ' обновлен');
+                if ($series) {
+                    return $this->redirect(['block-category/index', 'series_id' => $series->id, 'parent_id' => $series->parent_id]);
+                }
                 return $this->redirect(['block-category/index', 'parent_id' => $parent_id]);
             }
+        }
+
+        $fieldType = $model->type === BlockItem::TYPE_SERIES ? 'fields' : 'fieldsSeries';
+        $template = $block->getFieldsTemplates($fieldType);
+
+        if ($series) {
+            $template = $this->changeParentIdToSeries($template);
         }
 
         return $this->render('update', [
@@ -183,6 +141,7 @@ class BlockItemController extends Controller
             'category' => $category,
             'parents' => $parents,
             'model' => $model,
+            'template' => $template,
             'elem' => $model->propAssignments,
         ]);
     }
@@ -397,5 +356,27 @@ class BlockItemController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    /**
+     * Change parent_id field to series_id
+     *
+     * @param $template
+     * @return array
+     */
+    protected function changeParentIdToSeries($template)
+    {
+        foreach ($template as $tabName => $tabFields) {
+            foreach ($tabFields as $fieldKey => $fieldValue) {
+                if ($fieldValue['type'] === 'model' && $fieldValue['value'] === 'parent_id') {
+                    $template[$tabName][$fieldKey]['value'] = 'series_id';
+                }
+                // parent categories todo move to project
+                if ($fieldValue['type'] === 'prop' && $fieldValue['value'] === '84') {
+                    unset($template[$tabName][$fieldKey]);
+                }
+            }
+        }
+        return $template;
     }
 }

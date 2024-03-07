@@ -10,6 +10,7 @@ use yii\widgets\ActiveForm;
 /* @var $model BlockItem */
 /* @var $form yii\widgets\ActiveForm */
 /* @var $block Block */
+/* @var $template array */
 
 Select2Asset::register($this);
 ?>
@@ -25,7 +26,7 @@ Select2Asset::register($this);
 
             <?php $i = 0 ?>
 
-            <?php foreach ($block->getFieldsTemplates() as $tab => $items) : ?>
+            <?php foreach ($template as $tab => $items) : ?>
                 <?php $selected = ($i === 0) ? 'true' : 'false' ?>
                 <?php $class = ($i === 0) ? 'active' : '' ?>
                 <?php $i++ ?>
@@ -49,13 +50,13 @@ Select2Asset::register($this);
 
             <?php $i = 0 ?>
 
-            <?php foreach ($block->getFieldsTemplates() as $tab => $items) : ?>
+            <?php foreach ($template as $tab => $items) : ?>
                 <?php $class = ($i === 0) ? 'active show' : '' ?>
                 <?php $i++ ?>
 
                 <div class="tab-pane fade <?= $class ?>" id="custom-tabs-<?= $i ?>" role="tabpanel" aria-labelledby="custom-tabs-<?= $i ?>-tab">
                     <?php foreach ($items as $item) : ?>
-                        <?= $this->render('_type_' . $item['type'], ['form' => $form, 'model' => $model, 'block' => $block, 'value' => $item['value']]) ?>
+                        <?= $this->render('_type_' . $item['type'], ['form' => $form, 'model' => $model, 'label' => $item['name'], 'block' => $block, 'value' => $item['value']]) ?>
                     <?php endforeach; ?>
                 </div>
 

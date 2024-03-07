@@ -1,11 +1,11 @@
 <?php
 
+use thefx\blocks\forms\search\BlockCategorySearch;
+use thefx\blocks\models\blocks\BlockFields;
+use thefx\blocks\models\blocks\BlockItem;
 use yii\grid\CheckboxColumn;
 use yii\grid\ActionColumn;
-use thefx\blocks\forms\BlockFieldsCategoryForm;
-use thefx\blocks\forms\search\BlockCategorySearch;
 use thefx\blocks\models\blocks\Block;
-use thefx\blocks\models\blocks\BlockCategory;
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\helpers\Url;
@@ -14,14 +14,16 @@ use yii\helpers\Url;
 /* @var $searchModel BlockCategorySearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 /* @var $block Block */
-/* @var $category BlockCategory */
-/* @var $parents BlockCategory[] */
-/* @var $modelFieldsForm BlockFieldsCategoryForm */
-/* @var $modelFieldsItemsForm BlockFieldsCategoryForm */
+/* @var $category BlockCategorySearch */
+/* @var $parents BlockCategorySearch[] */
+/* @var $series BlockItem|null */
 
 $this->title = $block->translate->categories;
 if ($category && !$category->isRoot()) {
     $this->title = $category->title;
+}
+if ($series) {
+    $this->title = $series->title;
 }
 if ($parents) {
     $this->params['breadcrumbs'][] = ['label' => $block->translate->categories, 'url' => ['index', 'parent_id' => $parents[0]->parent_id]];
@@ -30,69 +32,16 @@ if ($parents) {
     }
 } else if (!$category->isRoot()) {
     $this->params['breadcrumbs'][] = ['label' => $block->translate->categories, 'url' => ['index', 'parent_id' => $category->parent_id]];
+} else if ($series && $category->isRoot()) {
+    $this->params['breadcrumbs'][] = ['label' => $block->translate->categories, 'url' => ['block-category/index', 'parent_id' => $series->parent_id]];
 }
+
 $this->params['breadcrumbs'][] = $this->title;
 
 \thefx\blocks\assets\SortableJs\SortableJsAsset::register($this);
+
+$settings = array_merge(Yii::$app->params['block'], Yii::$app->params['block' . $block->id] ?? []);
 ?>
-
-<script>
-
-    document.addEventListener("DOMContentLoaded", function () {
-
-        function sortFolders(data) {
-            if (data.prev.length !== 0) {
-                var dataJson = {'type': 'after', 'item': data.id, 'node': data.prev.data('key')};
-                $.get("<?=Url::to(['sort-category'])?>", dataJson);
-            } else if (data.next.length !== 0) {
-                var dataJson = {'type': 'before', 'item': data.id, 'node': data.next.data('key')};
-                $.get("<?=Url::to(['sort-category'])?>", dataJson);
-            }
-        }
-
-        // Sortable
-        document.querySelectorAll('table tbody').forEach(function (el) {
-            Sortable.create(el, {
-                draggable: 'tr[data-type="folder"]',
-                handle: ".handle",
-                onEnd: function (/**Event*/evt) {
-                    var data = {
-                        'id'       : $(evt.item).data('key'),
-                        'next'     : $(evt.item).next('tr[data-type="folder"]'),
-                        'prev'     : $(evt.item).prev('tr[data-type="folder"]'),
-                    };
-                    sortFolders(data);
-                    // var itemEl = evt.item;  // dragged HTMLElement
-                    // evt.to;    // target list
-                    // evt.from;  // previous list
-                    // evt.oldIndex;  // element's old index within old parent
-                    // evt.newIndex;  // element's new index within new parent
-                    // evt.oldDraggableIndex; // element's old index within old parent, only counting draggable elements
-                    // evt.newDraggableIndex; // element's new index within new parent, only counting draggable elements
-                    // evt.clone // the clone element
-                    // evt.pullMode;  // when item is in another sortable: `"clone"` if cloning, `true` if moving
-                },
-            });
-        });
-
-        // Sortable
-        //document.querySelectorAll('table tbody').forEach(function (el) {
-        //    Sortable.create(el, {
-        //        draggable: 'tr[data-type="item"]',
-        //        handle: ".handle",
-        //        onEnd: function (/**Event*/evt) {
-        //            var ids = [];
-        //            $(evt.target).find('tr[data-type="item"]').each(function (key, element) {
-        //                ids.push(element.getAttribute('data-key'));
-        //            });
-        //            $.get("<?//=Url::to(['sort-items'])?>//", {'ids': ids});
-        //        },
-        //    });
-        //});
-
-    });
-
-</script>
 
 <style>
     .table > thead > tr > th,
@@ -110,8 +59,9 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <?php if (in_array(Yii::$app->user->id, $this->context->module->rootUsers, true)) :?>
     <div class="mb-3">
-        <?= $this->render('_modal_category_fields', ['modelFieldsForm' => $modelFieldsForm]) ?>
-        <?= $this->render('_modal_item_fields', ['modelFieldsForm' => $modelFieldsItemsForm]) ?>
+        <?= Html::a('Элемент', ['block-fields/update', 'block_id' => $block->id, 'type' => BlockFields::BLOCK_TYPE_ITEM], ['class' => 'btn btn-default btn-sm']) ?>
+        <?= Html::a('Серия', ['block-fields/update', 'block_id' => $block->id, 'type' => BlockFields::BLOCK_TYPE_SERIES], ['class' => 'btn btn-default btn-sm']) ?>
+        <?= Html::a('Категории', ['block-fields/update', 'block_id' => $block->id, 'type' => BlockFields::BLOCK_TYPE_CATEGORY], ['class' => 'btn btn-default btn-sm']) ?>
         <hr>
     </div>
 <?php endif; ?>
@@ -124,8 +74,8 @@ $this->params['breadcrumbs'][] = $this->title;
             'class' => CheckboxColumn::class,
             'headerOptions' => ['style' => 'width:40px; text-align:center'],
             'contentOptions' => ['style' => 'text-align:center'],
-            'content' => static function(BlockCategory $row) {
-                return $row->type === BlockCategory::TYPE_ITEM ? Html::checkbox('selection[]', false, ['value' => $row->id]) : null;
+            'content' => static function(BlockCategorySearch $row) {
+                return $row->type === BlockCategorySearch::TYPE_ITEM ? Html::checkbox('selection[]', false, ['value' => $row->id]) : null;
             }
         ];
 //        $columns[] = [
@@ -146,7 +96,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'headerOptions' => ['style' => 'width:140px; text-align:center'],
                         'contentOptions' => ['style' => 'width:140px; text-align:center'],
                         'format' => 'html',
-                        'value' => static function(BlockCategory  $model) use ($category, $item) {
+                        'value' => static function(BlockCategorySearch  $model) use ($category, $item) {
                             $img = Html::img($model->getPhoto($item['value']), ['style' => 'max-width:100px; max-height:100px']);
                             $url = $model->isFolder() ? ['index', 'parent_id' => $model->id] : ['block-item/update', 'id' => $model->id, 'parent_id' => $category->id];
                             return Html::a($img, $url, ['data-pjax' => '0']);
@@ -158,11 +108,22 @@ $this->params['breadcrumbs'][] = $this->title;
                         'attribute' => 'title',
     //                'label' => '',
                         'format' => 'html',
-                        'value' => static function(BlockCategory  $model) use ($category) {
+                        'value' => static function(BlockCategorySearch $model) use ($category) {
+
                             if ($model->isFolder()) {
-                                return '<i class="fa fa-folder text-muted position-left"></i> ' . Html::a($model->title, ['index', 'parent_id' => $model->id]);
+                                $icon = '<i class="fa fa-folder text-muted position-left"></i> ';
+                                $url =  ['block-category/index', 'parent_id' => $model->id];
+                                return $icon . Html::a($model->title, $url);
                             }
-                            return Html::a($model->title, ['block-item/update', 'id' => $model->id, 'parent_id' => $category->id], ['data-pjax' => '0']);
+
+                            if ($model->isSeries()) {
+                                $icon = '<i class="fas fa-layer-group text-muted position-left"></i> ';
+                                $url =  ['block-category/index', 'series_id' => $model->id, 'parent_id' => $model->parent_id];
+                                return $icon . Html::a($model->title, $url, ['data-pjax' => '0']);
+                            }
+
+                            $url =  ['block-item/update', 'id' => $model->id, 'parent_id' => $category->id];
+                            return Html::a($model->title, $url, ['data-pjax' => '0']);
                         },
                     ];
                     break;
@@ -180,7 +141,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 case 'anons':
                     $columns[] = [
                         'attribute' => 'anons',
-                        'content' => static function(BlockCategory $row) {
+                        'content' => static function(BlockCategorySearch $row) {
                             return strip_tags($row->anons);
                         }
                     ];
@@ -188,7 +149,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 case 'text':
                     $columns[] = [
                         'attribute' => 'text',
-                        'content' => static function(BlockCategory $row) {
+                        'content' => static function(BlockCategorySearch $row) {
                             return strip_tags($row->text);
                         }
                     ];
@@ -198,7 +159,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'attribute' => 'public',
                         'headerOptions' => ['style' => 'width:85px; text-align:center'],
                         'contentOptions' => ['style' => 'text-align:center'],
-                        'content' => static function(BlockCategory $row) {
+                        'content' => static function(BlockCategorySearch $row) {
                             return $row->public ? '<span class="badge badge-success">Да</span>' : '<span class="badge">Нет</span>';
                         }
                     ];
@@ -208,7 +169,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'attribute' => 'update_date',
                         'headerOptions' => ['style' => 'width:200px; text-align:center'],
                         'contentOptions' => ['style' => 'text-align:center'],
-                        'content' => static function(BlockCategory $row) {
+                        'content' => static function(BlockCategorySearch $row) {
                             return $row->update_date ? date('d.m.Y H:i:s', strtotime($row->update_date)) : date('d.m.Y H:i:s', strtotime($row->create_date));
                         }
                     ];
@@ -227,12 +188,23 @@ $this->params['breadcrumbs'][] = $this->title;
             'template' => '{update}{copy}{delete}',
             'headerOptions' => ['style' => 'width:40px; text-align:center'],
             'contentOptions' => ['style' => 'text-align:center'],
-            'urlCreator' => static function($action, BlockCategory $model, $key, $index) use ($category) {
-                $params = is_array($key) ? $key : ['id' => (string)$key];
-                $params['parent_id'] = $category->id;
-                $params[0] = ($model->isFolder() ? 'block-category' : 'block-item') . '/' . $action;
+            'urlCreator' => static function($action, BlockCategorySearch $model, $key, $index) use ($category) {
+                $params = is_array($key) ? $key : ['id' => (string)$key, 'parent_id' => $category->id];
+
+                if ($model->isFolder()) {
+                    $params[0] = 'block-category' . '/' . $action;
+                } elseif ($model->isSeries()) {
+                    $params[0] = 'block-item' . '/' . $action;
+                } else {
+                    $params[0] = 'block-item' . '/' . $action;
+                }
                 return Url::toRoute(array_filter($params));
             },
+            'visibleButtons' => [
+                'copy' => static function (BlockCategorySearch $model) {
+                    return $model->isItem();
+                },
+            ],
             'buttons' => [
                 'copy' => static function($url, $model) {
                     return Html::a('<span class="fa fa-copy position-left mr-2"></span>Копировать', $url, ['title' => 'Копировать', 'class'=> 'dropdown-item', 'data-pjax' => '0']);
@@ -243,8 +215,15 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <!--    --><?php //\yii\widgets\Pjax::begin(); ?>
 
-    <?= Html::a($block->translate->block_create, ['block-item/create', 'parent_id' => $category->id], ['class' => 'btn btn-success']) ?>
-    <?= Html::a($block->translate->category_create, ['create', 'parent_id' => $category->id], ['class' => 'btn btn-default']) ?>
+    <?= Html::a($block->translate->block_create, ['block-item/create', 'parent_id' => $category->id, 'series_id' => $series->id ?? null], ['class' => 'btn btn-success']) ?>
+
+    <?php if (!$series && $settings['btn_add_series']) : ?>
+        <?= Html::a('Добавить серию', ['block-item/create', 'parent_id' => $category->id, 'type' => BlockItem::TYPE_SERIES], ['class' => 'btn btn-success']) ?>
+    <?php endif; ?>
+
+    <?php if (!$series && $settings['btn_add_group']) : ?>
+        <?= Html::a($block->translate->category_create, ['create', 'parent_id' => $category->id], ['class' => 'btn btn-default']) ?>
+    <?php endif; ?>
 
     <?= $this->render('_search', ['model' => $searchModel]); ?>
 
@@ -254,7 +233,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'options' => ['id' => 'tableTree'],
         'columns' => $columns,
         'layout' => $this->render('_tableTreeOptions', ['block' => $block]),
-        'rowOptions' => function ($model, $key, $index, $grid) {
+        'rowOptions' => static function ($model, $key, $index, $grid) {
             return ['data-type' => $model->type];
         },
     ]) ?>

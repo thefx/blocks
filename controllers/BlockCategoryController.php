@@ -2,8 +2,6 @@
 
 namespace thefx\blocks\controllers;
 
-use thefx\blocks\forms\BlockFieldsCategoryForm;
-use thefx\blocks\forms\BlockFieldsItemForm;
 use thefx\blocks\forms\search\BlockCategorySearch;
 use thefx\blocks\models\blocks\Block;
 use thefx\blocks\models\blocks\BlockCategory;
@@ -75,12 +73,16 @@ class BlockCategoryController extends Controller
      * @return string|Response
      * @throws NotFoundHttpException
      */
-    public function actionIndex($parent_id)
+    public function actionIndex($parent_id, $series_id = null)
     {
+        $this->layout = 'main';
+
         $searchModel = new BlockCategorySearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         $category = BlockCategory::find()->where(['id' => $parent_id])->one();
+        $series = $series_id ? BlockItem::find()->where(['id' => $series_id])->one() : null;
+
         $block = Block::findOrFail($category->block_id);
 
         $root = BlockCategory::find()->where(['block_id' => $block->id, 'parent_id' => 0])->one();
@@ -89,33 +91,14 @@ class BlockCategoryController extends Controller
 
         $parents = $category ? $category->getParents()->withoutRoot()->all() : null;
 
-        ##
-
-        $modelFieldsForm = new BlockFieldsCategoryForm($block);
-
-        if ($this->request->isPost && $modelFieldsForm->load(Yii::$app->request->post()) && $modelFieldsForm->save()) {
-            Yii::$app->session->setFlash('success', 'Поля сохранены');
-            return $this->refresh();
-        }
-
-        $modelFieldsItemsForm = new BlockFieldsItemForm($block);
-
-        if ($this->request->isPost && $modelFieldsItemsForm->load(Yii::$app->request->post()) && $modelFieldsItemsForm->save()) {
-            Yii::$app->session->setFlash('success', 'Поля сохранены');
-            return $this->refresh();
-        }
-
-        ##
-
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'block' => $block,
             'category' => $category,
+            'series' => $series,
             'parents' => $parents,
             'root' => $root,
-            'modelFieldsForm' => $modelFieldsForm,
-            'modelFieldsItemsForm' => $modelFieldsItemsForm,
         ]);
     }
 
@@ -145,18 +128,10 @@ class BlockCategoryController extends Controller
 
         $category = BlockCategory::findOrFail($parent_id);
         $block = Block::findOrFail($category->block_id);
+        $model = BlockCategory::create($block->id, $parent_id);
         $parents = $category->getParents()->withoutRoot()->all();
 
-        $model = new BlockCategory([
-            'block_id' => $block->id,
-            'parent_id' => $parent_id,
-            'sort' => 100,
-            'public' => 1,
-        ]);
-
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            $model->setAttribute('create_user', Yii::$app->user->id);
-            $model->setAttribute('create_date', date('Y-m-d H:i:s'));
             $model->appendTo($category)->save();
             TagDependency::invalidate(Yii::$app->cache, 'block_categories_' . $category->block_id);
             Yii::$app->session->setFlash('success', $block->translate->category . " добавлен");
@@ -189,14 +164,14 @@ class BlockCategoryController extends Controller
         $block = Block::findOrFail($category->block_id);
         $parents = $category->getParents()->withoutRoot()->all();
 
-        $model->setAttribute('update_user', Yii::$app->user->id);
-        $model->setAttribute('update_date', date('Y-m-d H:i:s'));
-
         if ($model->load(Yii::$app->request->post())) {
             if ($model->getOldAttribute('parent_id') !== (int) $model->getAttribute('parent_id')) {
                 $newCategory = BlockCategory::findOne($model->getAttribute('parent_id'));
                 $model->appendTo($newCategory);
             }
+            $model->setAttribute('update_user', Yii::$app->user->id);
+            $model->setAttribute('update_date', date('Y-m-d H:i:s'));
+
             if ($model->save()) {
                 TagDependency::invalidate(Yii::$app->cache, 'block_categories_' . $category->block_id);
                 Yii::$app->session->setFlash('success', $block->translate->category . " обновлен");
@@ -273,66 +248,6 @@ class BlockCategoryController extends Controller
         }
 
         return $items;
-    }
-
-    /**
-     * @throws NotFoundHttpException
-     */
-    public function actionOptionsTaskMove($categoryId, array $keys = [])
-    {
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
-        foreach ($keys as $key) {
-            $blockItem = BlockItem::findOrFail(['id' => $key]);
-            $blockItem->parent_id = (int) $categoryId;
-            $blockItem->save() or die(var_dump($blockItem->getErrors()));
-        }
-
-        TagDependency::invalidate(Yii::$app->cache, 'block_items_' . $blockItem->block_id);
-
-        return [
-            'result' => 'success'
-        ];
-    }
-
-    /**
-     * @throws NotFoundHttpException
-     */
-    public function actionOptionsTaskActivate($categoryId, array $keys = [])
-    {
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
-        foreach ($keys as $key) {
-            $blockItem = BlockItem::findOrFail(['id' => $key]);
-            $blockItem->public = 1;
-            $blockItem->save() or die(var_dump($blockItem->getErrors()));
-        }
-
-        TagDependency::invalidate(Yii::$app->cache, 'block_items_' . $blockItem->block_id);
-
-        return [
-            'result' => 'success'
-        ];
-    }
-
-    /**
-     * @throws NotFoundHttpException
-     */
-    public function actionOptionsTaskDeactivate($categoryId, array $keys = [])
-    {
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
-        foreach ($keys as $key) {
-            $blockItem = BlockItem::findOrFail(['id' => $key]);
-            $blockItem->public = 0;
-            $blockItem->save() or die(var_dump($blockItem->getErrors()));
-        }
-
-        TagDependency::invalidate(Yii::$app->cache, 'block_items_' . $blockItem->block_id);
-
-        return [
-            'result' => 'success'
-        ];
     }
 
     /**

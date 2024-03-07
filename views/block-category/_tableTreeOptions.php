@@ -36,28 +36,39 @@
         })
 
         $('#treeCategoryTask').on('change', function () {
+            $('#treeCategoryWrapper').addClass('d-none');
+            $('#treeSeriesWrapper').addClass('d-none');
+
             if ($(this).val() === 'move') {
                 $('#treeCategoryWrapper').removeClass('d-none')
-            } else {
-                $('#treeCategoryWrapper').addClass('d-none')
+            }
+            if ($(this).val() === 'move-series') {
+                $('#treeSeriesWrapper').removeClass('d-none')
             }
         })
 
         $('#treeCategory').select2();
         $('#treeCategory').parent().addClass('d-none');
 
-        $('#formOptions').on('click', '[type="button"]', function () {
-            var button = $(this);
-            var form = button.parents('form');
-            var formData = form.serializeArray();
-            var keys = $('#tableTree').yiiGridView('getSelectedRows');
-            var taskName = $('#formOptions [name="task"]').val();
+        $('#selectSeries').select2();
+        $('#selectSeries').parent().addClass('d-none');
 
-            keys.map(function (key) {
-                formData.push({name:'keys[]',value:key})
+        $('#formOptions').on('click', '[type="button"]', function () {
+            let button = $(this);
+            let form = button.parents('form');
+            let formData = form.serializeArray();
+            // var keys = $('#tableTree').yiiGridView('getSelectedRows');
+            let taskName = $('#formOptions [name="task"]').val();
+            let $grid = $('#tableTree');
+
+            $grid.find("input[name='selection[]']:checked").each(function () {
+                formData.push({
+                    name:$(this).parent().closest('tr').data('type')+'[]',
+                    value:$(this).parent().closest('tr').data('key')
+                })
             });
 
-            $.get('<?= \yii\helpers\Url::to(['options-task-']) ?>' + taskName, formData, function(data){
+            $.get('<?= \yii\helpers\Url::to(['block-category-tasks/index']) ?>/' + taskName, formData, function(data){
                 if (data.result === 'success') {
                     document.location.reload();
                     // $.pjax.reload({container: '#table'});
@@ -76,13 +87,22 @@
                     <option value="activate">Активировать</option>
                     <option value="deactivate">Деактивировать</option>
                     <option value="move">Переместить</option>
-<!--                    <option value="delete">Удалить</option>-->
+                    <option value="move-series">Переместить в серию</option>
+                    <option value="delete">Удалить</option>
                 </select>
                 <div id="treeCategoryWrapper" class="mr-sm-2">
                     <label class="sr-only" for="treeCategory">Category</label>
                     <select name="categoryId" id="treeCategory" class="form-control mr-sm-2">
                         <?php foreach ($block->categoryList('.') as $catId => $catName) : ?>
                             <option value="<?= $catId ?>"><?= $catName ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div id="treeSeriesWrapper" class="mr-sm-2">
+                    <label class="sr-only" for="treeSeriesWrapper">Series</label>
+                    <select name="seriesId" id="selectSeries" class="form-control mr-sm-2">
+                        <?php foreach ($block->seriesList() as $id => $title) : ?>
+                            <option value="<?= $id ?>"><?= $title ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>

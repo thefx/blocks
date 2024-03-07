@@ -15,25 +15,28 @@ use yii\jui\DatePicker;
 /** @var Block $block */
 /** @var BlockItemPropAssignments $form */
 /** @var string $value - field name */
+/** @var string $label - field label */
 
 if (!$model->hasProperty($value)) {
     return '';
 }
 
+$label = $label ?: $model->getAttributeLabel($value);
+
 switch ($value) {
     case 'seo_title':
     case 'path':
     case 'title':
-    case 'article':
-    case 'price':
-    case 'price_old':
-    case 'currency':
-    case 'unit':
-        echo $form->field($model, $value)->textInput(['maxlength' => true]);
+//    case 'article':
+//    case 'price':
+//    case 'price_old':
+//    case 'currency':
+//    case 'unit':
+        echo $form->field($model, $value)->textInput(['maxlength' => true])->label($label);
         break;
 
     case 'date':
-        echo $form->field($model, $value)->widget(DatePicker::class);
+        echo $form->field($model, $value)->widget(DatePicker::class, ['options' => ['class' => 'form-control', 'autocomplete' => 'off']])->label($label);
         break;
 
     case 'text':
@@ -45,7 +48,7 @@ switch ($value) {
                     'select' => Url::to(['get-uploaded-images', 'id' => $model->id])
                 ],
             ]
-        ]);
+        ])->label($label);
         break;
 
     case 'photo_preview':
@@ -69,7 +72,7 @@ switch ($value) {
                 'imagePreview' => $model->getPhoto($value) ? Html::img($model->getPhoto($value)) : '',
                 'imageUrl' => $model->getPhoto($value) ?: '',
             ]
-        ]);
+        ])->label($label);
         break;
 
     case 'photo':
@@ -97,7 +100,7 @@ switch ($value) {
                 'imagePreview' => $model->getPhoto() ? Html::img($model->getPhoto()) : '',
                 'imageUrl' => $model->getPhoto() ?: '',
             ]
-        ]);
+        ])->label($label);
         break;
 
     case 'parent_id':
@@ -107,20 +110,31 @@ switch ($value) {
             'pluginOptions' => [
                 'allowClear' => false
             ],
-        ]);
+        ])->label($label);
+        break;
+
+    case 'series_id':
+        echo $form->field($model, $value)->widget(Select2Input::class, [
+            'data' => $model->seriesList(),
+            'options' => ['placeholder' => 'Серия'],
+            'pluginOptions' => [
+                'allowClear' => false
+            ],
+        ])->label($label);
         break;
 
     case 'public':
-        echo $form->field($model, $value)->widget(SwitchInput::class);
+        echo $form->field($model, $value)->widget(SwitchInput::class)->label($label);
         break;
 
     case 'sort':
-        echo $form->field($model, $value)->textInput();
+        echo $form->field($model, $value)->textInput()->label($label);
         break;
 
     case 'seo_description':
     case 'seo_keywords':
-        echo $form->field($model, $value)->textarea(['rows' => 6]);
+        echo $form->field($model, $value)->textarea(['rows' => 6])->label($label);
         break;
-
+    default:
+        echo 'property ' . $value . ' not found';
 }

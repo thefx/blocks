@@ -3,6 +3,7 @@
 /* @var BlockItem $model */
 /* @var $form yii\widgets\ActiveForm */
 /* @var int $value - propId */
+/** @var string $label - field label */
 
 use thefx\blocks\widgets\propInput\PropInput;
 use thefx\blocks\models\blocks\BlockItem;

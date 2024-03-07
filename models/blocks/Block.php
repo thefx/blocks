@@ -30,6 +30,7 @@ use yii\web\NotFoundHttpException;
  * @property BlockSettings $settings
  * @property BlockTranslate $translate
  * @property BlockFields[] $fields
+ * @property BlockFields[] $fieldsSeries
  * @property array $fieldsTemplates
  * @property array $defaultFieldsCategoryTemplates
  * @property array $fieldsCategoryTemplates
@@ -71,15 +72,21 @@ class Block extends ActiveRecord
         return null;
     }
 
-    public function getFieldsTemplates()
+    public function getFieldsTemplates($itemType)
     {
-        if ($this->fields) {
+        $type = $itemType === BlockItem::TYPE_ITEM ? 'fields' : 'fieldsSeries';
+
+        if ($this->$type) {
             $arr = [];
-            foreach ($this->fields as $field) {
+            foreach ($this->$type as $field) {
                 if ($field->parent_id == 0) {
                     $children = [];
                     foreach ($field->children as $item) {
-                        $children[] = [ 'type' => $item->type, 'value' => $item->value ];
+                        $children[] = [
+                            'type' => $item->type,
+                            'value' => $item->value,
+                            'name' => $item->name ?? "",
+                        ];
                     }
                     $arr[$field->value] = $children;
                 }
@@ -89,43 +96,54 @@ class Block extends ActiveRecord
         return $this->getDefaultFieldsTemplates();
     }
 
+    public function getFieldsSeriesTemplates()
+    {
+        return $this->getFieldsTemplates(BlockItem::TYPE_SERIES);
+    }
+
     public function getDefaultFieldsTemplates()
     {
         $propsRows = [];
+        $blModel = new BlockItem();
 
         foreach ($this->props as $prop) {
-            $propsRows[] = [ 'type' => 'prop', 'value' => $prop->id ];
+            $propsRows[] = ['type' => 'prop', 'value' => $prop->id, 'hint' => ($prop->isRequired() ? '~' : '') . $prop->title];
         }
 
         return [
             'Краткая информация' => [
-                [ 'type' => 'model', 'value' => 'date' ],
-                [ 'type' => 'model', 'value' => 'title' ],
-                [ 'type' => 'model', 'value' => 'path' ],
-                [ 'type' => 'model', 'value' => 'anons' ],
-                [ 'type' => 'model', 'value' => 'photo_preview' ],
-                [ 'type' => 'model', 'value' => 'parent_id' ],
-                [ 'type' => 'model', 'value' => 'public' ],
-                [ 'type' => 'model', 'value' => 'sort' ],
+                ['type' => 'model', 'value' => 'date', 'hint' => $blModel->getAttributeLabel('date')],
+                ['type' => 'model', 'value' => 'title', 'hint' => $blModel->getAttributeLabel('title')],
+                ['type' => 'model', 'value' => 'path', 'hint' => $blModel->getAttributeLabel('path')],
+                ['type' => 'model', 'value' => 'anons', 'hint' => $blModel->getAttributeLabel('anons')],
+                ['type' => 'model', 'value' => 'photo_preview', 'hint' => $blModel->getAttributeLabel('photo_preview')],
+                ['type' => 'model', 'value' => 'parent_id', 'hint' => $blModel->getAttributeLabel('parent_id')],
+                ['type' => 'model', 'value' => 'public', 'hint' => $blModel->getAttributeLabel('public')],
+                ['type' => 'model', 'value' => 'sort', 'hint' => $blModel->getAttributeLabel('sort')],
             ],
             'Подробная информация' => [
-                [ 'type' => 'model', 'value' => 'photo' ],
-                [ 'type' => 'model', 'value' => 'text' ],
+                ['type' => 'model', 'value' => 'photo', 'hint' => $blModel->getAttributeLabel('photo')],
+                ['type' => 'model', 'value' => 'text', 'hint' => $blModel->getAttributeLabel('text')],
             ],
             'Характеристики' => $propsRows,
-            'Каталог' => [
-                [ 'type' => 'model', 'value' => 'article' ],
-                [ 'type' => 'model', 'value' => 'price' ],
-                [ 'type' => 'model', 'value' => 'price_old' ],
-                [ 'type' => 'model', 'value' => 'currency' ],
-                [ 'type' => 'model', 'value' => 'unit' ],
-            ],
+//            'Каталог' => [
+//                ['type' => 'model', 'value' => 'article' ],
+//                ['type' => 'model', 'value' => 'price' ],
+//                ['type' => 'model', 'value' => 'price_old' ],
+//                ['type' => 'model', 'value' => 'currency' ],
+//                ['type' => 'model', 'value' => 'unit' ],
+//            ],
             'Сео' => [
-                [ 'type' => 'model', 'value' => 'seo_title' ],
-                [ 'type' => 'model', 'value' => 'seo_keywords' ],
-                [ 'type' => 'model', 'value' => 'seo_description' ],
+                ['type' => 'model', 'value' => 'seo_title', 'hint' => $blModel->getAttributeLabel('seo_title')],
+                ['type' => 'model', 'value' => 'seo_keywords', 'hint' => $blModel->getAttributeLabel('seo_keywords')],
+                ['type' => 'model', 'value' => 'seo_description', 'hint' => $blModel->getAttributeLabel('seo_description')],
             ],
         ];
+    }
+
+    public function getDefaultFieldsSeriesTemplates()
+    {
+        return $this->getDefaultFieldsTemplates();
     }
 
     public function getFieldsCategoryTemplates()
@@ -145,12 +163,14 @@ class Block extends ActiveRecord
 
     public function getDefaultFieldsCategoryTemplates()
     {
+        $bsModel = new BlockCategory();
+        
         return [
-            [ 'type' => 'model', 'value' => 'title' ],
-            [ 'type' => 'model', 'value' => 'anons' ],
-            [ 'type' => 'model', 'value' => 'public' ],
-            [ 'type' => 'model', 'value' => 'id' ],
-            [ 'type' => 'model', 'value' => 'update_date' ],
+            ['type' => 'model', 'value' => 'title', 'hint' => $bsModel->getAttributeLabel('title')],
+            ['type' => 'model', 'value' => 'anons', 'hint' => $bsModel->getAttributeLabel('anons')],
+            ['type' => 'model', 'value' => 'public', 'hint' => $bsModel->getAttributeLabel('public')],
+            ['type' => 'model', 'value' => 'id', 'hint' => $bsModel->getAttributeLabel('id')],
+            ['type' => 'model', 'value' => 'update_date', 'hint' => $bsModel->getAttributeLabel('update_date')],
         ];
     }
 
@@ -204,8 +224,19 @@ class Block extends ActiveRecord
             ->orderBy('lft');
 
         return ArrayHelper::map($categories->all(), 'id', static function(BlockCategory $row) use($divider) {
-            return str_repeat($divider, $row->depth) . '' . $row->title;
+            return str_repeat($divider, $row->depth) . ' ' . $row->title;
         });
+    }
+
+    public function seriesList()
+    {
+        /** @var BlockCategory $category */
+        $items = BlockItem::find()->where([
+            'block_id' => $this->id,
+            'type' => BlockItem::TYPE_SERIES
+        ])->orderBy('title')->all();
+
+        return ArrayHelper::map($items, 'id', 'title');
     }
 
     public function getCategory()
@@ -233,6 +264,11 @@ class Block extends ActiveRecord
         return $this->hasMany(BlockFields::class, ['block_id' => 'id'])->onCondition(['block_type' => BlockFields::BLOCK_TYPE_ITEM]);
     }
 
+    public function getFieldsSeries()
+    {
+        return $this->hasMany(BlockFields::class, ['block_id' => 'id'])->onCondition(['block_type' => BlockFields::BLOCK_TYPE_SERIES]);
+    }
+
     public function getFieldsCategory()
     {
         return $this->hasMany(BlockFields::class, ['block_id' => 'id'])->onCondition(['block_type' => BlockFields::BLOCK_TYPE_CATEGORY]);
@@ -245,6 +281,12 @@ class Block extends ActiveRecord
             [
                 'class' => AttributesBehavior::class,
                 'attributes' => [
+//                    'create_user' => [
+//                        BaseActiveRecord::EVENT_BEFORE_INSERT => \Yii::$app->user->id,
+//                    ],
+//                    'create_date' => [
+//                        BaseActiveRecord::EVENT_BEFORE_INSERT => date('Y-m-d H:i:s'),
+//                    ],
                     'update_user' => [
                         BaseActiveRecord::EVENT_BEFORE_UPDATE => \Yii::$app->user->id,
                     ],

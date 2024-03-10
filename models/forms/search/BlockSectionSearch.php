@@ -67,11 +67,11 @@ class BlockSectionSearch extends BlockSection
         $this->load($params);
 
         $query1 = (new Query())
-            ->select(array_merge($commonFields, [ new Expression('"folder" as type') ], ['`left`']))
+            ->select(array_merge($commonFields, [ new Expression('"folder" as type') ], [ new Expression('null as delete_date') ], ['`left`']))
             ->from(BlockSection::tableName());
 
         $query2 = (new Query())
-            ->select(array_merge($commonFields, [ new Expression('"item" as type') ], ['`sort` AS `left`']))
+            ->select(array_merge($commonFields, [ new Expression('"item" as type') ], ['delete_date'], ['`sort` AS `left`']))
             ->from(BlockItem::tableName());
 
         $unionQuery = BlockSection::find()
@@ -82,6 +82,8 @@ class BlockSectionSearch extends BlockSection
         } else {
             $unionQuery->andFilterWhere(['block_id' => $this->block_id, 'section_id' => 0]);
         }
+
+        $unionQuery->andWhere('delete_date IS NULL');
 
         $unionQuery->andFilterWhere(['or',
             ['like', 'anons', trim($this->title)],

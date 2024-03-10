@@ -31,6 +31,8 @@ class m190204_192026_create_block_items_table extends Migration
             'create_date' => $this->dateTime(),
             'update_user' => $this->integer(),
             'update_date' => $this->dateTime(),
+            'delete_user' => $this->integer(),
+            'delete_date' => $this->dateTime(),
         ], $tableOptions);
 
         $this->createIndex('block_items_section_id_alias', '{{%block_items}}', ['section_id', 'alias']);

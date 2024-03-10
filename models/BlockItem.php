@@ -31,6 +31,8 @@ use yii\web\NotFoundHttpException;
  * @property string|null $create_date
  * @property int|null $update_user
  * @property string|null $update_date
+ * @property int|null $delete_user
+ * @property string|null $delete_date
  * @property BlockProperty[] $propertiesAll
  * @property BlockProperty[] $propertiesIndexed
  * @property BlockItemPropertyAssignment[] $propertyAssignments
@@ -187,8 +189,8 @@ class BlockItem extends ActiveRecord
         return [
             [['title', 'block_id', 'section_id', 'sort'], 'required'],
             [['anons', 'text'], 'string'],
-            [['date', 'create_date', 'update_date'], 'safe'],
-            [['block_id', 'section_id', 'public', 'sort', 'create_user', 'update_user'], 'integer'],
+            [['date', 'create_date', 'update_date', 'delete_date'], 'safe'],
+            [['block_id', 'section_id', 'public', 'sort', 'create_user', 'update_user', 'delete_user'], 'integer'],
             [['title', 'alias', 'seo_title', 'seo_keywords', 'seo_description'], 'string', 'max' => 255],
             [['photo', 'photo_preview'], 'file', 'mimeTypes' => 'image/*'],
         ];
@@ -219,6 +221,8 @@ class BlockItem extends ActiveRecord
             'create_date' => 'Дата создания',
             'update_user' => 'Редактировал',
             'update_date' => 'Дата обн.',
+            'delete_user' => 'Удалил',
+            'delete_date' => 'Дата удал.',
         ];
     }
 

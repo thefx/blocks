@@ -129,8 +129,7 @@ class BlockItemController extends Controller
             }
         }
 
-        $fieldType = $model->type === BlockItem::TYPE_SERIES ? 'fields' : 'fieldsSeries';
-        $template = $block->getFieldsTemplates($fieldType);
+        $template = $block->getFieldsTemplates($model->type);
 
         if ($series) {
             $template = $this->changeParentIdToSeries($template);

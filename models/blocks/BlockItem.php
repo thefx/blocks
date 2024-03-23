@@ -50,6 +50,7 @@ use yii\web\UploadedFile;
  * @property BlockItemPropAssignments[] $propAssignmentsFilter
  * @property Block $block
  * @property BlockProp[] $propsIndexed
+ * @property BlockItem $series
  *
  * @mixin SaveRelationsBehavior
  */
@@ -415,6 +416,11 @@ class BlockItem extends ActiveRecord
     public function getCategory()
     {
         return $this->hasOne(BlockCategory::class, ['id' => 'parent_id']);
+    }
+
+    public function getSeries()
+    {
+        return $this->hasOne(__CLASS__, ['id' => 'series_id']);
     }
 
     #########################

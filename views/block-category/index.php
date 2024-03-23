@@ -111,9 +111,9 @@ $settings = array_merge(Yii::$app->params['block'], Yii::$app->params['block' . 
                         'value' => static function(BlockCategorySearch $model) use ($category) {
 
                             if ($model->isFolder()) {
-                                $icon = '<i class="fa fa-folder text-muted position-left"></i> ';
+                                $icon = '<i class="fa fa-folder text-muted position-left"></i>';
                                 $url =  ['block-category/index', 'parent_id' => $model->id];
-                                return $icon . Html::a($model->title, $url);
+                                return Html::a($icon . '&nbsp;' . $model->title, $url);
                             }
 
                             if ($model->isSeries()) {

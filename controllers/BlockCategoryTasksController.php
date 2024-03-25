@@ -2,7 +2,9 @@
 
 namespace thefx\blocks\controllers;
 
+use thefx\blocks\models\blocks\BlockCategory;
 use thefx\blocks\models\blocks\BlockItem;
+use thefx\blocks\models\blocks\BlockItemPropAssignments;
 use Yii;
 use yii\caching\TagDependency;
 use yii\web\Controller;
@@ -11,31 +13,32 @@ use yii\web\Response;
 
 class BlockCategoryTasksController extends Controller
 {
+    public function beforeAction($action)
+    {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        return parent::beforeAction($action);
+    }
+
     /**
      * @throws NotFoundHttpException
      */
-    public function actionMove($categoryId, array $item = [])
+    public function actionMoveToCategory($categoryId, array $item = [])
     {
-        Yii::$app->response->format = Response::FORMAT_JSON;
+        $category = BlockCategory::findOrFail(['id' => $categoryId]);
         $blockItems = BlockItem::find()->where(['id' => $item])->all();
 
-        foreach ($blockItems as $blockItem) {
-            $blockItem->parent_id = (int) $categoryId;
-            $blockItem->series_id = null;
-            $blockItem->save() or die(var_dump($blockItem->getErrors()));
+        BlockItem::updateAll(['series_id' => null, 'parent_id' => $category->id], ['id' => $item]);
 
+        // todo update property 84
+
+        foreach ($blockItems as $blockItem) {
             // change parent_id for all items of series
             if ($blockItem->type === BlockItem::TYPE_SERIES) {
-                $itemsOfSeries = BlockItem::find()->where(['series_id' => $blockItem->id])->all();
-
-                foreach ($itemsOfSeries as $item2) {
-                    $item2->parent_id = $blockItem->parent_id;
-                    $item2->save() or die(var_dump($blockItem->getErrors()));
-                }
+                BlockItem::updateAll(['parent_id' => $blockItem->parent_id], ['series_id' => $blockItem->id]);
             }
         }
 
-        TagDependency::invalidate(Yii::$app->cache, 'block_items_' . $blockItem->block_id);
+        TagDependency::invalidate(Yii::$app->cache, 'block_items_' . $category->block_id);
 
         return [
             'result' => 'success'
@@ -45,22 +48,14 @@ class BlockCategoryTasksController extends Controller
     /**
      * @throws NotFoundHttpException
      */
-    public function actionMoveSeries($seriesId, array $item = [])
+    public function actionMoveToSeries($seriesId, array $item = [])
     {
-        Yii::$app->response->format = Response::FORMAT_JSON;
-
         $series = BlockItem::findOrFail(['id' => $seriesId, 'type' => BlockItem::TYPE_SERIES]);
-        $blockItems = BlockItem::find()->where(['id' => $item])->all();
 
-        foreach ($blockItems as $blockItem) {
-            if ($blockItem->type === BlockItem::TYPE_ITEM) {
-                $blockItem->series_id = $series->id;
-                $blockItem->parent_id = $series->parent_id;
-                $blockItem->save() or die(var_dump($blockItem->getErrors()));
-            }
-        }
-
-        TagDependency::invalidate(Yii::$app->cache, 'block_items_' . $blockItem->block_id);
+        BlockItem::updateAll(['series_id' => $series->id, 'parent_id' => $series->parent_id], ['id' => $item, 'type' => BlockItem::TYPE_ITEM]);
+        // delete categories (property 84)
+        BlockItemPropAssignments::deleteAll(['block_item_id' => $item, 'prop_id' => 84]);
+        TagDependency::invalidate(Yii::$app->cache, 'block_items_' . $series->block_id);
 
         return [
             'result' => 'success'
@@ -72,16 +67,10 @@ class BlockCategoryTasksController extends Controller
      */
     public function actionActivate($categoryId, array $item = [])
     {
-        Yii::$app->response->format = Response::FORMAT_JSON;
+        $category = BlockCategory::findOrFail(['id' => $categoryId]);
 
-        $blockItems = BlockItem::find()->where(['id' => $item])->all();
-
-        foreach ($blockItems as $blockItem) {
-            $blockItem->public = 1;
-            $blockItem->save() or die(var_dump($blockItem->getErrors()));
-        }
-
-        TagDependency::invalidate(Yii::$app->cache, 'block_items_' . $blockItem->block_id);
+        BlockItem::updateAll(['public' => 1], ['id' => $item]);
+        TagDependency::invalidate(Yii::$app->cache, 'block_items_' . $category->block_id);
 
         return [
             'result' => 'success'
@@ -93,16 +82,10 @@ class BlockCategoryTasksController extends Controller
      */
     public function actionDeactivate($categoryId, array $item = [])
     {
-        Yii::$app->response->format = Response::FORMAT_JSON;
+        $category = BlockCategory::findOrFail(['id' => $categoryId]);
 
-        $blockItems = BlockItem::find()->where(['id' => $item])->all();
-
-        foreach ($blockItems as $blockItem) {
-            $blockItem->public = 0;
-            $blockItem->save() or die(var_dump($blockItem->getErrors()));
-        }
-
-        TagDependency::invalidate(Yii::$app->cache, 'block_items_' . $blockItem->block_id);
+        BlockItem::updateAll(['public' => 0], ['id' => $item]);
+        TagDependency::invalidate(Yii::$app->cache, 'block_items_' . $category->block_id);
 
         return [
             'result' => 'success'
@@ -114,15 +97,10 @@ class BlockCategoryTasksController extends Controller
      */
     public function actionDelete($categoryId, array $item = [])
     {
-        Yii::$app->response->format = Response::FORMAT_JSON;
+        $category = BlockCategory::findOrFail(['id' => $categoryId]);
 
-        $blockItems = BlockItem::find()->where(['id' => $item])->all();
-
-        foreach ($blockItems as $blockItem) {
-            $blockItem->delete() or die(var_dump($blockItem->getErrors()));
-        }
-
-        TagDependency::invalidate(Yii::$app->cache, 'block_items_' . $blockItem->block_id);
+        BlockItem::deleteAll(['id' => $item]);
+        TagDependency::invalidate(Yii::$app->cache, 'block_items_' . $category->block_id);
 
         return [
             'result' => 'success'

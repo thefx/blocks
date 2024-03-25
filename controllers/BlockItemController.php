@@ -74,6 +74,9 @@ class BlockItemController extends Controller
         $fieldType = $model->type === BlockItem::TYPE_SERIES ? 'fields' : 'fieldsSeries';
         $template = $block->getFieldsTemplates($fieldType);
 
+        // add property with patent id if necessary
+        $this->addPropertyWithPatentIdIfNecessary($model);
+
         if ($series) {
             $template = $this->changeParentIdToSeries($template);
         }
@@ -122,6 +125,10 @@ class BlockItemController extends Controller
                 $model->save();
                 TagDependency::invalidate(Yii::$app->cache, 'block_items_' . $category->block_id);
                 Yii::$app->session->setFlash('success', $block->translate->block_item . ' обновлен');
+
+                // add property with patent id if necessary
+                $this->addPropertyWithPatentIdIfNecessary($model);
+
                 if ($series) {
                     return $this->redirect(['block-category/index', 'series_id' => $series->id, 'parent_id' => $series->parent_id]);
                 }
@@ -369,6 +376,7 @@ class BlockItemController extends Controller
             foreach ($tabFields as $fieldKey => $fieldValue) {
                 if ($fieldValue['type'] === 'model' && $fieldValue['value'] === 'parent_id') {
                     $template[$tabName][$fieldKey]['value'] = 'series_id';
+                    $template[$tabName][$fieldKey]['name'] = 'Серия';
                 }
                 // parent categories todo move to project
                 if ($fieldValue['type'] === 'prop' && $fieldValue['value'] === '84') {
@@ -377,5 +385,34 @@ class BlockItemController extends Controller
             }
         }
         return $template;
+    }
+
+    /**
+     * @param BlockItem $model
+     * @return void
+     */
+    public function addPropertyWithPatentIdIfNecessary(BlockItem $model): void
+    {
+        // Только для каталога и не родительской категории
+        if ($model->block_id != 1 || $model->parent_id == 1) {
+            return;
+        }
+
+        $assignment = BlockItemPropAssignments::findOne(['prop_id' => 84, 'block_item_id' => $model->id]);
+
+        if ($assignment) {
+            $value = explode(';', $assignment->value);
+            $value[] = $model->parent_id;
+            $value[] = array_unique($value);
+            $assignment->value = implode(';', $value);
+            $assignment->save() or die('1111');
+            return;
+        }
+        $assignment = new BlockItemPropAssignments([
+            'block_item_id' => $model->id,
+            'prop_id' => 84,
+            'value' => $model->parent_id,
+        ]);
+        $assignment->save() or die('2222');
     }
 }

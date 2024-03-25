@@ -39,10 +39,10 @@
             $('#treeCategoryWrapper').addClass('d-none');
             $('#treeSeriesWrapper').addClass('d-none');
 
-            if ($(this).val() === 'move') {
+            if ($(this).val() === 'move-to-category') {
                 $('#treeCategoryWrapper').removeClass('d-none')
             }
-            if ($(this).val() === 'move-series') {
+            if ($(this).val() === 'move-to-series') {
                 $('#treeSeriesWrapper').removeClass('d-none')
             }
         })
@@ -86,8 +86,8 @@
                 <select name="task" id="treeCategoryTask" class="form-control mr-sm-2">
                     <option value="activate">Активировать</option>
                     <option value="deactivate">Деактивировать</option>
-                    <option value="move">Переместить</option>
-                    <option value="move-series">Переместить в серию</option>
+                    <option value="move-to-category">Переместить</option>
+                    <option value="move-to-series">Переместить в серию</option>
                     <option value="delete">Удалить</option>
                 </select>
                 <div id="treeCategoryWrapper" class="mr-sm-2">

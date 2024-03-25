@@ -22,9 +22,6 @@ $this->title = $block->translate->categories;
 if ($category && !$category->isRoot()) {
     $this->title = $category->title;
 }
-if ($series) {
-    $this->title = $series->title;
-}
 if ($parents) {
     $this->params['breadcrumbs'][] = ['label' => $block->translate->categories, 'url' => ['index', 'parent_id' => $parents[0]->parent_id]];
     foreach ($parents as $parent) {
@@ -34,6 +31,10 @@ if ($parents) {
     $this->params['breadcrumbs'][] = ['label' => $block->translate->categories, 'url' => ['index', 'parent_id' => $category->parent_id]];
 } else if ($series && $category->isRoot()) {
     $this->params['breadcrumbs'][] = ['label' => $block->translate->categories, 'url' => ['block-category/index', 'parent_id' => $series->parent_id]];
+}
+if ($series) {
+    $this->title = 'Серия ' . $series->title;
+    $this->params['breadcrumbs'][] = ['label' => $category->title, 'url' => ['block-category/index', 'parent_id' => $category->id]];
 }
 
 $this->params['breadcrumbs'][] = $this->title;

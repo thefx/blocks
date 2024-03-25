@@ -64,6 +64,9 @@ class BlockItemController extends Controller
                 TagDependency::invalidate(Yii::$app->cache, 'block_items_' . $category->block_id);
                 Yii::$app->session->setFlash('success', $block->translate->block_item . ' добавлен');
 
+                // add property with patent id if necessary
+                $this->addPropertyWithPatentIdIfNecessary($model);
+
                 if ($series) {
                     return $this->redirect(['block-category/index', 'series_id' => $series->id, 'parent_id' => $series->parent_id]);
                 }
@@ -73,9 +76,6 @@ class BlockItemController extends Controller
 
         $fieldType = $model->type === BlockItem::TYPE_SERIES ? 'fields' : 'fieldsSeries';
         $template = $block->getFieldsTemplates($fieldType);
-
-        // add property with patent id if necessary
-        $this->addPropertyWithPatentIdIfNecessary($model);
 
         if ($series) {
             $template = $this->changeParentIdToSeries($template);

@@ -23,15 +23,17 @@ class BlockFieldsController extends Controller
             ->one();
 
         $form = new BlockFieldsForm($block, $type);
+        $rootCategory = $block->category->root;
 
         if ($this->request->isPost && $form->load(Yii::$app->request->post()) && $form->save()) {
             Yii::$app->session->setFlash('success', 'Поля сохранены');
-            return $this->redirect(['block-category/index', 'parent_id' => $block->id]);
+            return $this->redirect(['block-category/index', 'parent_id' => $rootCategory->id]);
         }
 
         return $this->render('update', [
             'model' => $form,
             'block' => $block,
+            'category' => $rootCategory,
             'template' => $form->getDefaultTemplate(),
         ]);
     }

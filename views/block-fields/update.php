@@ -2,6 +2,7 @@
 
 use thefx\blocks\forms\BlockFieldsForm;
 use thefx\blocks\models\blocks\Block;
+use thefx\blocks\models\blocks\BlockCategory;
 use thefx\blocks\models\blocks\BlockFields;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
@@ -9,6 +10,7 @@ use yii\widgets\ActiveForm;
 /* @var $this yii\web\View */
 /* @var $block Block */
 /* @var $model BlockFieldsForm */
+/* @var $category BlockCategory */
 /* @var $template string */
 
 switch ($model->block_type) {
@@ -26,7 +28,7 @@ switch ($model->block_type) {
 }
 
 $this->title = 'Настройка полей для ' . $titleSuffix;
-$this->params['breadcrumbs'][] = ['label' => $block->translate->blocks_item, 'url' => ['block-sections/index', 'block_id' => $block->id]];
+$this->params['breadcrumbs'][] = ['label' => $block->translate->categories, 'url' => ['block-category/index', 'parent_id' => $category->id]];
 $this->params['breadcrumbs'][] = $this->title;
 
 //\app\assets\Codemirror\CodemirrorAsset::register($this);

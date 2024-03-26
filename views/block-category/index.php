@@ -112,15 +112,15 @@ $settings = array_merge(Yii::$app->params['block'], Yii::$app->params['block' . 
                         'value' => static function(BlockCategorySearch $model) use ($category) {
 
                             if ($model->isFolder()) {
-                                $icon = '<i class="fa fa-folder text-muted position-left"></i>';
+                                $icon = '<i class="fa fa-folder text-muted position-left mt-1"></i>';
                                 $url =  ['block-category/index', 'parent_id' => $model->id];
-                                return Html::a($icon . '&nbsp;' . $model->title, $url);
+                                return '<div class="d-flex">' . $icon . Html::a($model->title, $url, ['data-pjax' => '0']) . '</div>';
                             }
 
                             if ($model->isSeries()) {
-                                $icon = '<i class="fas fa-layer-group text-muted position-left"></i> ';
+                                $icon = '<i class="fas fa-layer-group text-muted position-left mt-1"></i> ';
                                 $url =  ['block-category/index', 'series_id' => $model->id, 'parent_id' => $model->parent_id];
-                                return $icon . Html::a($model->title, $url, ['data-pjax' => '0']);
+                                return '<div class="d-flex">' . $icon . Html::a($model->title, $url, ['data-pjax' => '0']) . '</div>';;
                             }
 
                             $url =  ['block-item/update', 'id' => $model->id, 'parent_id' => $category->id];

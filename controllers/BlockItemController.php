@@ -394,7 +394,7 @@ class BlockItemController extends Controller
     public function addPropertyWithPatentIdIfNecessary(BlockItem $model): void
     {
         // Только для каталога и не родительской категории
-        if ($model->block_id != 1 || $model->parent_id == 1) {
+        if ($model->block_id != 1 || $model->parent_id == 1 || $model->series_id != '') {
             return;
         }
 
@@ -403,7 +403,7 @@ class BlockItemController extends Controller
         if ($assignment) {
             $value = explode(';', $assignment->value);
             $value[] = $model->parent_id;
-            $value[] = array_unique($value);
+            $value = array_unique($value);
             $assignment->value = implode(';', $value);
             $assignment->save() or die('1111');
             return;

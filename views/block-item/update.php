@@ -20,6 +20,8 @@ foreach ($parents as $parent) {
 }
 if (!$category->isRoot()) {
     $this->params['breadcrumbs'][] = ['label' => $category->title, 'url' => ['block-category/index', 'parent_id' => $category->id]];
+} else {
+    $this->params['breadcrumbs'][] = ['label' => $block->translate->categories, 'url' => ['block-category/index', 'parent_id' => $category->id]];
 }
 $this->params['breadcrumbs'][] = $this->title;
 ?>

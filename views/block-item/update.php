@@ -5,13 +5,11 @@
 /* @var $block Block */
 /* @var $category BlockCategory */
 /* @var $parents BlockCategory[] */
-/* @var $modelFieldsForm BlockFieldsItemForm */
 /* @var $elem */
 /* @var $template array */
 
 use thefx\blocks\models\blocks\Block;
 use thefx\blocks\models\blocks\BlockCategory;
-use thefx\blocks\forms\BlockFieldsItemForm;
 use thefx\blocks\models\blocks\BlockItem;
 
 $this->title = $model->isItem() ? $block->translate->block_update : 'Изменить серию';

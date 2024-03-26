@@ -6,10 +6,8 @@
 /* @var $category BlockCategory */
 /* @var $parents BlockCategory[] */
 /* @var $elem */
-/* @var $modelFieldsForm BlockFieldsItemForm */
 /* @var $template array */
 
-use thefx\blocks\forms\BlockFieldsItemForm;
 use thefx\blocks\models\blocks\Block;
 use thefx\blocks\models\blocks\BlockCategory;
 use thefx\blocks\models\blocks\BlockItem;
@@ -22,6 +20,8 @@ foreach ($parents as $parent) {
 }
 if (!$category->isRoot()) {
     $this->params['breadcrumbs'][] = ['label' => $category->title, 'url' => ['block-category/index', 'parent_id' => $category->id]];
+} else {
+    $this->params['breadcrumbs'][] = ['label' => $block->translate->categories, 'url' => ['block-category/index', 'parent_id' => $category->id]];
 }
 $this->params['breadcrumbs'][] = $this->title;
 ?>

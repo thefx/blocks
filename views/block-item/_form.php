@@ -19,31 +19,34 @@ Select2Asset::register($this);
 
 <?= $form->errorSummary($model, ['class' => 'alert alert-danger']) ?>
 
+
 <div class="card card-primary card-outline card-outline-tabs">
 
-    <div class="card-header p-0 border-bottom-0">
-        <ul class="nav nav-tabs" role="tablist">
+    <?php if (count($template) > 1) : ?>
+        <div class="card-header p-0 border-bottom-0">
+            <ul class="nav nav-tabs" role="tablist">
 
-            <?php $i = 0 ?>
+                <?php $i = 0 ?>
 
-            <?php foreach ($template as $tab => $items) : ?>
-                <?php $selected = ($i === 0) ? 'true' : 'false' ?>
-                <?php $class = ($i === 0) ? 'active' : '' ?>
-                <?php $i++ ?>
+                <?php foreach ($template as $tab => $items) : ?>
+                    <?php $selected = ($i === 0) ? 'true' : 'false' ?>
+                    <?php $class = ($i === 0) ? 'active' : '' ?>
+                    <?php $i++ ?>
 
-                <li class="nav-item">
-                    <a class="nav-link <?= $class ?>"
-                       id="custom-tabs-<?= $i ?>-tab"
-                       data-toggle="pill"
-                       href="#custom-tabs-<?= $i ?>" role="tab"
-                       aria-controls="custom-tabs-<?= $i ?>"
-                       aria-selected="<?= $selected ?>"><?= $tab ?></a>
-                </li>
+                    <li class="nav-item">
+                        <a class="nav-link <?= $class ?>"
+                           id="custom-tabs-<?= $i ?>-tab"
+                           data-toggle="pill"
+                           href="#custom-tabs-<?= $i ?>" role="tab"
+                           aria-controls="custom-tabs-<?= $i ?>"
+                           aria-selected="<?= $selected ?>"><?= $tab ?></a>
+                    </li>
 
-            <?php endforeach; ?>
+                <?php endforeach; ?>
 
-        </ul>
-    </div>
+            </ul>
+        </div>
+    <?php endif; ?>
 
     <div class="card-body">
         <div class="tab-content">

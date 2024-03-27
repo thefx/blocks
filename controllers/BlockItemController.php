@@ -31,6 +31,28 @@ class BlockItemController extends Controller
         parent::__construct($id, $module, $config);
     }
 
+    public function actions()
+    {
+        return [
+            'upload-image' => [
+                'class' => 'vova07\imperavi\actions\UploadFileAction',
+                'url' => '/statics/',
+                'path' => \Yii::getAlias("@webroot") . '/statics',
+                'unique' => true,
+                'validatorOptions' => [
+                    'maxWidth' => 4000,
+                    'maxHeight' => 4000
+                ]
+            ],
+            'get-uploaded-images' => [
+                'class' => 'vova07\imperavi\actions\GetImagesAction',
+                'url' => '/statics/',
+                'path' => \Yii::getAlias("@webroot") . '/statics',
+                'options' => ['only' => ['*.jpg', '*.jpeg', '*.png', '*.gif', '*.ico']],
+            ]
+        ];
+    }
+
     /**
      * Creates a new BlockItem model.
      * If creation is successful, the browser will be redirected to the 'view' page.

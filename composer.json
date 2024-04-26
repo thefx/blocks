@@ -16,7 +16,6 @@
         "la-haute-societe/yii2-save-relations-behavior": "^1.2",
         "paulzi/yii2-nested-sets": "^1.0",
         "vova07/yii2-imperavi-widget": "*",
-        "2amigos/yii2-transliterator-helper": "*",
         "almasaeed2010/adminlte": "^3.1.0",
         "thefx/yii2-widgets-cropper": "dev-master",
         "yiisoft/yii2-jui": "~2.0.0",

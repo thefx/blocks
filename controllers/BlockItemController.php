@@ -10,6 +10,7 @@ use thefx\blocks\models\blocks\BlockItemPropAssignments;
 use thefx\blocks\models\blocks\BlockProp;
 use thefx\blocks\models\files\Files;
 use thefx\blocks\models\images\Images;
+use thefx\blocks\services\BlockItemPropertyAssignmentService;
 use thefx\blocks\services\TransactionManager;
 use Yii;
 use yii\base\Module;
@@ -27,9 +28,12 @@ class BlockItemController extends Controller
 {
     public $transaction;
 
-    public function __construct($id, Module $module, TransactionManager $transaction, array $config = [])
+    public $service;
+
+    public function __construct($id, Module $module, TransactionManager $transaction, BlockItemPropertyAssignmentService $service, array $config = [])
     {
         $this->transaction = $transaction;
+        $this->service = $service;
         parent::__construct($id, $module, $config);
     }
 
@@ -99,11 +103,13 @@ class BlockItemController extends Controller
                 Yii::$app->db->createCommand()->batchInsert('block_item_prop_compare', ['item_id', 'prop_id'], $propCompareArray)->execute();
                 // end prop compare
 
-                TagDependency::invalidate(Yii::$app->cache, 'block_items_' . $category->block_id);
-                Yii::$app->session->setFlash('success', $block->translate->block_item . ' добавлен');
+                $this->service->splitAndStore($model->id);
 
                 // add property with patent id if necessary
                 $this->addPropertyWithPatentIdIfNecessary($model);
+
+                TagDependency::invalidate(Yii::$app->cache, 'block_items_' . $category->block_id);
+                Yii::$app->session->setFlash('success', $block->translate->block_item . ' добавлен');
 
                 if ($series) {
                     return $this->redirect(['block-category/index', 'series_id' => $series->id, 'parent_id' => $series->parent_id]);
@@ -184,6 +190,8 @@ class BlockItemController extends Controller
 
                 TagDependency::invalidate(Yii::$app->cache, 'block_items_' . $category->block_id);
                 Yii::$app->session->setFlash('success', $block->translate->block_item . ' обновлен');
+
+                $this->service->splitAndStore($model->id);
 
                 // add property with patent id if necessary
                 $this->addPropertyWithPatentIdIfNecessary($model);
@@ -266,6 +274,7 @@ class BlockItemController extends Controller
                 $newPropAssignment->value = $newValues;
                 $newPropAssignment->save(false) or die('error 2'); // todo: проверить сохранение
             }
+            $this->service->splitAndStore($newModel->id);
         });
 
         return $this->redirect(['update', 'id' => $newModel->id, 'parent_id' => $model->parent_id]);

@@ -7,6 +7,7 @@
 /* @var $parents BlockCategory[] */
 /* @var $template array */
 /* @var $blockItemCompositeForm BlockItemCompositeForm */
+/* @var $propsCompareTemplate array */
 
 use thefx\blocks\forms\BlockItemCompositeForm;
 use thefx\blocks\models\blocks\Block;
@@ -33,7 +34,8 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'block' => $block,
         'template' => $template,
-        'blockItemCompositeForm' => $blockItemCompositeForm
+        'blockItemCompositeForm' => $blockItemCompositeForm,
+        'propsCompareTemplate' => $propsCompareTemplate,
     ]) ?>
 
 </div>

@@ -5,9 +5,10 @@
 /* @var $block Block */
 /* @var $category BlockCategory */
 /* @var $parents BlockCategory[] */
-/* @var $elem */
 /* @var $template array */
+/* @var $blockItemCompositeForm BlockItemCompositeForm */
 
+use thefx\blocks\forms\BlockItemCompositeForm;
 use thefx\blocks\models\blocks\Block;
 use thefx\blocks\models\blocks\BlockCategory;
 use thefx\blocks\models\blocks\BlockItem;
@@ -31,8 +32,8 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= $this->render('_form', [
         'model' => $model,
         'block' => $block,
-        'elem' => $elem,
         'template' => $template,
+        'blockItemCompositeForm' => $blockItemCompositeForm
     ]) ?>
 
 </div>

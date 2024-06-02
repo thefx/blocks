@@ -218,7 +218,7 @@ class BlockProp extends ActiveRecord
     public function rules()
     {
         return [
-            [['block_id', 'code', 'sort'], 'required'],
+            [['title', 'block_id', 'code', 'sort'], 'required'],
             [['block_id', 'public', 'multi', 'required', 'sort', 'in_filter', 'relative_block_item', 'relative_block_cat', 'redactor'], 'integer'],
             [['title', 'type', 'code', 'hint', 'default_value'], 'string', 'max' => 255],
             [['upload_path', 'watermark_path', 'web_path'], 'string'],

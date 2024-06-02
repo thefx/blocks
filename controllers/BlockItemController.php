@@ -2,6 +2,7 @@
 
 namespace thefx\blocks\controllers;
 
+use thefx\blocks\forms\BlockItemCompositeForm;
 use thefx\blocks\models\blocks\Block;
 use thefx\blocks\models\blocks\BlockCategory;
 use thefx\blocks\models\blocks\BlockItem;
@@ -13,6 +14,7 @@ use thefx\blocks\services\TransactionManager;
 use Yii;
 use yii\base\Module;
 use yii\caching\TagDependency;
+use yii\db\Expression;
 use yii\db\StaleObjectException;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -71,6 +73,8 @@ class BlockItemController extends Controller
 
         $blockItemType = $type === BlockItem::TYPE_SERIES ? BlockItem::TYPE_SERIES : BlockItem::TYPE_ITEM;
         $model = BlockItem::create($block->id, $parent_id, $blockItemType);
+        $blockItemCompositeForm = new BlockItemCompositeForm($model);
+
         if ($series) {
             $model->series_id = $series->id;
         }
@@ -78,11 +82,23 @@ class BlockItemController extends Controller
 
         if ($model->load(Yii::$app->request->post()) /*&& $model->save()*/) {
             $model->loadAssignments(Yii::$app->request->post());
+            $blockItemCompositeForm->load(Yii::$app->request->post());
+
             if ($model->validate()) {
                 if ($series) {
                     $model->parent_id = $series->parent_id;
                 }
                 $model->save();
+
+                // prop compare
+                $propCompareArray = [];
+                foreach ($blockItemCompositeForm->propCompareIds as $propId) {
+                    $propCompareArray[] = [$model->id, $propId];
+                }
+                Yii::$app->db->createCommand()->delete('block_item_prop_compare', ['item_id' => $model->id])->execute();
+                Yii::$app->db->createCommand()->batchInsert('block_item_prop_compare', ['item_id', 'prop_id'], $propCompareArray)->execute();
+                // end prop compare
+
                 TagDependency::invalidate(Yii::$app->cache, 'block_items_' . $category->block_id);
                 Yii::$app->session->setFlash('success', $block->translate->block_item . ' добавлен');
 
@@ -98,6 +114,13 @@ class BlockItemController extends Controller
 
         $template = $block->getFieldsTemplates($model->type);
 
+        $propsCompareTemplate = (new \yii\db\Query())
+            ->select(new Expression('"prop" as type, id as value, "" as name'))
+            ->from(BlockProp::tableName())
+            ->andWhere('compare = 1')
+            ->orderBy('sort')
+            ->all();
+
         if ($series) {
             $template = $this->changeParentIdToSeries($template);
         }
@@ -109,9 +132,10 @@ class BlockItemController extends Controller
             'model' => $model,
             'template' => $template,
             'elem' => $model->propAssignments,
+            'blockItemCompositeForm' => $blockItemCompositeForm,
+            'propsCompareTemplate' => $propsCompareTemplate,
         ]);
     }
-
 
     /**
      * Updates an existing BlockItem model.
@@ -134,16 +158,30 @@ class BlockItemController extends Controller
 
         $model->populateAssignments();
 
+        $blockItemCompositeForm = new BlockItemCompositeForm($model);
+
         if ($model->load(Yii::$app->request->post()) /*&& $model->save()*/) {
             $model->loadAssignments(Yii::$app->request->post());
-            if ($model->validate()) {
+            $blockItemCompositeForm->load(Yii::$app->request->post());
+            if ($model->validate() && $blockItemCompositeForm->validate()) {
                 $model->setAttribute('update_user', Yii::$app->user->id);
                 $model->setAttribute('update_date', date('Y-m-d H:i:s'));
+
                 if ($model->series_id) {
                     $series2 = BlockItem::findOrFail($model->series_id);
                     $model->parent_id = $series2->parent_id;
                 }
                 $model->save();
+
+                // prop compare
+                $propCompareArray = [];
+                foreach ($blockItemCompositeForm->propCompareIds as $propId) {
+                    $propCompareArray[] = [$model->id, $propId];
+                }
+                Yii::$app->db->createCommand()->delete('block_item_prop_compare', ['item_id' => $model->id])->execute();
+                Yii::$app->db->createCommand()->batchInsert('block_item_prop_compare', ['item_id', 'prop_id'], $propCompareArray)->execute();
+                // end prop compare
+
                 TagDependency::invalidate(Yii::$app->cache, 'block_items_' . $category->block_id);
                 Yii::$app->session->setFlash('success', $block->translate->block_item . ' обновлен');
 
@@ -159,6 +197,13 @@ class BlockItemController extends Controller
 
         $template = $block->getFieldsTemplates($model->type);
 
+        $propsCompareTemplate = (new \yii\db\Query())
+            ->select(new Expression('"prop" as type, id as value, "" as name'))
+            ->from(BlockProp::tableName())
+            ->andWhere('compare = 1')
+            ->orderBy('sort')
+            ->all();
+
         if ($series) {
             $template = $this->changeParentIdToSeries($template);
         }
@@ -169,7 +214,9 @@ class BlockItemController extends Controller
             'parents' => $parents,
             'model' => $model,
             'template' => $template,
+            'propsCompareTemplate' => $propsCompareTemplate,
             'elem' => $model->propAssignments,
+            'blockItemCompositeForm' => $blockItemCompositeForm,
         ]);
     }
 
@@ -194,7 +241,7 @@ class BlockItemController extends Controller
 
                 if ($properties[$propAssignment->prop_id]->type === BlockProp::TYPE_IMAGE) {
                     $newValues = [];
-                    $values  = explode(';', $propAssignment->value);
+                    $values = explode(';', $propAssignment->value);
                     foreach ($values as $value) {
                         $newFilename = uniqid('', false);
                         $newValues[] = $this->copyFile($value, $newFilename);
@@ -204,7 +251,7 @@ class BlockItemController extends Controller
                     $newValues = implode(';', $newValues);
                 } else if ($properties[$propAssignment->prop_id]->type === BlockProp::TYPE_FILE) {
                     $newValues = [];
-                    $values  = explode(';', $propAssignment->value);
+                    $values = explode(';', $propAssignment->value);
                     foreach ($values as $value) {
                         $newValues[] = $this->copyFile($value);
                     }

@@ -1,6 +1,7 @@
 <?php
 
 use thefx\blocks\assets\Select2Asset\Select2Asset;
+use thefx\blocks\forms\BlockItemCompositeForm;
 use thefx\blocks\models\blocks\Block;
 use thefx\blocks\models\blocks\BlockItem;
 use yii\helpers\Html;
@@ -11,6 +12,8 @@ use yii\widgets\ActiveForm;
 /* @var $form yii\widgets\ActiveForm */
 /* @var $block Block */
 /* @var $template array */
+/* @var $propsCompareTemplate array */
+/* @var $blockItemCompositeForm BlockItemCompositeForm */
 
 Select2Asset::register($this);
 ?>
@@ -44,6 +47,28 @@ Select2Asset::register($this);
 
                 <?php endforeach; ?>
 
+                <?php if ($model->isSeries()) : ?>
+                    <li class="nav-item">
+                        <a class="nav-link"
+                           id="custom-tabs-10-tab"
+                           data-toggle="pill"
+                           href="#custom-tabs-100" role="tab"
+                           aria-controls="custom-tabs-100"
+                           aria-selected="false">Для таблицы</a>
+                    </li>
+                <?php endif; ?>
+
+                <?php if ($model->isItem()) : ?>
+                    <li class="nav-item">
+                        <a class="nav-link"
+                           id="custom-tabs-10-tab"
+                           data-toggle="pill"
+                           href="#custom-tabs-100" role="tab"
+                           aria-controls="custom-tabs-100"
+                           aria-selected="false">Свойства для таблицы</a>
+                    </li>
+                <?php endif; ?>
+
             </ul>
         </div>
     <?php endif; ?>
@@ -65,6 +90,18 @@ Select2Asset::register($this);
 
             <?php endforeach; ?>
 
+            <?php if ($model->isSeries()) : ?>
+                <div class="tab-pane fade" id="custom-tabs-100" role="tabpanel" aria-labelledby="custom-tabs-100-tab">
+                    <?= $form->field($blockItemCompositeForm, 'propCompareIds')->checkboxList($blockItemCompositeForm->getPropsCompareList(), ['separator' => '<br />'])->label('Какие характеристики будут в таблице') ?>
+                </div>
+            <?php endif; ?>
+            <?php if ($model->isItem()) : ?>
+                <div class="tab-pane fade" id="custom-tabs-100" role="tabpanel" aria-labelledby="custom-tabs-100-tab">
+                    <?php foreach ($propsCompareTemplate as $item) : ?>
+                        <?= $this->render('_type_' . $item['type'], ['form' => $form, 'model' => $model, 'label' => $item['name'], 'block' => $block, 'value' => $item['value']]) ?>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
         </div>
     </div>
 

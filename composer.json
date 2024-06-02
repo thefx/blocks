@@ -20,7 +20,8 @@
         "thefx/yii2-widgets-cropper": "dev-master",
         "yiisoft/yii2-jui": "~2.0.0",
         "select2/select2": ">=4.0",
-        "intervention/image": "^2.5"
+        "intervention/image": "^2.5",
+        "2amigos/yii2-transliterator-helper": "*"
     },
     "require-dev": {
         "roave/security-advisories": "dev-latest"

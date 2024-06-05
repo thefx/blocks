@@ -104,7 +104,7 @@ class BlockCategorySearch extends BlockCategory
 
         if ($this->block_id && $this->title) {
             $unionQuery->andFilterWhere(['block_id' => $this->block_id]);
-        } else {
+        } else if (!$this->series_id) {
             $unionQuery->andFilterWhere(['parent_id' => $this->parent_id]);
         }
 

@@ -47,7 +47,7 @@ Select2Asset::register($this);
 
                 <?php endforeach; ?>
 
-                <?php if ($model->isSeries()) : ?>
+                <?php if ($model->isSeries() && $model->block_id == 1) : ?>
                     <li class="nav-item">
                         <a class="nav-link"
                            id="custom-tabs-10-tab"
@@ -58,7 +58,7 @@ Select2Asset::register($this);
                     </li>
                 <?php endif; ?>
 
-                <?php if ($model->isItem()) : ?>
+                <?php if ($model->isItem() && $model->block_id == 1) : ?>
                     <li class="nav-item">
                         <a class="nav-link"
                            id="custom-tabs-10-tab"
@@ -90,12 +90,12 @@ Select2Asset::register($this);
 
             <?php endforeach; ?>
 
-            <?php if ($model->isSeries()) : ?>
+            <?php if ($model->isSeries() && $model->block_id == 1) : ?>
                 <div class="tab-pane fade" id="custom-tabs-100" role="tabpanel" aria-labelledby="custom-tabs-100-tab">
                     <?= $form->field($blockItemCompositeForm, 'propCompareIds')->checkboxList($blockItemCompositeForm->getPropsCompareList(), ['separator' => '<br />'])->label('Какие характеристики будут в таблице') ?>
                 </div>
             <?php endif; ?>
-            <?php if ($model->isItem()) : ?>
+            <?php if ($model->isItem() && $model->block_id == 1) : ?>
                 <div class="tab-pane fade" id="custom-tabs-100" role="tabpanel" aria-labelledby="custom-tabs-100-tab">
                     <?php foreach ($propsCompareTemplate as $item) : ?>
                         <?= $this->render('_type_' . $item['type'], ['form' => $form, 'model' => $model, 'label' => $item['name'], 'block' => $block, 'value' => $item['value']]) ?>

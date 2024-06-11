@@ -23,9 +23,6 @@
         "intervention/image": "^2.5",
         "2amigos/yii2-transliterator-helper": "*"
     },
-    "require-dev": {
-        "roave/security-advisories": "dev-latest"
-    },
     "autoload": {
         "psr-4": {
             "thefx\\blocks\\": ""
